@@ -100,11 +100,7 @@ function Homepage(props) {
                </div>
            ))}
            </div>
-           <button  className=' h-12 w-30 bg-black font-bold text-xl p-3 ml-16 mt-5 text-white rounded-xl' >
-            invoice
-          <Link to='/Invoice'>
-        </Link>
-          </button>
+          
         </div>
       
     );

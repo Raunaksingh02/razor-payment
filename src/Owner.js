@@ -22,7 +22,7 @@ function Owner(props) {
 
               <div className="grid grid-cols-1 ">
    
-              <Link to="/OrderDetails">
+              <Link to="/Order">
               
               <div className='m-3 p-3 border-2 border-black h-56 rounded-xl bg-black '>
                 

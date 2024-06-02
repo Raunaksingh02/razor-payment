@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import backarrowlogo from "./images/backarrowlogo.png"
 import Paymentdatauser from './PaymentData.js';
 
+
 function OrderDetails(props) {
 
     return (
@@ -65,7 +66,7 @@ function OrderDetails(props) {
 
 
 
-export default {OrderDetails};
+export default OrderDetails;
 
 
 

@@ -26,7 +26,7 @@ const PaymentComponent = () => {
         <Route path="/" element={<Homepage />} />
         <Route path="/Owner" element={<Owner/>} />
         <Route path="/Invoice" element={<Invoicecompo/>} />
-        <Route path="/OrderDetails" element={<OrderDetails/>} />
+        <Route path="/Order" element={<OrderDetails/>} />
         <Route  path="/Admin " element={<Admin />} />
         <Route path="/bill" element={<Billpart 
            />} />
