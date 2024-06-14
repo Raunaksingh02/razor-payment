@@ -9,17 +9,13 @@ import { Link,useNavigate } from 'react-router-dom';
 import Admin from './Admin.js';
 import Owner from './Owner.js'
 import OrderDetails from './OrderDetails.js';
+import Updatepart from './Updatepart.js';
 import Invoicecompo from './Invoicecompo.js';
 import { useHistory } from 'react-router-dom';
+import Dishmanage from './Dishmanage.js';
 
 const PaymentComponent = () => {
-
-
-  
-   
-   
-  
-  
+ 
   return (
     <Router>
       <Routes>
@@ -28,8 +24,9 @@ const PaymentComponent = () => {
         <Route path="/Invoice" element={<Invoicecompo/>} />
         <Route path="/Order" element={<OrderDetails/>} />
         <Route  path="/Admin " element={<Admin />} />
-        <Route path="/bill" element={<Billpart 
-           />} />
+        <Route  path="/Dishmanage" element={<Dishmanage />} />
+        <Route path="/bill" element={<Billpart  />} />
+         <Route path="/update/:_id" element={<Updatepart />} />   
       </Routes>
     </Router>
   );

@@ -101,7 +101,7 @@ function Billpart() {
        console.log(response);
        
      try {
-       await axios.post('http://localhost:1000/api/payments', { 
+       await axios.post('https://backendcafe-ceaj.onrender.com/api/payments', { 
          orderId,
           paymentId:response.razorpay_payment_id ,  
          cartforpayment:cartforpayment,
@@ -111,26 +111,20 @@ function Billpart() {
          customerPhoneNo:customerPhone,
        });
        console.log('Payment details saved'); // Debug log
-
-    
-     
      } catch (error) {
        console.error('Error saving payment details:', error);
      }
    };
  };
-
- 
   
-  const  {setCustomerName,setCustomerTable,setCustomerPhone,customerPhone,customerName,customerTable}= useContext(CustomerContext);
+const  {setCustomerName,setCustomerTable,setCustomerPhone,customerPhone,customerName,customerTable}= useContext(CustomerContext);
 
-  
-  const handlename=(event)=>{
+const handlename=(event)=>{
     setCustomerName(event.target.value);
     console.log(customerName);
   }
 
-  const handlePhoneNo=(event)=>{
+const handlePhoneNo=(event)=>{
     setCustomerPhone(event.target.value);
     console.log(customerPhone);
   }
