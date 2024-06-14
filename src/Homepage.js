@@ -55,23 +55,28 @@ function Homepage() {
 
     return (
         <div>
-            <div className='flex item-center justify-center'>
+            <div className='flex items-center justify-center'>
                 <h1 className="text-3xl font-bold text-center m-2">Cafe Coffee</h1>
                 <Link to="/bill">
-                    <img src={cartlogo} className='h-12 w-12' />
+                    <img src={cartlogo} className='h-12 w-12' alt="cart logo" />
                 </Link>
                 <h1 className="font-bold text-red text-2xl">{totalquantityforhome}</h1>
                 <Link to="/Owner">
-                    <img src={user} className='h-10 w-10 ml-8 mt-1' />
+                    <img src={user} className='h-10 w-10 ml-8 mt-1' alt="user icon" />
                 </Link>
             </div>
-            <div>
+            <div >
                 {cafes.map((item, index) => (
-                    <div className='flex flex-row m-3 p-3' key={index}>  {/* flex flex-row */}
+                    <div className='grid grid-cols-2   m-3 p-3' key={index}>  {/* flex flex-row */}
                         <div>
-                            <img className='m-2' src={item.image} alt={item.name} />
+                            <img
+                                className='m-2'
+                                src={item.image}
+                                alt={item.name}
+                                style={{ width: '150px', height: '150px', objectFit: 'cover',display:'block' }}
+                            />
                         </div>
-                        <div className='ml-4'>
+                        <div className='m-1'>
                             <h2 className="font-bold">{item.name}</h2>
                             <p>Category: {item.category}</p>
                             <p>Rating: {item.rating} stars</p>

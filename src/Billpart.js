@@ -7,7 +7,7 @@ import deletelogo from "./images/deletelogo.png";
 import Modal from 'react-modal';
 import closebutton from './images/closebutton.png';
 import { CustomerContext } from './CustomerContext';
-import Invoicecompo from './Invoicecompo';
+
 import axios from 'axios';
 
 Modal.setAppElement('#root');
