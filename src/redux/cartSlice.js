@@ -9,7 +9,7 @@ const cartSlice = createSlice({
   reducers: {
     addToCart: (state, action) =>{
       
-        const itempresent =state.cart.find((item)=>item.id===action.payload.id );
+        const itempresent =state.cart.find((item)=>item._id===action.payload._id );
         if(itempresent){
             itempresent.quantity++;
 
@@ -19,7 +19,7 @@ const cartSlice = createSlice({
         }
     },
     removeToCart: (state, action) =>{
-      const itempresent =state.cart.find((item)=>item.id===action.payload.id);
+      const itempresent =state.cart.find((item)=>item._id===action.payload._id);
       if(itempresent){
           itempresent.quantity--;
       }
