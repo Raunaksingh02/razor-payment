@@ -11,8 +11,9 @@ function Homepage() {
     const [quantities, setQuantities] = useState([]);
     const [selectedSizes, setSelectedSizes] = useState([]);
     const [selectedPrices, setSelectedPrices] = useState([]);
-    const dispatch = useDispatch();
+    const [selectedCategory, setSelectedCategory] = useState('All');
 
+    const dispatch = useDispatch();
     const cartfortotal = useSelector((state) => state.cart.cart);
     const totalquantityforhome = cartfortotal.map((item) => item.quantity).reduce((prev, curr) => prev + curr, 0);
 
@@ -58,10 +59,16 @@ function Homepage() {
         setSelectedPrices(newSelectedPrices);
     };
 
+    const categories = ['All', ...new Set(cafes.map(cafe => cafe.category))];
+
+    const filteredCafes = selectedCategory === 'All'
+        ? cafes
+        : cafes.filter(cafe => cafe.category === selectedCategory);
+
     return (
         <div className="container mx-auto p-4">
             <div className='flex items-center justify-between'>
-                <h1 className="text-3xl font-bold text-center m-2">Cafe Coffee</h1>
+                <h1 className="text-3xl font-extrabold text-center m-2">Cafe Coffee</h1>
                 <div className='flex items-center'>
                     <Link to="/bill">
                         <img src={cartlogo} className='h-12 w-12' alt="cart logo" />
@@ -72,11 +79,28 @@ function Homepage() {
                     </Link>
                 </div>
             </div>
-            <div className="grid grid-cols-1   mt-3 ">
-                {cafes.map((item, index) => (
+
+            <div className="flex  justify-end font-bold  text-xl items-center p-2 ">
+                <label htmlFor="category-select" className="block   mr-7"> Select  Category :</label>
+                <select
+                    id="category-select"
+                    className="mt-1 block pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                    value={selectedCategory}
+                    onChange={(e) => setSelectedCategory(e.target.value)}
+                >
+                    {categories.map((category, index) => (
+                        <option key={index} value={category}>
+                            {category}
+                        </option>
+                    ))}
+                </select>
+            </div>
+
+            <div className="grid grid-cols-1 mt-3">
+                {filteredCafes.map((item, index) => (
                     <div className="flex flex-row bg-gray-100 rounded-2xl shadow-lg shadow-gray-400 p-4 mb-4" key={index}>
                         <img
-                            className='w-full mt-4 p-2 h-48 object-cover  rounded-3xl'
+                            className='w-full mt-4 p-2 h-48 object-cover rounded-3xl'
                             src={item.image}
                             alt={item.name}
                         />
@@ -84,32 +108,30 @@ function Homepage() {
                             <h2 className="font-bold text-xl">{item.name}</h2>
                             <p>Category: {item.category}</p>
                             <p>Rating: {item.rating} stars</p>
-                           <p className="font-bold">Price: {selectedPrices[index]}</p>
+                            <p className="font-bold">Price: {selectedPrices[cafes.indexOf(item)]}</p>
                             <div className="mt-2">
                                 <label htmlFor={`size-select-${index}`} className="block text-sm font-medium font-bold text-gray-700">Size:</label>
                                 <select
                                     id={`size-select-${index}`}
                                     className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
-                                    value={selectedSizes[index]}
+                                    value={selectedSizes[cafes.indexOf(item)]}
                                     onChange={(e) => {
                                         const size = e.target.value;
-                                        handleSizeChange(index, size);
+                                        handleSizeChange(cafes.indexOf(item), size);
                                     }}
                                 >
                                     {item.sizes.map(size => (
-                                        <option key={size.size} value={size.size} className="w-full " >
-                                     
-                                       <p className='mr-4' > {size.size}</p>
+                                        <option key={size.size} value={size.size} className="w-full">
+                                            {`${size.size} - $${size.price}`}
                                         </option>
-                                    
                                     ))}
                                 </select>
                             </div>
                             <p className="mt-2">{item.description}</p>
                             <div className='flex items-center mt-4'>
-                                <button onClick={() => { increase(index); additemtocart(item, selectedSizes[index], selectedPrices[index]); }} className="h-10 w-10 bg-black text-white rounded-l-lg">+</button>
-                                <h1 className='font-bold text-2xl mx-4'>{quantities[index]}</h1>
-                                <button onClick={() => { decrease(index); removeitemtocart(item, selectedSizes[index], selectedPrices[index]); }} className="h-10 w-10 bg-black text-white rounded-r-lg">-</button>
+                                <button onClick={() => { increase(cafes.indexOf(item)); additemtocart(item, selectedSizes[cafes.indexOf(item)], selectedPrices[cafes.indexOf(item)]); }} className="h-10 w-10 bg-black text-white rounded-l-lg">+</button>
+                                <h1 className='font-bold text-2xl mx-4'>{quantities[cafes.indexOf(item)]}</h1>
+                                <button onClick={() => { decrease(cafes.indexOf(item)); removeitemtocart(item, selectedSizes[cafes.indexOf(item)], selectedPrices[cafes.indexOf(item)]); }} className="h-10 w-10 bg-black text-white rounded-r-lg">-</button>
                             </div>
                         </div>
                     </div>

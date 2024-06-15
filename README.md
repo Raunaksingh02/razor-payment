@@ -1,277 +1,4 @@
-# razor-payment
- for ordering system
-
- code for orderdetails main div
- 
- <div>
-            <div>
-                {payments.map(payment => (
-                    <div key={payment.paymentId} className='grid grid-cols-1 border-2 border-black m-4 p-4 text-center'>
-                        <h1>PaymentId: {payment.paymentId}</h1>
-                        <h1>Name: {payment.name}</h1>
-                        <h1>CustomerTable: {payment.customerTable}</h1>
-                        <h1>Amount: {payment.amount}</h1>
-                        <h1>Contact No: {payment.customerPhoneNo}</h1>
-                        <h1>Status:{payment.status}</h1>
-                        {payment.cartforpayment.map(item => (
-                            <div key={item.id} className='grid grid-col-1 border-2 border-black m-3 p-3'>
-                                <h2>Item Name: {item.name}</h2>
-                                <h3>Category: {item.category}</h3>
-                                <h3>Rating: {item.rating}</h3>
-                                <h4>Price: {item.price}</h4>
-                            </div>
-                        ))}
-                       <div clasName="flex justify-center ">
-                       <div>
-                       <button onClick={() => handleDelete(payment.paymentId)} className="mt-4 ">
-                           Delete
-                        </button>
-                        </div>
-                          <div>
-                          <button  onClick={()=>handlemove(payment._id)} className="mt-4">
-                             Update
-                        </button>
-                            </div>
-
-
-                        </div>
-                    </div>
-                ))}
-            </div>
-        </div>
- 
-
-
-
- Homepage componenet
-
- import React, { useState } from 'react';
-import cafes from './Cafedata';
-import { Link } from 'react-router-dom';
-import {  useDispatch ,useSelector} from 'react-redux';
-import cartlogo from "./images/cartlogo.png"
-import user from "./images/user.png";
-import { addToCart ,removeToCart} from './redux/cartSlice.js'
-
-
-
-function Homepage(props) {
-    // State to store quantities for each cafe item
-    const [type,settype]=useState("");
-
-    const [quantities, setQuantities] = useState(Array(cafes.length).fill(0));  
-    const cartfortotal = useSelector((state) => state.cart.cart);
-    const totalquantityforhome = cartfortotal.map((item)=>item.quantity).reduce((prev,curr) => prev + curr, 0);
-         
-    const dispatch = useDispatch();
-    const additemtocart=(item)=>{
-    dispatch(addToCart(item));
-     
-      console.log(item);
-     }
-
-     const removeitemtocart=(item)=>{
-        dispatch(removeToCart(item));
-       
-        console.log(item);
-       }
-
-  
-    // Function to increase quantity for a specific cafe item
-    const increase = (index) => {
-        const newQuantities = [...quantities];
-        newQuantities[index] += 1;
-        setQuantities(newQuantities);
-    }
-   
-
-  
-
-    // Function to decrease quantity for a specific cafe item
-    const decrease = (index) => {
-        if (quantities[index] > 0) {
-            const newQuantities = [...quantities];
-            newQuantities[index] -= 1;
-            setQuantities(newQuantities);
-        }
-    }
-
-
-   
-
-    return (
-        <div>
-          <div className='flex item-center justify-center  '>
-          <h1 className="text-3xl font-bold text-center m-2">Cafe Coffee</h1>
-        
-          <Link to="/bill">
-            <img
-            src={cartlogo}
-             className='h-12 w-12 '
-            />
-          </Link>
-          <h1 className="font-bold text-red text-2xl"> {totalquantityforhome}</h1>
-          <Link to="/Owner">
-            <img
-            src={user}
-             className='h-10 w-10 ml-8 mt-1'
-            />
-          </Link>
-          </div>
-           <div>
-           {cafes.map((item, index) => (
-               <div className='flex flex-row m-3 p-3' key={index} >
-                       <div>
-                       <img className='m-2' src={item.image} alt={item.name} />
-                       </div>
-                       <div className='ml-4'>   
-                
-                       <h2 className="font-bold">{item.name}</h2>
-                       <p>Category: {item.category}</p>
-                       <p>Rating: {item.rating} stars</p>
-                       <p>Price:{item.price}</p>
-                      
-                       <p>{item.description}</p>
-                       <div className='flex m-2'>
-                       <button onClick={() => { increase(index); additemtocart(item); }} className="h-10 w-10 bg-black text-white">+</button>
-
-                               <h1 className='font-bold text-2xl m-2 '>{quantities[index]}</h1>
-                           <button onClick={() => {decrease(index); removeitemtocart(item);}} className="h-10 w-10 bg-black text-white">-</button>
-                       </div>
-                   </div>
-               </div>
-           ))}
-           </div>
-          
-        </div>
-      
-    );
-}
-
-export default Homepage;
-
-
-
-// updated code of homepage.js for the size entry system
-
-import React, { useState } from 'react';
-import cafes from './Cafedata';
-import { Link } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import cartlogo from "./images/cartlogo.png";
-import user from "./images/user.png";
-import { addToCart, removeToCart } from './redux/cartSlice.js';
-
-function Homepage(props) {
-    // State to store quantities for each cafe item
-    const [quantities, setQuantities] = useState(Array(cafes.length).fill(0));
-    // State to store selected size for each cafe item
-    const [selectedSizes, setSelectedSizes] = useState(Array(cafes.length).fill('medium'));
-
-    const cartfortotal = useSelector((state) => state.cart.cart);
-    const totalquantityforhome = cartfortotal.map((item) => item.quantity).reduce((prev, curr) => prev + curr, 0);
-
-    const dispatch = useDispatch();
-
-    const additemtocart = (item, size) => {
-        const itemWithSize = { ...item, size, price: item.sizes.find(s => s.size === size).price };
-        dispatch(addToCart(itemWithSize));
-        console.log(itemWithSize);
-    }
-
-    const removeitemtocart = (item, size) => {
-        const itemWithSize = { ...item, size, price: item.sizes.find(s => s.size === size).price };
-        dispatch(removeToCart(itemWithSize));
-        console.log(itemWithSize);
-    }
-
-    // Function to increase quantity for a specific cafe item
-    const increase = (index) => {
-        const newQuantities = [...quantities];
-        newQuantities[index] += 1;
-        setQuantities(newQuantities);
-    }
-
-    // Function to decrease quantity for a specific cafe item
-    const decrease = (index) => {
-        if (quantities[index] > 0) {
-            const newQuantities = [...quantities];
-            newQuantities[index] -= 1;
-            setQuantities(newQuantities);
-        }
-    }
-
-    // Function to handle size selection change
-    const handleSizeChange = (index, size) => {
-        const newSelectedSizes = [...selectedSizes];
-        newSelectedSizes[index] = size;
-        setSelectedSizes(newSelectedSizes);
-    }
-
-    return (
-        <div>
-            <div className='flex item-center justify-center'>
-                <h1 className="text-3xl font-bold text-center m-2">Cafe Coffee</h1>
-
-                <Link to="/bill">
-                    <img
-                        src={cartlogo}
-                        className='h-12 w-12'
-                    />
-                </Link>
-                <h1 className="font-bold text-red text-2xl"> {totalquantityforhome}</h1>
-                <Link to="/Owner">
-                    <img
-                        src={user}
-                        className='h-10 w-10 ml-8 mt-1'
-                    />
-                </Link>
-            </div>
-            <div>
-                {cafes.map((item, index) => (
-                    <div className='flex flex-row m-3 p-3' key={index}>
-                        <div>
-                            <img className='m-2' src={item.image} alt={item.name} />
-                        </div>
-                        <div className='ml-4'>
-                            <h2 className="font-bold">{item.name}</h2>
-                            <p>Category: {item.category}</p>
-                            <p>Rating: {item.rating} stars</p>
-                            <p>Price: {item.sizes.find(s => s.size === selectedSizes[index]).price}</p>
-                            <p>{item.description}</p>
-                            <div className='flex m-2'>
-                                <label className='mr-2 font-bold '>Size:</label>
-                                <select
-                                    value={selectedSizes[index]}
-                                    onChange={(e) => handleSizeChange(index, e.target.value)}
-                                >
-                                    {item.sizes.map(size => (
-                                        <option key={size.size} value={size.size}>
-                                            {size.size}
-                                        </option>
-                                    ))}
-                                </select>
-                            </div>
-                            <div className='flex m-2'>
-                                <button onClick={() => { increase(index); additemtocart(item, selectedSizes[index]); }} className="h-10 w-10 bg-black text-white">+</button>
-                                <h1 className='font-bold text-2xl m-2'>{quantities[index]}</h1>
-                                <button onClick={() => { decrease(index); removeitemtocart(item, selectedSizes[index]); }} className="h-10 w-10 bg-black text-white">-</button>
-                            </div>
-                        </div>
-                    </div>
-                ))}
-            </div>
-        </div>
-    );
-}
-
-export default Homepage;
-
-
-
-proper working homepage code
-
-
+home page working page
 
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
@@ -285,17 +12,24 @@ function Homepage() {
     const [cafes, setCafes] = useState([]);
     const [quantities, setQuantities] = useState([]);
     const [selectedSizes, setSelectedSizes] = useState([]);
+    const [selectedPrices, setSelectedPrices] = useState([]);
+   
+    const dispatch = useDispatch();
 
+    
+
+   
     const cartfortotal = useSelector((state) => state.cart.cart);
     const totalquantityforhome = cartfortotal.map((item) => item.quantity).reduce((prev, curr) => prev + curr, 0);
-    const dispatch = useDispatch();
 
     useEffect(() => {
         axios.get('https://backendcafe-ceaj.onrender.com/getdish')
             .then(response => {
                 setCafes(response.data);
+                
                 setQuantities(Array(response.data.length).fill(0));
-                setSelectedSizes(Array(response.data.length).fill(response.data[0]?.sizes[0]?.size || ''));
+                setSelectedSizes(response.data.map(dish => dish.sizes[0]?.size || ''));
+                setSelectedPrices(response.data.map(dish => dish.sizes[0]?.price || 0));
             })
             .catch(error => console.error('Error fetching data:', error));
     }, []);
@@ -322,57 +56,68 @@ function Homepage() {
         }
     };
 
-    const handleSizeChange = (index, size, price) => {
+    const handleSizeChange = (index, size) => {
         const newSelectedSizes = [...selectedSizes];
+        const newSelectedPrices = [...selectedPrices];
         newSelectedSizes[index] = size;
+        newSelectedPrices[index] = cafes[index].sizes.find(s => s.size === size).price;
         setSelectedSizes(newSelectedSizes);
+        setSelectedPrices(newSelectedPrices);
     };
 
     return (
-        <div>
-            <div className='flex item-center justify-center'>
+        <div className="container mx-auto p-4">
+            <div className='flex items-center justify-between'>
                 <h1 className="text-3xl font-bold text-center m-2">Cafe Coffee</h1>
-                <Link to="/bill">
-                    <img src={cartlogo} className='h-12 w-12' />
-                </Link>
-                <h1 className="font-bold text-red text-2xl">{totalquantityforhome}</h1>
-                <Link to="/Owner">
-                    <img src={user} className='h-10 w-10 ml-8 mt-1' />
-                </Link>
+                <div className='flex items-center'>
+                    <Link to="/bill">
+                        <img src={cartlogo} className='h-12 w-12' alt="cart logo" />
+                    </Link>
+                    <h1 className="font-bold text-red-500 text-2xl ml-2">{totalquantityforhome}</h1>
+                    <Link to="/Owner">
+                        <img src={user} className='h-10 w-10 ml-8 mt-1' alt="user icon" />
+                    </Link>
+                </div>
             </div>
-            <div>
+           
+            <div className="grid grid-cols-1   mt-3 ">
                 {cafes.map((item, index) => (
-                    <div className='flex flex-row m-3 p-3' key={index}>  {/* flex flex-row */}
-                        <div>
-                            <img className='m-2' src={item.image} alt={item.name} />
-                        </div>
-                        <div className='ml-4'>
-                            <h2 className="font-bold">{item.name}</h2>
+                    <div className="flex flex-row bg-gray-100 rounded-2xl shadow-lg shadow-gray-400 p-4 mb-4" key={index}>
+                        <img
+                            className='w-full mt-4 p-2 h-48 object-cover  rounded-3xl'
+                            src={item.image}
+                            alt={item.name}
+                        />
+                        <div className='p-2'>
+                            <h2 className="font-bold text-xl">{item.name}</h2>
                             <p>Category: {item.category}</p>
                             <p>Rating: {item.rating} stars</p>
-                            <div>
-                                <label htmlFor={`size-select-${index}`}>Size:</label>
+                           <p className="font-bold">Price: {selectedPrices[index]}</p>
+                            <div className="mt-2">
+                                <label htmlFor={`size-select-${index}`} className="block text-sm font-medium font-bold text-gray-700">Size:</label>
                                 <select
                                     id={`size-select-${index}`}
+                                    className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
                                     value={selectedSizes[index]}
                                     onChange={(e) => {
                                         const size = e.target.value;
-                                        const price = item.sizes.find(s => s.size === size).price;
-                                        handleSizeChange(index, size, price);
+                                        handleSizeChange(index, size);
                                     }}
                                 >
                                     {item.sizes.map(size => (
-                                        <option key={size.size} value={size.size}>
-                                            {size.size} - ${size.price}
+                                        <option key={size.size} value={size.size} className="w-full " >
+                                     
+                                       <p className='mr-4' > {size.size}</p>
                                         </option>
+                                    
                                     ))}
                                 </select>
                             </div>
-                            <p>{item.description}</p>
-                            <div className='flex m-2'>
-                                <button onClick={() => { increase(index); additemtocart(item, selectedSizes[index], item.sizes.find(s => s.size === selectedSizes[index]).price); }} className="h-10 w-10 bg-black text-white">+</button>
-                                <h1 className='font-bold text-2xl m-2'>{quantities[index]}</h1>
-                                <button onClick={() => { decrease(index); removeitemtocart(item, selectedSizes[index], item.sizes.find(s => s.size === selectedSizes[index]).price); }} className="h-10 w-10 bg-black text-white">-</button>
+                            <p className="mt-2">{item.description}</p>
+                            <div className='flex items-center mt-4'>
+                                <button onClick={() => { increase(index); additemtocart(item, selectedSizes[index], selectedPrices[index]); }} className="h-10 w-10 bg-black text-white rounded-l-lg">+</button>
+                                <h1 className='font-bold text-2xl mx-4'>{quantities[index]}</h1>
+                                <button onClick={() => { decrease(index); removeitemtocart(item, selectedSizes[index], selectedPrices[index]); }} className="h-10 w-10 bg-black text-white rounded-r-lg">-</button>
                             </div>
                         </div>
                     </div>
