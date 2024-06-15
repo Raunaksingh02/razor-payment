@@ -79,8 +79,7 @@ function Homepage() {
                     </Link>
                 </div>
             </div>
-
-            <div className="flex  justify-end font-bold  text-xl items-center p-2 ">
+            <div className="flex justify-between font-bold  text-xl items-center p-2 ">
                 <label htmlFor="category-select" className="block   mr-7"> Select  Category :</label>
                 <select
                     id="category-select"
