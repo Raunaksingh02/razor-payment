@@ -43,9 +43,9 @@ function Owner(props) {
 
   return (
     <div>
-      <div className="bg-gray-100">
-        <div className="rounded shadow-md">
-          <h1 className="text-center text-2xl font-bold mb-6">Waiter Requests</h1>
+      <div >
+        <div>
+
           {requests.map((request, index) => (
             <div key={index} className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
               <strong className="font-bold">Incoming Call from {request.table}!</strong>
