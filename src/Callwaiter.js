@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import waiter from "./images/waiter.png";
+import backarrowlogo from "./images/backarrowlogo.png";
 import { io } from 'socket.io-client';
 
 const socket = io("https://backendcafe-ceaj.onrender.com");
@@ -34,9 +37,25 @@ export default function Callwaiter() {
   };
 
   return (
+    <div>
+              <div className='flex items-center'>
+         <Link to="/">
+         <img
+            src={backarrowlogo}
+            className='h-10 w-10 m-2'
+            />
+         </Link>
+          
+           </div>
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
-        <h1 className="text-center text-2xl font-bold mb-6">Call Service</h1>
+        
+        <img
+            src={waiter}
+            className='h-16 w-24 ml-24'
+            />
+        
+        <h1 className="text-center text-2xl font-extrabold mb-6 mt-4 mr-8">Call Service</h1>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label htmlFor="table" className="block text-gray-700 font-bold mb-2">Select Table</label>
@@ -82,6 +101,7 @@ export default function Callwaiter() {
           </div>
         </form>
       </div>
+    </div>
     </div>
   );
 }

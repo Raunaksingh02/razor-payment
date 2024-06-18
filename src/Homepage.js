@@ -72,15 +72,21 @@ function Homepage() {
                 <h1 className="text-3xl font-extrabold text-center m-2">Cafe Coffee </h1>
                 <div className='flex items-center'>
                 <Link to="/Call">
-                        <img src={dialicon} className='h-10 w-10' alt="cart logo" />
+                       <div className='flex items-center p-2  bg-gray-100 shadow-lg shadow-gray-400 hover:bg-gray-400 rounded-2xl mr-2'>
+                        <img
+                        src={dialicon}
+                        className='h-6 w-6 '
+                        />
+                        <p className='font-bold m-1 ' >  Waiter</p>
+                       </div>
                     </Link>
                     <Link to="/bill">
                         <img src={cartlogo} className='h-12 w-12' alt="cart logo" />
                     </Link>
                     <h1 className="font-bold text-red-500 text-2xl ml-2">{totalquantityforhome}</h1>
-                    <Link to="/Owner">
+               {/*     <Link to="/Owner">
                         <img src={user} className='h-10 w-10 ml-4 mt-1' alt="user icon" />
-                    </Link>
+                    </Link> */}
 
                 </div>
             </div>
@@ -88,7 +94,7 @@ function Homepage() {
                 <label htmlFor="category-select" className="block   mr-7"> Select  Category :</label>
                 <select
                     id="category-select"
-                    className="mt-1 block pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                    className="mt-1 block pl-3 pr-10 py-2 bg-gray-100 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
                     value={selectedCategory}
                     onChange={(e) => setSelectedCategory(e.target.value)}
                 >
