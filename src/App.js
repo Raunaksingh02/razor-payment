@@ -13,6 +13,8 @@ import Updatepart from './Updatepart.js';
 import Invoicecompo from './Invoicecompo.js';
 import { useHistory } from 'react-router-dom';
 import Dishmanage from './Dishmanage.js';
+import Callwaiter from './Callwaiter.js';
+import Waiterpage from './Waiterpage.js';
 
 const PaymentComponent = () => {
  
@@ -23,6 +25,8 @@ const PaymentComponent = () => {
         <Route path="/Owner" element={<Owner/>} />
         <Route path="/Invoice" element={<Invoicecompo/>} />
         <Route path="/Order" element={<OrderDetails/>} />
+        <Route path="/Call" element={<Callwaiter/>} />
+        <Route path="/Waiter" element={<Waiterpage/>} />
         <Route  path="/Admin " element={<Admin />} />
         <Route  path="/Dishmanage" element={<Dishmanage />} />
         <Route path="/bill" element={<Billpart  />} />

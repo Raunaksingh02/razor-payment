@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import cartlogo from "./images/cartlogo.png";
+import dialicon from './images/dialicon.png';
 import user from "./images/user.png";
 import { addToCart, removeToCart } from './redux/cartSlice.js';
 
@@ -68,15 +69,19 @@ function Homepage() {
     return (
         <div className="container mx-auto p-4">
             <div className='flex items-center justify-between'>
-                <h1 className="text-3xl font-extrabold text-center m-2">Cafe Coffee</h1>
+                <h1 className="text-3xl font-extrabold text-center m-2">Cafe Coffee </h1>
                 <div className='flex items-center'>
+                <Link to="/Call">
+                        <img src={dialicon} className='h-10 w-10' alt="cart logo" />
+                    </Link>
                     <Link to="/bill">
                         <img src={cartlogo} className='h-12 w-12' alt="cart logo" />
                     </Link>
                     <h1 className="font-bold text-red-500 text-2xl ml-2">{totalquantityforhome}</h1>
                     <Link to="/Owner">
-                        <img src={user} className='h-10 w-10 ml-8 mt-1' alt="user icon" />
+                        <img src={user} className='h-10 w-10 ml-4 mt-1' alt="user icon" />
                     </Link>
+
                 </div>
             </div>
             <div className="flex justify-between font-bold  text-xl items-center p-2 ">
@@ -136,7 +141,7 @@ function Homepage() {
                     </div>
                 ))}
             </div>
-        </div>
+                </div>
     );
 }
 

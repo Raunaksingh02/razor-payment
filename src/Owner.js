@@ -1,11 +1,50 @@
-import React from 'react';
+import React,{useEffect,useState} from 'react';
 import { Link } from 'react-router-dom';
 import backarrowlogo from "./images/backarrowlogo.png"
+import { io } from 'socket.io-client';
 
+const socket = io("http://localhost:1000");
 
 function Owner(props) {   
+   const [requests, setRequests] = useState([]);
+
+   useEffect(() => {
+     socket.on('Request', (data) => {
+       const newRequest = { ...data, time: new Date().toLocaleTimeString() };
+       setRequests(prevRequests => [...prevRequests, newRequest]);
+       playAlertSound();
+     });
+   }, []);
+ 
+   const playAlertSound = () => {
+     const audio = new Audio('/alertsound.mp3');
+     audio.play();
+   };
+ 
+   const removeRequest = (index) => {
+     setRequests(requests.filter((_, i) => i !== index));
+   };
+    
     return (
-        <div>
+      <div>
+      <div className=" bg-gray-100">
+      <div className=" rounded shadow-md ">
+        <h1 className="text-center text-2xl font-bold mb-6"></h1>
+        {requests.map((request, index) => (
+          <div key={index} className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+            <strong className="font-bold">Incoming Call from  {request.table}!</strong>
+            <span className="block sm:inline"> {request.query} at {request.time}</span>
+            <button
+              onClick={() => removeRequest(index)}
+              className="absolute top-0 bottom-0 right-0 px-4 py-3"
+            >
+              <span className="text-2xl">&times;</span>
+            </button>
+          </div>
+        ))}
+      </div>
+    </div>
+        <div>   
            <div className='flex items-center'>
          <Link to="/">
          <img
@@ -27,9 +66,10 @@ function Owner(props) {
              </div>
              </Link>
              <div className='m-3 p-3 border-2 border-black h-56 rounded-xl bg-black '>
-                <h1 className='mt-14 text-center text-4xl font-mono font-bold text-white'>Shop Details</h1>
+                <h1 className='mt-14 text-center text-4xl font-mono font-bold text-white'>Waiter Request</h1>
              </div>
               </div>
+        </div>
         </div>
     );
 }
