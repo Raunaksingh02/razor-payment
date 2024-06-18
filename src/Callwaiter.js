@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { io } from 'socket.io-client';
 
-const socket = io("http://localhost:1000");
+const socket = io("https://backendcafe-ceaj.onrender.com");
 
 export default function Callwaiter() {
   const [table, setTable] = useState('');

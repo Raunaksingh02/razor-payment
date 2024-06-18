@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import backarrowlogo from "./images/backarrowlogo.png"
 import { io } from 'socket.io-client';
 
-const socket = io(["https://backendcafe-ceaj.onrender.com","http://locahost:3000"]);
+const socket = io("https://backendcafe-ceaj.onrender.com");
 
 function Owner(props) {   
    const [requests, setRequests] = useState([]);
@@ -65,9 +65,12 @@ function Owner(props) {
                 <h1 className='mt-14 text-center text-4xl font-mono font-bold text-white'>Dish Management</h1> 
              </div>
              </Link>
-             <div className='m-3 p-3 border-2 border-black h-56 rounded-xl bg-black '>
+             <Link to="/Waiter">            
+              <div className='m-3 p-3 border-2 border-black h-56 rounded-xl bg-black '>
                 <h1 className='mt-14 text-center text-4xl font-mono font-bold text-white'>Waiter Request</h1>
              </div>
+             </Link>
+
               </div>
         </div>
         </div>
