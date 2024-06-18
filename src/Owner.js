@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import backarrowlogo from "./images/backarrowlogo.png"
 import { io } from 'socket.io-client';
 
-const socket = io("http://localhost:1000");
+const socket = io(["https://backendcafe-ceaj.onrender.com","http://locahost:3000"]);
 
 function Owner(props) {   
    const [requests, setRequests] = useState([]);
