@@ -131,7 +131,8 @@ const PaymentDetails = () => {
                     <h1 className="text-lg">Customer Table: {payment.customerTable}</h1>
                     <h1 className="text-lg">Amount: {payment.amount}</h1>
                     <h1 className="text-lg">Contact No: {payment.customerPhoneNo}</h1>
-                    <h1 className="text-lg">Contact No: {payment.date}</h1>
+                    <h1 className="text-lg">Date: {new Date(payment.date).toLocaleDateString()}</h1>
+                    <h1 className="text-lg">Time: {new Date(payment.date).toLocaleTimeString()}</h1>
                     
                     <h1 className={`text-lg ${payment.status === 'pending' ? 'text-red-400' : 'text-green-500'}`}>
                         Status: {payment.status}
