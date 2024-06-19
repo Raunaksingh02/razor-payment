@@ -127,10 +127,12 @@ const PaymentDetails = () => {
             {payments.map(payment => (
                 <div key={payment.paymentId} className='border-2 border-gray-300 rounded-lg shadow-lg m-4 p-6'>
                     <h1 className="text-xl font-semibold">PaymentId: {payment.paymentId}</h1>
-                    <h1 className="text-lg">Name: {payment.name}</h1>
+                    <h1 className="text-lg font-semibold">Name: {payment.name}</h1>
                     <h1 className="text-lg">Customer Table: {payment.customerTable}</h1>
                     <h1 className="text-lg">Amount: {payment.amount}</h1>
                     <h1 className="text-lg">Contact No: {payment.customerPhoneNo}</h1>
+                    <h1 className="text-lg">Contact No: {payment.date}</h1>
+                    
                     <h1 className={`text-lg ${payment.status === 'pending' ? 'text-red-400' : 'text-green-500'}`}>
                         Status: {payment.status}
                     </h1>
