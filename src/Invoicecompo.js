@@ -1,6 +1,5 @@
-
 import React, { useContext, useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import {  useSelector } from 'react-redux';
 import html2canvas from "html2canvas";
 import jsPDF from 'jspdf';
 import { CustomerContext } from './CustomerContext.js'; // Import your context here
