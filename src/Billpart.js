@@ -179,8 +179,11 @@ const handlePhoneNo=(event)=>{
                 </div>
             </div>
              {
-            cartforpayment.map((item, index) => (
-                <div className='flex flex-row m-3 ' key={index}>
+
+             
+            cartforpayment.map((item, index)=> (
+              
+                <div className='flex flex-row m-4 ml-3 p-4 bg-gray-200 shadow-xl shadow-gray-500 rounded-2xl' key={index}>
                    <div>
                    <img
                         src={item.image}
@@ -197,9 +200,12 @@ const handlePhoneNo=(event)=>{
                     <p>Quantity: {item.quantity}</p>
                     </div>
                  </div>
-                ))   
+                  
+                ))
+                 
               }
-                 <div>
+              
+                 <div className='mt-4 '>
                     <h1 className='font-bold text-2xl text-center'>Total Amount ={grandTotalforpayment}</h1>
                     <button 
                      onClick={openModal}

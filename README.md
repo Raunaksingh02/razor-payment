@@ -214,6 +214,170 @@ function Owner(props) {
 export default Owner;
 
 
+homepage div of dish
+
+<div className="grid grid-cols-1 mt-3 ">
+                {filteredCafes.map((item, index) => (
+                    <div className="flex flex-row bg-gray-100 rounded-2xl shadow-lg shadow-gray-400 p-4 mb-4" key={index}>
+                        <img
+                            className='w-full mt-4 p-2 h-48 object-cover rounded-3xl'
+                            src={item.image}
+                            alt={item.name}
+                        />
+                        <div className='p-2'>
+                            <h2 className="font-bold text-xl">{item.name}</h2>
+                            <p>Category: {item.category}</p>
+                            <p>Rating: {item.rating} stars</p>
+                            <p className="font-bold">Price: {selectedPrices[cafes.indexOf(item)]}</p>
+                            <div className="mt-2">
+                                <label htmlFor={`size-select-${index}`} className="block text-sm font-medium font-bold text-gray-700">Size:</label>
+                                <select
+                                    id={`size-select-${index}`}
+                                    className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                                    value={selectedSizes[cafes.indexOf(item)]}
+                                    onChange={(e) => {
+                                        const size = e.target.value;
+                                        handleSizeChange(cafes.indexOf(item), size);
+                                    }}
+                                >
+                                    {item.sizes.map(size => (
+                                        <option key={size.size} value={size.size} className="w-full">
+                                            {`${size.size} - $${size.price}`}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                            <p className="mt-2">{item.description}</p>
+                            <div className='flex items-center mt-4'>
+                                <button onClick={() => { increase(cafes.indexOf(item)); additemtocart(item, selectedSizes[cafes.indexOf(item)], selectedPrices[cafes.indexOf(item)]); }} className="h-10 w-10 bg-black text-white rounded-l-lg">+</button>
+                                <h1 className='font-bold text-2xl mx-4'>{quantities[cafes.indexOf(item)]}</h1>
+                                <button onClick={() => { decrease(cafes.indexOf(item)); removeitemtocart(item, selectedSizes[cafes.indexOf(item)], selectedPrices[cafes.indexOf(item)]); }} className="h-10 w-10 bg-black text-white rounded-r-lg">-</button>
+                            </div>
+                        </div>
+                    </div>
+                ))}
+            </div>
+                </div>
+
+
+
+invoice working componet
+
+
+import React, { useContext ,useRef} from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import html2canvas from "html2canvas";
+import jsPDF from 'jspdf';
+import {CustomerContext} from './CustomerContext.js'; // Import your context here
+
+function Invoicecompo() {
+
+    const pdfRef = useRef();
+
+    const downloadPDF = () => {
+        const input = pdfRef.current;
+        html2canvas(input).then((canvas) => {
+            const imgData = canvas.toDataURL('image/png');
+            const pdf = new jsPDF('p', 'mm', 'a4', true);
+            const pdfWidth = pdf.internal.pageSize.getWidth();
+            const pdfHeight = pdf.internal.pageSize.getHeight();
+            let imgWidth = canvas.width;
+            let imgHeight = canvas.height;
+    
+            let imgX = 0;
+            let imgY = 0;
+            let imgRatio = 1;
+    
+            if (imgWidth > pdfWidth || imgHeight > pdfHeight) {
+                imgRatio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
+              imgWidth = imgWidth*imgRatio;
+               imgHeight = imgHeight*imgRatio;
+            }
+    
+            imgX = (pdfWidth - imgWidth) / 2;
+            imgY = (pdfHeight - imgHeight) / 2;
+    
+            pdf.addImage(imgData, 'PNG', imgX, imgY, imgWidth, imgHeight);
+            pdf.save('invoice.pdf');
+        });
+    }
+    
+    
+  
+
+    const { customerName, customerTable, customerPhone } = useContext(CustomerContext);
+   
+    const cartforinvoice = useSelector((state) => state.cart.cart);
+    const totalforinvoice = cartforinvoice.map((item) => item.price * item.quantity).reduce((prev, curr) => prev + curr, 0);
+    const grandTotalforinvoice = totalforinvoice + 50; // Assuming 50 is some additional charge (like tax or delivery fee)
+   
+    return (
+        <div>
+        <div 
+        ref={pdfRef}
+        className='max-w-md mx-auto bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4'>
+            <div
+            className='text-center mb-4'>
+                <h1 className='text-2xl font-extrabold'>Invoice</h1>
+                <h1 className='text-2xl font-bold mt-3 '>Cafe House</h1>
+            </div>
+            <div className='mb-4'>
+                <p><strong>Customer Name:</strong> {customerName}</p>
+            <p><strong>Customer Table:</strong> {customerTable ? customerTable : 'Table 1'}</p>
+                <p><strong>Customer Phone:</strong> {customerPhone}</p>
+            </div>
+            <table className='w-full mb-4'>
+                <thead>
+                    <tr>
+                        <th className='border px-4 py-2'>Item</th>
+                        <th className='border px-4 py-2'>Price</th>
+                        <th className='border px-4 py-2'>Quantity</th>
+                        <th className='border px-4 py-2'>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {cartforinvoice.map((item, index) => (
+                        <tr key={index}>
+                            <td className='border px-4 py-2'>{item.name}</td>
+                            <td className='border px-4 py-2'>${item.price}</td>
+                            <td className='border px-4 py-2'>{item.quantity}</td>
+                            <td className='border px-4 py-2'>${(item.price * item.quantity)}</td>
+                        </tr>
+                    ))}
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colSpan='3' className='border px-4 py-2 text-right'>Subtotal:</td>
+                        <td className='border px-4 py-2'>${totalforinvoice}</td>
+                    </tr>
+                    <tr>
+                        <td colSpan='3' className='border px-4 py-2 text-right'>Additional Charges:</td>
+                        <td className='border px-4 py-2'>50.00</td>
+                    </tr>
+                    <tr>
+                        <td colSpan='3' className='border px-4 py-2 text-right font-bold'>Grand Total:</td>
+                        <td className='border px-4 py-2 font-bold'>{grandTotalforinvoice}</td>
+                    </tr>
+                   
+                </tfoot>
+            </table>
+        </div>
+       <div>
+<button 
+ onClick={downloadPDF} 
+ className='h-16 w-28 p-3 m-3 ml-24 pb-1 border-2 border-black bg-black text-white rounded-xl font-bold  '>
+ Download Bill
+</button>
+    </div>
+     </div>
+
+    );
+}
+
+export default Invoicecompo;
+
+
+
 
 
 
