@@ -5,8 +5,8 @@ import 'react-datepicker/dist/react-datepicker.css';
 import './App.css';
 
 export default function Profitpage() {
-  const [dailyProfit, setDailyProfit] = useState(0);
-  const [monthlyProfit, setMonthlyProfit] = useState(0);
+  const [dailyProfit, setDailyProfit] = useState(null);
+  const [monthlyProfit, setMonthlyProfit] = useState(null);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedMonth, setSelectedMonth] = useState(new Date());
 
@@ -51,7 +51,7 @@ export default function Profitpage() {
             dateFormat="yyyy/MM/dd"
             className="block w-full mt-1 bg-white border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
           />
-          <p className="text-lg text-gray-600 mt-4">Daily Profit: ${dailyProfit.toFixed(2)}</p>
+          <p className="text-lg text-gray-600 mt-4">Daily Profit: ${dailyProfit !== null ? dailyProfit.toFixed(2) : 'Loading...'}</p>
         </div>
         <div className="bg-white shadow-md rounded-lg p-6">
           <h2 className="text-xl font-semibold text-gray-800 mb-2">Select Month for Monthly Profit</h2>
@@ -62,7 +62,7 @@ export default function Profitpage() {
             showMonthYearPicker
             className="block w-full mt-1 bg-white border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
           />
-          <p className="text-lg text-gray-600 mt-4">Monthly Profit: ${monthlyProfit.toFixed(2)}</p>
+          <p className="text-lg text-gray-600 mt-4">Monthly Profit: ${monthlyProfit !== null ? monthlyProfit.toFixed(2) : 'Loading...'}</p>
         </div>
       </main>
       <footer className="bg-gray-800 text-white p-4 text-center">
@@ -71,24 +71,6 @@ export default function Profitpage() {
     </div>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
