@@ -64,18 +64,23 @@ function Owner(props) {
         </div>
         <div className="grid grid-cols-1">
           <Link to="/Order">
-            <div className='m-3 p-3 border-2 border-black h-56 rounded-xl bg-black'>
+            <div className='m-3 p-3 border-2 border-black h-56 rounded-2xl bg-black'>
               <h1 className='mt-14 text-center text-4xl font-mono font-bold text-white'>Order Details</h1>
             </div>
           </Link>
           <Link to="/Dishmanage">
-            <div className='m-3 p-3 border-2 border-black h-56 rounded-xl bg-black'>
+            <div className='m-3 p-3 border-2 border-black h-56 rounded-2xl bg-black'>
               <h1 className='mt-14 text-center text-4xl font-mono font-bold text-white'>Dish Management</h1>
             </div>
           </Link>
           <Link to="/Waiter">
-            <div className='m-3 p-3 border-2 border-black h-56 rounded-xl bg-black'>
-              <h1 className='mt-14 text-center text-4xl font-mono font-bold text-white'>Waiter Request</h1>
+            <div className='m-3 p-3 border-2 border-black h-56 rounded-2xl bg-black'>
+              <h1 className='mt-14 text-center text-4xl font-mono font-bold text-white'>Cost Price </h1>
+            </div>
+          </Link>
+          <Link to="/Profit">
+            <div className='m-3 p-3 border-2 border-black h-56 rounded-2xl bg-black'>
+              <h1 className='mt-14 text-center text-4xl font-mono font-bold text-white'>Profit Analysis </h1>
             </div>
           </Link>
         </div>

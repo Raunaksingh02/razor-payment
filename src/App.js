@@ -1,20 +1,18 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import axios from 'axios';
+import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Homepage from './Homepage'; // Make sure these paths are correct
 import Billpart from './Billpart'; // Make sure these paths are correct
-import { CustomerContext } from './CustomerContext';
-import { Link,useNavigate } from 'react-router-dom';
+
 import Admin from './Admin.js';
 import Owner from './Owner.js'
 import OrderDetails from './OrderDetails.js';
 import Updatepart from './Updatepart.js';
 import Invoicecompo from './Invoicecompo.js';
-import { useHistory } from 'react-router-dom';
+
 import Dishmanage from './Dishmanage.js';
 import Callwaiter from './Callwaiter.js';
 import Waiterpage from './Waiterpage.js';
+import Profitpage from './Profitpage.js';
 
 const PaymentComponent = () => {
  
@@ -27,6 +25,7 @@ const PaymentComponent = () => {
         <Route path="/Order" element={<OrderDetails/>} />
         <Route path="/Call" element={<Callwaiter/>} />
         <Route path="/Waiter" element={<Waiterpage/>} />
+        <Route path="/Profit" element={<Profitpage/>} />
         <Route  path="/Admin " element={<Admin />} />
         <Route  path="/Dishmanage" element={<Dishmanage />} />
         <Route path="/bill" element={<Billpart  />} />

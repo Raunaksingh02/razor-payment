@@ -108,7 +108,7 @@ function Homepage() {
            
             <div className="grid grid-cols-1 mt-3  ">
                 {filteredCafes.map((item, index) => (
-                    <div className="flex flex-row bg-gray-100 rounded-2xl shadow-lg shadow-gray-400 p-4 mb-4 hover:bg-gray-200" key={index}>
+                    <div className="flex flex-row bg-gray-100 rounded-2xl shadow-lg shadow-gray-400 p-4 mb-4 hover:bg-gray-400" key={index}>
                         <img
                             className='w-full mt-4 p-2 h-48 object-cover rounded-3xl'
                             src={item.image}
