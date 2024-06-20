@@ -12,6 +12,7 @@ function Homepage() {
     const [quantities, setQuantities] = useState([]);
     const [selectedSizes, setSelectedSizes] = useState([]);
     const [selectedPrices, setSelectedPrices] = useState([]);
+    const [selectedCostPrices, setSelectedCostPrices] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState('All');
 
     const dispatch = useDispatch();
@@ -25,12 +26,13 @@ function Homepage() {
                 setQuantities(Array(response.data.length).fill(0));
                 setSelectedSizes(response.data.map(dish => dish.sizes[0]?.size || ''));
                 setSelectedPrices(response.data.map(dish => dish.sizes[0]?.price || 0));
+                setSelectedCostPrices(response.data.map(dish => dish.sizes[0]?.costPrice || 0));
             })
             .catch(error => console.error('Error fetching data:', error));
     }, []);
 
-    const additemtocart = (item, size, price) => {
-        dispatch(addToCart({ ...item, size, price }));
+    const additemtocart = (item, size, price, costPrice) => {
+        dispatch(addToCart({ ...item, size, price, costPrice }));
     };
 
     const removeitemtocart = (item, size, price) => {
@@ -54,10 +56,14 @@ function Homepage() {
     const handleSizeChange = (index, size) => {
         const newSelectedSizes = [...selectedSizes];
         const newSelectedPrices = [...selectedPrices];
+        const newSelectedCostPrices = [...selectedCostPrices];
         newSelectedSizes[index] = size;
-        newSelectedPrices[index] = cafes[index].sizes.find(s => s.size === size).price;
+        const selectedSizeIndex = cafes[index].sizes.findIndex(s => s.size === size);
+        newSelectedPrices[index] = cafes[index].sizes[selectedSizeIndex].price;
+        newSelectedCostPrices[index] = cafes[index].sizes[selectedSizeIndex].costPrice;
         setSelectedSizes(newSelectedSizes);
         setSelectedPrices(newSelectedPrices);
+        setSelectedCostPrices(newSelectedCostPrices);
     };
 
     const categories = ['All', ...new Set(cafes.map(cafe => cafe.category))];
@@ -71,23 +77,19 @@ function Homepage() {
             <div className='flex items-center justify-between'>
                 <h1 className="text-3xl font-extrabold text-center m-2">Cafe Coffee </h1>
                 <div className='flex items-center'>
-                <Link to="/Call">
-                       <div className='flex items-center p-2  bg-gray-100 shadow-lg shadow-gray-400 hover:bg-gray-400 rounded-2xl mr-2'>
-                        <img
-                        src={dialicon}
-                        className='h-6 w-6 '
-                        />
-                        <p className='font-bold m-1 ' >  Waiter</p>
-                       </div>
+                    <Link to="/Call">
+                        <div className='flex items-center p-2  bg-gray-100 shadow-lg shadow-gray-400 hover:bg-gray-400 rounded-2xl mr-2'>
+                            <img
+                                src={dialicon}
+                                className='h-6 w-6 '
+                            />
+                            <p className='font-bold m-1 ' >  Waiter</p>
+                        </div>
                     </Link>
                     <Link to="/bill">
                         <img src={cartlogo} className='h-12 w-12' alt="cart logo" />
                     </Link>
                     <h1 className="font-bold text-red-500 text-2xl ml-2">{totalquantityforhome}</h1>
-               {/*     <Link to="/Owner">
-                        <img src={user} className='h-10 w-10 ml-4 mt-1' alt="user icon" />
-                    </Link> */}
-
                 </div>
             </div>
             <div className="flex justify-between font-bold  text-xl items-center p-2 ">
@@ -105,7 +107,7 @@ function Homepage() {
                     ))}
                 </select>
             </div>
-           
+
             <div className="grid grid-cols-1 mt-3  ">
                 {filteredCafes.map((item, index) => (
                     <div className="flex flex-row bg-gray-100 rounded-2xl shadow-lg shadow-gray-400 p-4 mb-4 hover:bg-gray-400" key={index}>
@@ -139,7 +141,7 @@ function Homepage() {
                             </div>
                             <p className="mt-2">{item.description}</p>
                             <div className='flex items-center mt-4'>
-                                <button onClick={() => { increase(cafes.indexOf(item)); additemtocart(item, selectedSizes[cafes.indexOf(item)], selectedPrices[cafes.indexOf(item)]); }} className="h-10 w-10 bg-black text-white rounded-l-lg">+</button>
+                                <button onClick={() => { increase(cafes.indexOf(item)); additemtocart(item, selectedSizes[cafes.indexOf(item)], selectedPrices[cafes.indexOf(item)], selectedCostPrices[cafes.indexOf(item)]); }} className="h-10 w-10 bg-black text-white rounded-l-lg">+</button>
                                 <h1 className='font-bold text-2xl mx-4'>{quantities[cafes.indexOf(item)]}</h1>
                                 <button onClick={() => { decrease(cafes.indexOf(item)); removeitemtocart(item, selectedSizes[cafes.indexOf(item)], selectedPrices[cafes.indexOf(item)]); }} className="h-10 w-10 bg-black text-white rounded-r-lg">-</button>
                             </div>
@@ -147,8 +149,8 @@ function Homepage() {
                     </div>
                 ))}
             </div>
-                </div>
-   
+        </div>
+
     );
 }
 

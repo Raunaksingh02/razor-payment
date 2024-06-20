@@ -200,12 +200,9 @@ const handlePhoneNo=(event)=>{
                     <p>Quantity: {item.quantity}</p>
                     </div>
                  </div>
-                  
-                ))
-                 
-              }
-              
-                 <div className='mt-4 '>
+                  ))
+                  }
+                    <div className='mt-4 '>
                     <h1 className='font-bold text-2xl text-center'>Total Amount ={grandTotalforpayment}</h1>
                     <button 
                      onClick={openModal}
@@ -272,24 +269,20 @@ const handlePhoneNo=(event)=>{
         </select>
         </div>
         </div>
-
         <div>
           <button
           onClick={loadRazorpay}
           className='h-12 w-30 bg-black font-bold text-xl p-3 ml-16 mt-5 text-white rounded-xl '>
             Pay Now
           </button  >
-         
         </div>
-         
     </div>
      </div>
      {/*   <button onClick={loadRazorpay}>Pay Now</button>
          */}
       </Modal>
-     
     </div>
-               </div>
+    </div>
     );
 }
 
