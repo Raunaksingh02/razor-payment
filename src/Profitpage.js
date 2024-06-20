@@ -15,6 +15,7 @@ export default function Profitpage() {
       const response = await axios.get('https://backendcafe-ceaj.onrender.com/profit/daily', {
         params: { date: date.toISOString() }
       });
+      console.log('Daily Profit Response:', response.data);
       setDailyProfit(response.data.dailyProfit);
     } catch (error) {
       console.error('Error fetching daily profit:', error);
@@ -26,6 +27,7 @@ export default function Profitpage() {
       const response = await axios.get('https://backendcafe-ceaj.onrender.com/profit/monthly', {
         params: { date: date.toISOString() }
       });
+      console.log('Monthly Profit Response:', response.data);
       setMonthlyProfit(response.data.monthlyProfit);
     } catch (error) {
       console.error('Error fetching monthly profit:', error);
@@ -71,8 +73,3 @@ export default function Profitpage() {
     </div>
   );
 }
-
-
-
-
-
