@@ -1,66 +1,89 @@
 import React, { useState, useEffect } from 'react';
-import { io } from 'socket.io-client';
+import axios from 'axios';
+import './App.css';
 
-const socket = io("https://backendcafe-ceaj.onrender.com/");
-
-export default function Waiterpage() {
-  const [requests, setRequests] = useState([]);
-  const [soundEnabled, setSoundEnabled] = useState(false);
+function Waiterpage() {
+  const [dishes, setDishes] = useState([]);
+  const [selectedDish, setSelectedDish] = useState(null);
+  const [costPrices, setCostPrices] = useState([]);
 
   useEffect(() => {
-    socket.on('Request', (data) => {
-      console.log("Received data:", data);
-      const newRequest = { ...data, time: new Date().toLocaleTimeString() };
-      setRequests(prevRequests => [...prevRequests, newRequest]);
-      if (soundEnabled) {
-        playAlertSound();
+    const fetchDishes = async () => {
+      try {
+        const response = await axios.get('https://backendcafe-ceaj.onrender.com/getdish');
+        setDishes(response.data);
+      } catch (error) {
+        console.error('Error fetching dishes:', error);
       }
-    });
-  }, [soundEnabled]);
+    };
 
-  const playAlertSound = () => {
-    const audio = new Audio('/alertsound.mp3'); // Make sure to have an alertsound.mp3 file in your public directory
-    audio.play();
+    fetchDishes();
+  }, []);
+
+  const handleDishSelect = dishId => {
+    const dish = dishes.find(d => d._id === dishId);
+    setSelectedDish(dish);
+    setCostPrices(dish.sizes.map(size => ({ size: size.size, costPrice: size.costPrice })));
   };
 
-  const enableSound = () => {
-    setSoundEnabled(true);
-    const audio = new Audio('/silent.mp3'); // A silent.mp3 file should be in your public directory
-    audio.play();
-    
+  const handleCostPriceChange = (size, newCostPrice) => {
+    setCostPrices(prev =>
+      prev.map(cp => (cp.size === size ? { ...cp, costPrice: newCostPrice } : cp))
+    );
+  };
+
+  const handleSubmit = async () => {
+    try {
+      await axios.put(`https://backendcafe-ceaj.onrender.com/${selectedDish._id}/size`, {
+        sizes: costPrices
+      });
+      alert('Cost prices updated successfully');
+    } catch (error) {
+      console.error('Error updating cost prices:', error);
+    }
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-4">
-      <div className="bg-white p-8 rounded shadow-md max-w-4xl mx-auto">
-        <h1 className="text-center text-2xl font-bold mb-6">Waiter Requests</h1>
-        <button
-          onClick={enableSound}
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4"
-        >
-          Enable Sound Alerts
-        </button>
-        <div className="overflow-x-auto">
-          <table className="min-w-full bg-white border border-gray-200">
-            <thead>
-              <tr>
-                <th className="px-4 py-2 border-b">Table</th>
-                <th className="px-4 py-2 border-b">Query</th>
-                <th className="px-4 py-2 border-b">Time</th>
-              </tr>
-            </thead>
-            <tbody>
-              {requests.map((request, index) => (
-                <tr key={index} className="hover:bg-gray-100">
-                  <td className="px-4 py-2 border-b">{request.table}</td>
-                  <td className="px-4 py-2 border-b">{request.query}</td>
-                  <td className="px-4 py-2 border-b">{request.time}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
+    <div className="App">
+      <header>
+        <h1>Update Cost Prices</h1>
+      </header>
+      <main>
+        <label>
+          Select Dish:
+          <select onChange={e => handleDishSelect(e.target.value)}>
+            <option value="">Select a dish</option>
+            {dishes.map(dish => (
+              <option key={dish._id} value={dish._id}>
+                {dish.name}
+              </option>
+            ))}
+          </select>
+        </label>
+        {selectedDish && (
+          <div>
+            <h2>{selectedDish.name}</h2>
+            {selectedDish.sizes.map(size => (
+              <div key={size.size} className="size-entry">
+                <label>
+                  {size.size}:
+                  <input
+                    type="number"
+                    value={costPrices.find(cp => cp.size === size.size).costPrice}
+                    onChange={e => handleCostPriceChange(size.size, e.target.value)}
+                  />
+                </label>
+              </div>
+            ))}
+            <button onClick={handleSubmit}>Update Cost Prices</button>
+          </div>
+        )}
+      </main>
+      <footer>
+        <p>© 2024 Professional Billing Page. All rights reserved.</p>
+      </footer>
     </div>
   );
 }
+
+export default Waiterpage;

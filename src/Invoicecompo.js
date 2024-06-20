@@ -37,6 +37,8 @@ function Invoicecompo() {
     }
 
    
+   
+  
 
     const { customerName, customerTable, customerPhone } = useContext(CustomerContext);
 

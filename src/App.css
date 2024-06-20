@@ -1,6 +1,29 @@
 .App {
   text-align: center;
 }
+.App {
+  text-align: center;
+}
+
+header, footer {
+  background-color: #282c34;
+  padding: 20px;
+  color: white;
+}
+
+main {
+  padding: 20px;
+}
+
+.size-entry {
+  margin: 10px 0;
+}
+
+button {
+  padding: 10px 20px;
+  font-size: 16px;
+}
+
 
 .App-logo {
   height: 40vmin;
