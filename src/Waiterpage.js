@@ -34,7 +34,7 @@ function Waiterpage() {
 
   const handleSubmit = async () => {
     try {
-      await axios.put(`https://backendcafe-ceaj.onrender.com/${selectedDish._id}/size`, {
+      await axios.put(`https://backendcafe-ceaj.onrender.com/getdish/${selectedDish._id}/size`, {
         sizes: costPrices
       });
       alert('Cost prices updated successfully');
