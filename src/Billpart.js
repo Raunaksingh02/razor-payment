@@ -109,13 +109,35 @@ function Billpart() {
          amount: grandTotalforpayment, 
          customerTable:customerTable,
          customerPhoneNo:customerPhone,
+         paymentmode:"online"
        });
-       console.log('Payment details saved'); // Debug log
+       console.log('Payment details saved');
      } catch (error) {
        console.error('Error saving payment details:', error);
      }
    };
  };
+
+ const savePaymentDetails2 = async ( customerName,grandTotalforpayment,customerPhone,customerTable,cartforpayment) => {
+  
+  
+try {
+  await axios.post('https://backendcafe-ceaj.onrender.com/api/payments', { 
+   
+    cartforpayment:cartforpayment,
+    name : customerName,       
+    amount: grandTotalforpayment, 
+    customerTable:customerTable,
+    customerPhoneNo:customerPhone,
+   
+  });
+  console.log('Payment details saved');
+} catch (error) {
+  console.error('Error saving payment details:', error);
+}
+};
+
+//for saving the payment for the cash bill 
   
 const  {setCustomerName,setCustomerTable,setCustomerPhone,customerPhone,customerName,customerTable}= useContext(CustomerContext);
 
@@ -206,8 +228,8 @@ const handlePhoneNo=(event)=>{
                     <h1 className='font-bold text-2xl text-center'>Total Amount ={grandTotalforpayment}</h1>
                     <button 
                      onClick={openModal}
-                    className='h-12 w-34 ml-32 p-3 mt-2  bg-black text-white font-bold rounded-lg'>
-                     Pay Now
+                    className='h-12 w-38 ml-32 p-3 mt-2  bg-black text-white font-bold rounded-lg'>
+                     Place Order
                     </button>
                     </div> 
                     <div>
@@ -275,6 +297,11 @@ const handlePhoneNo=(event)=>{
           className='h-12 w-30 bg-black font-bold text-xl p-3 ml-16 mt-5 text-white rounded-xl '>
             Pay Now
           </button  >
+          <button
+           onClick={savePaymentDetails2}
+          className='h-12 w-30 bg-black font-bold text-xl p-3 ml-16 mt -3 mt-5 text-white rounded-xl '>
+            Pay Cash
+          </button  >
         </div>
     </div>
      </div>
@@ -284,20 +311,10 @@ const handlePhoneNo=(event)=>{
     </div>
     </div>
     );
-}
 
+  
+  }
 export default Billpart;
-
-
-
-
-
-
-
-
-
-
-
 
 
 
