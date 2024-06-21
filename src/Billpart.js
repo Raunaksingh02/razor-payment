@@ -15,8 +15,6 @@ function Billpart() {
   const direct = useNavigate();
 
   const [orderId, setOrderId] = useState('');
-  const [mode1, setmode1] = useState("Cash");
-  const [mode2, setmode2] = useState("online");
   const [paymentId, setPaymentId] = useState('');
   const dispatch = useDispatch();
 
@@ -87,8 +85,9 @@ function Billpart() {
         name: customerName,
         amount: grandTotalforpayment,
         customerTable,
+        paymentmode: "online",
         customerPhoneNo: customerPhone,
-        paymentmode: mode2
+        
       });
     } catch (error) {
       console.error('Error saving payment details:', error);
@@ -102,8 +101,9 @@ function Billpart() {
         name: customerName,
         amount: grandTotalforpayment,
         customerTable,
+        paymentmode: "cash",
         customerPhoneNo: customerPhone,
-        paymentmode: mode1
+       
       });
       console.log('Payment details saved');
       alert("Payment details saved successfully");
