@@ -134,7 +134,7 @@ function Homepage() {
                                 >
                                     {item.sizes.map(size => (
                                         <option key={size.size} value={size.size} className="w-full">
-                                            {`${size.size} - $${size.price}`}
+                                            {`${size.size}`}
                                         </option>
                                     ))}
                                 </select>

@@ -228,90 +228,91 @@ const DishManagement = () => {
       </div>
 
       {editDish && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
-          <div className="bg-white p-6 rounded shadow-lg">
+    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center px-4 sm:px-0">
+        <div className="bg-white p-6 rounded shadow-lg w-full max-w-md sm:max-w-lg md:max-w-2xl">
             <h2 className="text-2xl font-semibold mb-4">Edit Dish</h2>
             <div className="flex flex-col space-y-4">
-              <input
-                type="text"
-                placeholder="Name"
-                value={editDish.name}
-                onChange={(e) => setEditDish({ ...editDish, name: e.target.value })}
-                className="border p-2 rounded"
-              />
-              <input
-                type="text"
-                placeholder="Category"
-                value={editDish.category}
-                onChange={(e) => setEditDish({ ...editDish, category: e.target.value })}
-                className="border p-2 rounded"
-              />
-              <input
-                type="number"
-                placeholder="Rating"
-                value={editDish.rating}
-                onChange={(e) => setEditDish({ ...editDish, rating: e.target.value })}
-                className="border p-2 rounded"
-              />
-              {editDish.sizes.map((size, index) => (
-                <div key={index} className="flex space-x-4 items-center">
-                  <input
+                <input
                     type="text"
-                    placeholder="Size"
-                    value={size.size}
-                    onChange={(e) =>
-                      handleSizeChange(index, 'size', e.target.value, setEditDish, editDish)
-                    }
+                    placeholder="Name"
+                    value={editDish.name}
+                    onChange={(e) => setEditDish({ ...editDish, name: e.target.value })}
                     className="border p-2 rounded"
-                  />
-                  <input
+                />
+                <input
+                    type="text"
+                    placeholder="Category"
+                    value={editDish.category}
+                    onChange={(e) => setEditDish({ ...editDish, category: e.target.value })}
+                    className="border p-2 rounded"
+                />
+                <input
                     type="number"
-                    placeholder="Price"
-                    value={size.price}
-                    onChange={(e) =>
-                      handleSizeChange(index, 'price', e.target.value, setEditDish, editDish)
-                    }
+                    placeholder="Rating"
+                    value={editDish.rating}
+                    onChange={(e) => setEditDish({ ...editDish, rating: e.target.value })}
                     className="border p-2 rounded"
-                  />
-                  <button
-                    onClick={() => removeSizeField(index, setEditDish, editDish)}
-                    className="bg-red-500 text-white p-2 rounded"
-                  >
-                    Remove
-                  </button>
+                />
+                {editDish.sizes.map((size, index) => (
+                    <div key={index} className="flex space-x-4 items-center">
+                        <input
+                            type="text"
+                            placeholder="Size"
+                            value={size.size}
+                            onChange={(e) =>
+                                handleSizeChange(index, 'size', e.target.value, setEditDish, editDish)
+                            }
+                            className="border p-2 rounded w-full"
+                        />
+                        <input
+                            type="number"
+                            placeholder="Price"
+                            value={size.price}
+                            onChange={(e) =>
+                                handleSizeChange(index, 'price', e.target.value, setEditDish, editDish)
+                            }
+                            className="border p-2 rounded w-full"
+                        />
+                        <button
+                            onClick={() => removeSizeField(index, setEditDish, editDish)}
+                            className="bg-red-500 text-white p-2 rounded"
+                        >
+                            Remove
+                        </button>
+                    </div>
+                ))}
+                <button
+                    onClick={() => addSizeField(setEditDish, editDish)}
+                    className="bg-green-500 text-white p-2 rounded"
+                >
+                    Add Size
+                </button>
+                <input
+                    type="text"
+                    placeholder="Image URL"
+                    value={editDish.image}
+                    onChange={(e) => setEditDish({ ...editDish, image: e.target.value })}
+                    className="border p-2 rounded"
+                />
+                <textarea
+                    placeholder="Description"
+                    value={editDish.description}
+                    onChange={(e) => setEditDish({ ...editDish, description: e.target.value })}
+                    className="border p-2 rounded"
+                />
+                <div className="flex space-x-4">
+                    <button onClick={handleUpdate} className="bg-green-500 text-white p-2 rounded">
+                        Update Dish
+                    </button>
+                    <button onClick={() => setEditDish(null)} className="bg-gray-500 text-white p-2 rounded">
+                        Cancel
+                    </button>
                 </div>
-              ))}
-              <button
-                onClick={() => addSizeField(setEditDish, editDish)}
-                className="bg-green-500 text-white p-2 rounded"
-              >
-                Add Size
-              </button>
-              <input
-                type="text"
-                placeholder="Image URL"
-                value={editDish.image}
-                onChange={(e) => setEditDish({ ...editDish, image: e.target.value })}
-                className="border p-2 rounded"
-              />
-              <textarea
-                placeholder="Description"
-                value={editDish.description}
-                onChange={(e) => setEditDish({ ...editDish, description: e.target.value })}
-                className="border p-2 rounded"
-              />
-              <div className="flex space-x-4">
-                <button onClick={handleUpdate} className="bg-green-500 text-white p-2 rounded">
-                  Update Dish
-                </button>
-                <button onClick={() => setEditDish(null)} className="bg-gray-500 text-white p-2 rounded">
-                  Cancel
-                </button>
-              </div>
             </div>
-          </div>
         </div>
-      )}
+    </div>
+)}
+
     </div>
   );
 };
