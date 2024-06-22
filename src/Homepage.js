@@ -81,7 +81,7 @@ function Homepage() {
                         <div className='flex items-center p-2  bg-gray-100 shadow-lg shadow-gray-400 hover:bg-gray-400 rounded-2xl mr-2'>
                             <img
                                 src={dialicon}
-                                className='h-6 w-6 '
+                                className='h-6 w-6  animate-ring'
                             />
                             <p className='font-bold m-1 ' >  Waiter</p>
                         </div>
@@ -107,16 +107,10 @@ function Homepage() {
                     ))}
                 </select>
             </div>
-            <div>
-                <img
-                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRkNCo7OHXCi5o1jkKUw3qOg3bozTAZpBUTNg&s"
-                 className="w-full h-44 rounded-xl"
-                />
-            
-            </div>
+          
             <div className="grid grid-cols-1 mt-3  ">
                 {filteredCafes.map((item, index) => (
-                    <div className="flex flex-row bg-gray-100 rounded-2xl shadow-lg shadow-gray-400 p-4 mb-4 hover:bg-gray-400" key={index}>
+                    <div className="flex flex-row bg-gray-100 ease-in duration-300 rounded-2xl shadow-lg shadow-gray-400 p-4 mb-4 hover:bg-gray-400" key={index}>
                         <img
                             className='w-full mt-4 p-2 h-48 object-cover rounded-3xl'
                             src={item.image}
