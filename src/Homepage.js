@@ -107,7 +107,13 @@ function Homepage() {
                     ))}
                 </select>
             </div>
-
+            <div>
+                <img
+                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRkNCo7OHXCi5o1jkKUw3qOg3bozTAZpBUTNg&s"
+                 className="w-full h-44 rounded-xl"
+                />
+            
+            </div>
             <div className="grid grid-cols-1 mt-3  ">
                 {filteredCafes.map((item, index) => (
                     <div className="flex flex-row bg-gray-100 rounded-2xl shadow-lg shadow-gray-400 p-4 mb-4 hover:bg-gray-400" key={index}>

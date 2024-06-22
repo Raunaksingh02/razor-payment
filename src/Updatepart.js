@@ -9,7 +9,8 @@ const UpdatePart = () => {
         amount: '',
         customerTable: 'Table 1',
         customerPhoneNo: '',
-        status: 'pending'
+        status: 'pending',
+        paymentmode:'',
     });
 
     useEffect(() => {
@@ -47,7 +48,7 @@ const UpdatePart = () => {
 
     return (
         <div className="container mx-auto">
-            <h1 className="text-2xl font-bold text-center mt-10 p-3">Update Payment</h1>
+            <h1 className="text-2xl font-bold text-center mt-10 p-3">Update Payment </h1>
             <form onSubmit={handleSubmit} className="max-w-md mx-auto p-4 bg-white shadow-md rounded">
                 <div className="mb-4">
                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">
@@ -103,7 +104,7 @@ const UpdatePart = () => {
                 </div>
                 <div className="mb-4">
                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="status">
-                        Status
+                       Order Status
                     </label>
                     <select
                         id="status"
@@ -116,6 +117,22 @@ const UpdatePart = () => {
                         <option value="delivered">Delivered</option>
                     </select>
                 </div>
+                <div className="mb-4">
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="paymentmode">
+                        Payment Status
+                    </label>
+                    <select
+                        id="paymentmode"
+                        name="paymentmode"
+                        value={data.paymentmode}
+                        onChange={handleChange}
+                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    >
+                        <option value="pending">Pending</option>
+                        <option value="Received">Received</option>
+                    </select>
+                </div>
+
                 <button
                     type="submit"
                     className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"

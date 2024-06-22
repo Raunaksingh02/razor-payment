@@ -170,19 +170,22 @@ const PaymentDetails = () => {
                 </div>
                 <div>
                     {filterPayments().map(payment => (
-                        <div key={payment._id} className='border-2 border-gray-300 rounded-lg shadow-lg m-4 p-6'>
+                        <div key={payment._id} className='border-3 border-gray-300 rounded-2xl shadow-xl  shadow-gray-500 m-4 p-6'>
                             {payment.paymentmode === "online" && (
                                 <h1 className="text-xl font-semibold">PaymentId: {payment.paymentId}</h1>
                             )}
-                            <h1 className="text-lg">Name: {payment.name}</h1>
-                            <h1 className="text-lg">Customer Table: {payment.customerTable}</h1>
-                            <h1 className="text-lg">Amount: {payment.amount}</h1>
-                            <h1 className="text-lg">Contact No: {payment.customerPhoneNo}</h1>
-                            <h1 className="text-lg">Payment Mode: {payment.paymentmode}</h1>
-                            <h1 className={`text-lg ${payment.status === 'pending' ? 'text-red-400' : 'text-green-500'}`}>
-                                Status: {payment.status}
+                            <h1 className="text-xl font-bold">Name: {payment.name}</h1>
+                            <h1 className="text-lg font-bold">Customer Table:  {payment.customerTable}</h1>
+                            <h1 className="text-lg font-bold" >Amount: {payment.amount}</h1>
+                            <h1 className="text-lg font-bold">Contact No: {payment.customerPhoneNo}</h1>
+                           
+                            <h1 className={`text-lg ${payment.status === 'pending' ? 'text-red-400 font-bold' : 'text-green-500 font-bold'}`}>
+                               Order Status: {payment.status}
                             </h1>
-                            <h1 className="text-lg">Date: {formatDate(payment.date)}</h1>
+                            <h1 className={`text-lg ${payment.paymentmode === 'Cash-Not Received' ? 'text-red-400' : 'text-green-500 font-bold'}`}>
+                              Pyment Status: {payment.paymentmode}
+                            </h1>
+                            <h1 className="text-lg font-bold">Date: {formatDate(payment.date)}</h1>
                             <div className="mt-4">
                                 {payment.cartforpayment.map(item => (
                                     <div key={item.id} className='border-2 border-gray-200 rounded-md shadow-md m-3 p-3'>

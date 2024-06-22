@@ -85,7 +85,7 @@ function Billpart() {
         name: customerName,
         amount: grandTotalforpayment,
         customerTable,
-        paymentmode: "online",
+        paymentmode: "Online - Received",
         customerPhoneNo: customerPhone,
         
       });
@@ -101,7 +101,7 @@ function Billpart() {
         name: customerName,
         amount: grandTotalforpayment,
         customerTable,
-        paymentmode: "cash",
+        paymentmode: "Cash-Not Received",
         customerPhoneNo: customerPhone,
        
       });
