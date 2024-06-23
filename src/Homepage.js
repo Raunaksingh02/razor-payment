@@ -7,6 +7,7 @@ import dialicon from './images/dialicon.png';
 import user from "./images/user.png";
 import { addToCart, removeToCart } from './redux/cartSlice.js';
 
+
 function Homepage() {
     const [cafes, setCafes] = useState([]);
     const [quantities, setQuantities] = useState([]);
@@ -14,6 +15,7 @@ function Homepage() {
     const [selectedPrices, setSelectedPrices] = useState([]);
     const [selectedCostPrices, setSelectedCostPrices] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState('All');
+    const [loading,setLoading] = useState(true);
 
     const dispatch = useDispatch();
     const cartfortotal = useSelector((state) => state.cart.cart);
@@ -27,6 +29,7 @@ function Homepage() {
                 setSelectedSizes(response.data.map(dish => dish.sizes[0]?.size || ''));
                 setSelectedPrices(response.data.map(dish => dish.sizes[0]?.price || 0));
                 setSelectedCostPrices(response.data.map(dish => dish.sizes[0]?.costPrice || 0));
+               setLoading(false);
             })
             .catch(error => console.error('Error fetching data:', error));
     }, []);
@@ -72,6 +75,8 @@ function Homepage() {
         ? cafes
         : cafes.filter(cafe => cafe.category === selectedCategory);
 
+
+     
     return (
         <div className="container mx-auto p-4">
             <div className='flex items-center justify-between'>

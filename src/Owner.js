@@ -5,6 +5,8 @@ import backarrowlogo from "./images/backarrowlogo.png";
 import { FaMoneyCheckDollar } from "react-icons/fa6";
 import { IoFastFoodOutline } from "react-icons/io5";
 import { GiCook } from "react-icons/gi";
+import Chart from "./Chart";
+import { FaChartLine } from "react-icons/fa6";
 
 import { io } from 'socket.io-client';
 
@@ -60,6 +62,7 @@ function Owner(props) {
           </div>
         ))}
       </div>
+
       <div style={{ flex: "1" }}>
         <div className='flex items-center '>
           <Link to="/">
@@ -67,9 +70,10 @@ function Owner(props) {
           </Link>
           <h1 className="font-extrabold text-3xl text-center text-[#18196c] ml-10">Admin Panel</h1>
         </div>
+      
         <div className="grid grid-cols-1 shadow-xl shadow-blue-400">
           <Link to="/Order">
-          <div className='m-3 p-3 h-56 rounded-2xl transition duration-150 ease-in-out bg-[#18196c] flex flex-col items-center justify-center'>
+          <div className='m-3 p-3 h-56 rounded-2xl transition duration-150 ease-in-out  bg-[#18196c] flex flex-col items-center justify-center'>
          <h1 className='text-center text-4xl font-mono font-extrabold text-white'>Order Details</h1>
             <GiCook  fill='white'  className="h-12 w-12 mt-4" />
             </div>
@@ -91,6 +95,12 @@ function Owner(props) {
         <div className='m-3 p-3 h-56 rounded-2xl transition duration-150 ease-in-out bg-[#18196c] flex flex-col items-center justify-center'>
          <h1 className='text-center text-4xl font-mono font-extrabold text-white'>Profit Data</h1>
              <FaMoneyCheckDollar  fill="white" className="h-12 w-12 mt-4 "  />
+            </div>
+          </Link>
+          <Link to="/Chart">
+        <div className='m-3 p-3 h-56 rounded-2xl transition duration-150 ease-in-out bg-[#18196c] flex flex-col items-center justify-center'>
+         <h1 className='text-center text-4xl font-mono font-extrabold text-white'>Analysis</h1>
+         <FaChartLine fill="white" className="h-12 w-12 mt-4"/>
             </div>
           </Link>
       </div>

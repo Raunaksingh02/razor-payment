@@ -1,18 +1,18 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Homepage from './Homepage'; // Make sure these paths are correct
-import Billpart from './Billpart'; // Make sure these paths are correct
-
+import Homepage from './Homepage'; 
+import Billpart from './Billpart'; 
 import Admin from './Admin.js';
 import Owner from './Owner.js'
 import OrderDetails from './OrderDetails.js';
 import Updatepart from './Updatepart.js';
 import Invoicecompo from './Invoicecompo.js';
-
+import Chart from "./Chart.js";
 import Dishmanage from './Dishmanage.js';
 import Callwaiter from './Callwaiter.js';
 import Waiterpage from './Waiterpage.js';
 import Profitpage from './Profitpage.js';
+import Salechart from "./Salechart.js"
 
 const PaymentComponent = () => {
  
@@ -27,6 +27,8 @@ const PaymentComponent = () => {
         <Route path="/Waiter" element={<Waiterpage/>} />
         <Route path="/Profit" element={<Profitpage/>} />
         <Route  path="/Admin " element={<Admin />} />
+        <Route  path="/Chart" element={<Chart />} />
+        <Route  path="/Sale" element={<Salechart />} />
         <Route  path="/Dishmanage" element={<Dishmanage />} />
         <Route path="/bill" element={<Billpart  />} />
          <Route path="/update/:_id" element={<Updatepart />} />   
