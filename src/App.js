@@ -12,7 +12,8 @@ import Dishmanage from './Dishmanage.js';
 import Callwaiter from './Callwaiter.js';
 import Waiterpage from './Waiterpage.js';
 import Profitpage from './Profitpage.js';
-import Salechart from "./Salechart.js"
+import Salechart from "./Salechart.js";
+import Month from "./Month.js"
 
 const PaymentComponent = () => {
  
@@ -26,7 +27,10 @@ const PaymentComponent = () => {
         <Route path="/Call" element={<Callwaiter/>} />
         <Route path="/Waiter" element={<Waiterpage/>} />
         <Route path="/Profit" element={<Profitpage/>} />
+        <Route  path="/Month" element={<Month/>} />
+       
         <Route  path="/Admin " element={<Admin />} />
+       
         <Route  path="/Chart" element={<Chart />} />
         <Route  path="/Sale" element={<Salechart />} />
         <Route  path="/Dishmanage" element={<Dishmanage />} />

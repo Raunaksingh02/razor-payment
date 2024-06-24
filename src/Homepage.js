@@ -127,7 +127,7 @@ function Homepage() {
                             <p>Rating: {item.rating} stars</p>
                             <p className="font-bold">Price: {selectedPrices[cafes.indexOf(item)]}</p>
                             <div className="mt-2">
-                                <label htmlFor={`size-select-${index}`} className="block text-sm font-medium font-bold text-gray-700">Size:</label>
+                                <label htmlFor={`size-select-${index}`} className="block text-sm  font-bold text-gray-700">Size:</label>
                                 <select
                                     id={`size-select-${index}`}
                                     className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
