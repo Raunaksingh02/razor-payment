@@ -4,9 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import cartlogo from "./images/cartlogo.png";
 import dialicon from './images/dialicon.png';
-import user from "./images/user.png";
 import { addToCart, removeToCart } from './redux/cartSlice.js';
-
 
 function Homepage() {
     const [cafes, setCafes] = useState([]);
@@ -15,7 +13,9 @@ function Homepage() {
     const [selectedPrices, setSelectedPrices] = useState([]);
     const [selectedCostPrices, setSelectedCostPrices] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState('All');
-    const [loading,setLoading] = useState(true);
+    const [loading, setLoading] = useState(true);
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 5;
 
     const dispatch = useDispatch();
     const cartfortotal = useSelector((state) => state.cart.cart);
@@ -29,7 +29,7 @@ function Homepage() {
                 setSelectedSizes(response.data.map(dish => dish.sizes[0]?.size || ''));
                 setSelectedPrices(response.data.map(dish => dish.sizes[0]?.price || 0));
                 setSelectedCostPrices(response.data.map(dish => dish.sizes[0]?.costPrice || 0));
-               setLoading(false);
+                setLoading(false);
             })
             .catch(error => console.error('Error fetching data:', error));
     }, []);
@@ -75,8 +75,16 @@ function Homepage() {
         ? cafes
         : cafes.filter(cafe => cafe.category === selectedCategory);
 
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentCafes = filteredCafes.slice(indexOfFirstItem, indexOfLastItem);
 
-     
+    const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+    if (loading) {
+        return <div className="text-center">Loading...</div>;
+    }
+
     return (
         <div className="container mx-auto p-4">
             <div className='flex items-center justify-between'>
@@ -112,9 +120,8 @@ function Homepage() {
                     ))}
                 </select>
             </div>
-          
-            <div className="grid grid-cols-1 mt-3  ">
-                {filteredCafes.map((item, index) => (
+            <div className="grid grid-cols-1 mt-3">
+                {currentCafes.map((item, index) => (
                     <div className="flex flex-row bg-gray-100 ease-in duration-300 rounded-2xl shadow-lg shadow-gray-400 p-4 mb-4 hover:bg-gray-400" key={index}>
                         <img
                             className='w-full mt-4 p-2 h-48 object-cover rounded-3xl'
@@ -154,8 +161,32 @@ function Homepage() {
                     </div>
                 ))}
             </div>
+            <div className="flex justify-center mt-4">
+                <button
+                    onClick={() => paginate(currentPage - 1)}
+                    disabled={currentPage === 1}
+                    className="px-4 py-2 mx-1 bg-gray-300 rounded-md hover:bg-gray-400 disabled:opacity-50"
+                >
+                    Previous
+                </button>
+                {[...Array(Math.ceil(filteredCafes.length / itemsPerPage)).keys()].map((number) => (
+                    <button
+                        key={number + 1}
+                        onClick={() => paginate(number + 1)}
+                        className={`px-4 py-2 mx-1 ${currentPage === number + 1 ? 'bg-gray-600 text-white' : 'bg-gray-300'} rounded-md hover:bg-gray-400`}
+                    >
+                        {number + 1}
+                    </button>
+                ))}
+                <button
+                    onClick={() => paginate(currentPage + 1)}
+                    disabled={currentPage === Math.ceil(filteredCafes.length / itemsPerPage)}
+                    className="px-4 py-2 mx-1 bg-gray-300 rounded-md hover:bg-gray-400 disabled:opacity-50"
+                >
+                    Next
+                </button>
+            </div>
         </div>
-
     );
 }
 

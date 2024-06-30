@@ -179,11 +179,11 @@ const PaymentDetails = () => {
                             <h1 className="text-lg font-bold" >Amount: {payment.amount}</h1>
                             <h1 className="text-lg font-bold">Contact No: {payment.customerPhoneNo}</h1>
                            
-                            <h1 className={`text-lg ${payment.status === 'pending' ? 'text-red-400 font-bold' : 'text-green-500 font-bold'}`}>
+                            <h1 className={`text-lg ${payment.status === 'pending' ? 'text-red-400 ' : 'text-green-500 font-bold'}`}>
                                Order Status: {payment.status}
                             </h1>
                             <h1 className={`text-lg ${payment.paymentmode === 'Cash-Not Received' ? 'text-red-400' : 'text-green-500 font-bold'}`}>
-                              Pyment Status: {payment.paymentmode}
+                              Payment Status: {payment.paymentmode}
                             </h1>
                             <h1 className="text-lg font-bold">Date: {formatDate(payment.date)}</h1>
                             <div className="mt-4">
