@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
+import { GrCafeteria } from "react-icons/gr";
 import cartlogo from "./images/cartlogo.png";
 import dialicon from './images/dialicon.png';
 import { addToCart, removeToCart } from './redux/cartSlice.js';
@@ -82,7 +83,10 @@ function Homepage() {
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
     if (loading) {
-        return <div className="text-center">Loading...</div>;
+        return <div className="  flex justify-center items-center text-center mt-20">
+            <h1 className="font-bold  ml-3">Loading the menu...</h1>
+            <GrCafeteria fill='white' className='h-10 w-10' />
+            </div>;
     }
 
     return (
