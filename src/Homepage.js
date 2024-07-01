@@ -5,6 +5,7 @@ import axios from 'axios';
 import { GrCafeteria } from "react-icons/gr";
 import cartlogo from "./images/cartlogo.png";
 import dialicon from './images/dialicon.png';
+import { CiSearch } from "react-icons/ci";
 import { addToCart, removeToCart } from './redux/cartSlice.js';
 
 function Homepage() {
@@ -16,6 +17,7 @@ function Homepage() {
     const [selectedCategory, setSelectedCategory] = useState('All');
     const [loading, setLoading] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
+    const [searchTerm, setSearchTerm] = useState('');
     const itemsPerPage = 5;
 
     const dispatch = useDispatch();
@@ -76,9 +78,13 @@ function Homepage() {
         ? cafes
         : cafes.filter(cafe => cafe.category === selectedCategory);
 
+    const searchedCafes = searchTerm === ''
+        ? filteredCafes
+        : filteredCafes.filter(cafe => cafe.name.toLowerCase().includes(searchTerm.toLowerCase()) || cafe.category.toLowerCase().includes(searchTerm.toLowerCase()));
+
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentCafes = filteredCafes.slice(indexOfFirstItem, indexOfLastItem);
+    const currentCafes = searchedCafes.slice(indexOfFirstItem, indexOfLastItem);
 
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
@@ -86,7 +92,7 @@ function Homepage() {
         return <div className="  flex justify-center items-center text-center mt-20">
             <h1 className="font-bold  ml-3">Loading the menu...</h1>
             <GrCafeteria fill='white' className='h-10 w-10' />
-            </div>;
+        </div>;
     }
 
     return (
@@ -123,6 +129,20 @@ function Homepage() {
                         </option>
                     ))}
                 </select>
+            </div>
+            <div className="flex justify-center p-4">
+                <div className="flex w-full max-w-md border-2 border-gray-300 rounded-full shadow-lg">
+                    <input
+                        type="text"
+                        placeholder="Enter dish name..."
+                        className="w-full h-12 px-4 text-gray-700 placeholder-gray-400 rounded-l-full focus:outline-none"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                    <button onClick={() => setCurrentPage(1)} className="flex items-center justify-center w-12 h-12 bg-gray-800 rounded-r-full hover:bg-gray-700 focus:outline-none">
+                        <CiSearch fill="white" className="w-8 h-8" />
+                    </button>
+                </div>
             </div>
             <div className="grid grid-cols-1 mt-3">
                 {currentCafes.map((item, index) => (
@@ -173,7 +193,7 @@ function Homepage() {
                 >
                     Previous
                 </button>
-                {[...Array(Math.ceil(filteredCafes.length / itemsPerPage)).keys()].map((number) => (
+                {[...Array(Math.ceil(searchedCafes.length / itemsPerPage)).keys()].map((number) => (
                     <button
                         key={number + 1}
                         onClick={() => paginate(number + 1)}
@@ -184,7 +204,7 @@ function Homepage() {
                 ))}
                 <button
                     onClick={() => paginate(currentPage + 1)}
-                    disabled={currentPage === Math.ceil(filteredCafes.length / itemsPerPage)}
+                    disabled={currentPage === Math.ceil(searchedCafes.length / itemsPerPage)}
                     className="px-4 py-2 mx-1 bg-gray-300 rounded-md hover:bg-gray-400 disabled:opacity-50"
                 >
                     Next
