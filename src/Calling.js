@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useRef } from 'react';
-
 import { io } from 'socket.io-client';
 
 const socket = io("https://backendcafe-ceaj.onrender.com");
@@ -9,6 +8,9 @@ function Calling(props) {
   const audioRef = useRef(new Audio('/alertsound.mp3'));
 
   useEffect(() => {
+    const audioElement = audioRef.current;
+    audioElement.load(); // Preload the audio
+
     socket.on('Request', (data) => {
       const newRequest = { ...data, time: new Date().toLocaleTimeString() };
       setRequests(prevRequests => [...prevRequests, newRequest]);
@@ -25,9 +27,12 @@ function Calling(props) {
   }, []);
 
   const playAlertSound = () => {
-    if (audioRef.current) {
-      audioRef.current.currentTime = 0; // Ensure the sound plays from the start
-      audioRef.current.play();
+    const audioElement = audioRef.current;
+    if (audioElement) {
+      audioElement.currentTime = 0; // Ensure the sound plays from the start
+      audioElement.play().catch(error => {
+        console.error('Error playing audio:', error);
+      });
     }
   };
 
@@ -39,39 +44,24 @@ function Calling(props) {
   };
 
   return (
-  
-      <div>
-        {requests.map((request, index) => (
-          <div key={index} className="bg-red-100 border  border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
-            <strong className="font-bold">Incoming Call from {request.table}!</strong>
-            <span className="block sm:inline"> {request.query} at {request.time}</span>
-            <button
-              onClick={() => removeRequest(index)}
-              className="absolute top-0 bottom-0 right-0 px-4 py-3"
-            >
-              <span className="text-2xl">&times;</span>
-            </button>
-          </div>
-        ))}
-      </div>
-  
-
-  )
+    <div>
+      {requests.map((request, index) => (
+        <div key={index} className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+          <strong className="font-bold">Incoming Call from {request.table}!</strong>
+          <span className="block sm:inline"> {request.query} at {request.time}</span>
+          <button
+            onClick={() => removeRequest(index)}
+            className="absolute top-0 bottom-0 right-0 px-4 py-3"
+          >
+            <span className="text-2xl">&times;</span>
+          </button>
+        </div>
+      ))}
+    </div>
+  );
 }
 
-
 export default Calling;
-
-
-
-
-
-
-
-
-
-
-
 
 
 
