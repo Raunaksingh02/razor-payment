@@ -6,6 +6,7 @@ import Chart from 'react-apexcharts';
 import backarrowlogo from "./images/backarrowlogo.png";
 import { Link } from 'react-router-dom';
 import './App.css';
+import Calling from "./Calling";
 
 export default function Profitpage() {
   const [dailyProfit, setDailyProfit] = useState(null);
@@ -47,6 +48,7 @@ export default function Profitpage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-100">
+      <Calling/>
       <header className="flex items-center bg-gray-400 text-white p-4">
         <Link to="/Owner">
           <img

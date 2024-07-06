@@ -14,7 +14,9 @@ function Owner(props) {
 
   return (
     <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
-     <Calling/>
+    <div>
+    <Calling/>
+    </div>
       <div style={{ flex: "1" }}>
         <div className='flex items-center '>
           <Link to="/">
