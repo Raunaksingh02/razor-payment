@@ -39,7 +39,7 @@ function Calling(props) {
   };
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
+  
       <div>
         {requests.map((request, index) => (
           <div key={index} className="bg-red-100 border  border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
@@ -54,7 +54,7 @@ function Calling(props) {
           </div>
         ))}
       </div>
-    </div>
+  
 
   )
 }
