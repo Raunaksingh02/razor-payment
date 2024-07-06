@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate ,Link} from 'react-router-dom';
-
+import Calling from "./Calling";
 
 
 const DishManagement = () => {
@@ -108,6 +108,7 @@ const DishManagement = () => {
 
   return (
     <div className="container mx-auto p-6">
+      <Calling/>
       <h1 className="text-3xl font-bold mb-6 text-center">Dish Management</h1>
 
       <div className="mb-6">
