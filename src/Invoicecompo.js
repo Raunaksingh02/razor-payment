@@ -88,9 +88,9 @@ function Invoicecompo() {
                         {cartforinvoice.map((item, index) => (
                             <tr key={index}>
                                 <td className="border px-4 py-2">{item.name}</td>
-                                <td className="border px-4 py-2">${item.price}</td>
+                                <td className="border px-4 py-2">{item.price}</td>
                                 <td className="border px-4 py-2">{item.quantity}</td>
-                                <td className="border px-4 py-2">${(item.price * item.quantity).toFixed(2)}</td>
+                                <td className="border px-4 py-2">{(item.price * item.quantity).toFixed(2)}</td>
                             </tr>
                         ))}
                     </tbody>

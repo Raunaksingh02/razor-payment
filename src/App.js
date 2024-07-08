@@ -15,6 +15,7 @@ import Profitpage from './Profitpage.js';
 import Salechart from "./Salechart.js";
 import Month from "./Month.js"
 import Address from "./Address.js";
+import Webisteorder from './Webisteorder.js';
 
 const PaymentComponent = () => {
  
@@ -24,8 +25,9 @@ const PaymentComponent = () => {
         <Route path="/:table" element={<Homepage />} />
         <Route path="/" element={<Homepage />} />
         <Route path="/Owner" element={<Owner/>} />
-        <Route path="/Invoice" element={<Invoicecompo/>} />
+        <Route path="/Invoice/:_id" element={<Invoicecompo/>} />
         <Route path="/Order" element={<OrderDetails/>} />
+        <Route path="/Website" element={<Webisteorder/>} />
         <Route path="/Call" element={<Callwaiter/>} />
         <Route path="/Address" element={<Address/>} />
         <Route path="/Waiter" element={<Waiterpage/>} />

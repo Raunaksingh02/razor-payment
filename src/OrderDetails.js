@@ -85,6 +85,7 @@ const PaymentDetails = () => {
         move(`/update/${_id}`);
     };
 
+
     const filterPayments = () => {
         const today = new Date().toISOString().split('T')[0];
         const weekAgo = new Date();

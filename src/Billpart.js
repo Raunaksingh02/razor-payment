@@ -71,11 +71,9 @@ function Billpart() {
       description: 'Test Payment',
       order_id: orderId,
       handler: (response) => {
-        setPaymentId(response.razorpay_payment_id);
-        savePaymentDetails(orderId, response, customerName, grandTotalforpayment, customerPhone, customerTable, cartforpayment, houseNo, city, pincode, landmark);
-        alert("payment successful");
-        navigate('/Invoice');
-      },
+        setPaymentId(response.razorpay_payment_id);    
+     savePaymentDetails(orderId, response, customerName, grandTotalforpayment, customerPhone, customerTable, cartforpayment, houseNo, city, pincode, landmark); 
+    },
       prefill: {
         name: customerName,
         email: 'rs3297275@gmail.com',
@@ -91,7 +89,7 @@ function Billpart() {
 
   const savePaymentDetails = async (orderId, response, customerName, grandTotalforpayment, customerPhone, customerTable, cartforpayment, houseNo, city, pincode, landmark) => {
     try {
-      await axios.post('https://backendcafe-ceaj.onrender.com/api/payments', {
+      const res = await axios.post('https://backendcafe-ceaj.onrender.com/api/payments', {
         orderId,
         paymentId: response.razorpay_payment_id,
         cartforpayment,
@@ -99,42 +97,49 @@ function Billpart() {
         amount: grandTotalforpayment,
         customerTable,
         paymentmode: "Online - Received",
-        customerPhoneNo: customerPhone,
         address: {
           houseNo,
           city,
           pincode,
           landmark
-        }
+        },
+        customerPhoneNo: customerPhone,
+      
       });
+      
+      const paymentId = res.data._id; // Assuming _id is your payment object ID
+      console.log('Payment details saved:', paymentId);
+      navigate(`/Invoice/${paymentId}`); // Navigate to Invoice page with paymentId in URL
     } catch (error) {
       console.error('Error saving payment details:', error);
     }
   };
-
+  
   const savePaymentDetails2 = async () => {
     try {
-      await axios.post('https://backendcafe-ceaj.onrender.com/api/payments', {
+      const response = await axios.post('https://backendcafe-ceaj.onrender.com/api/payments', {
         cartforpayment,
         name: customerName,
         amount: grandTotalforpayment,
         customerTable,
         paymentmode: "Cash-Not Received",
-        customerPhoneNo: customerPhone,
         address: {
           houseNo,
           city,
           pincode,
           landmark
-        }
+        },
+        customerPhoneNo: customerPhone,
+    
       });
+      const paymentId = response.data._id; // Assuming _id is your payment object ID
       console.log('Payment details saved');
-      alert("Payment details saved successfully");
-      navigate('/Invoice');
+      navigate(`/Invoice/${paymentId}`);
     } catch (error) {
       console.error('Error saving payment details:', error);
     }
   };
+
 
   const handlename = (event) => {
     setCustomerName(event.target.value);
