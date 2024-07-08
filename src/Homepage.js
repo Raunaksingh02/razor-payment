@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import { GrCafeteria } from "react-icons/gr";
@@ -9,6 +9,7 @@ import { CiSearch } from "react-icons/ci";
 import { addToCart, removeToCart } from './redux/cartSlice.js';
 
 function Homepage() {
+    const { table } = useParams(); // Get the table parameter from the URL
     const [cafes, setCafes] = useState([]);
     const [quantities, setQuantities] = useState([]);
     const [selectedSizes, setSelectedSizes] = useState([]);
@@ -89,8 +90,8 @@ function Homepage() {
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
     if (loading) {
-        return <div className="  flex justify-center items-center text-center mt-20">
-            <h1 className="font-bold  ml-3">Loading the menu...</h1>
+        return <div className="flex justify-center items-center text-center mt-20">
+            <h1 className="font-bold ml-3">Loading the menu...</h1>
             <GrCafeteria fill='white' className='h-10 w-10' />
         </div>;
     }
@@ -100,23 +101,25 @@ function Homepage() {
             <div className='flex items-center justify-between'>
                 <h1 className="text-3xl font-extrabold text-center m-2">Cafe Coffee </h1>
                 <div className='flex items-center'>
-                    <Link to="/Call">
-                        <div className='flex items-center p-2  bg-gray-100 shadow-lg shadow-gray-400 hover:bg-gray-400 rounded-2xl mr-2'>
-                            <img
-                                src={dialicon}
-                                className='h-6 w-6  animate-ring'
-                            />
-                            <p className='font-bold m-1 ' >  Waiter</p>
-                        </div>
-                    </Link>
-                    <Link to="/bill">
+                    {table && (
+                        <Link to="/Call">
+                            <div className='flex items-center p-2 bg-gray-100 shadow-lg shadow-gray-400 hover:bg-gray-400 rounded-2xl mr-2'>
+                                <img
+                                    src={dialicon}
+                                    className='h-6 w-6 animate-ring'
+                                />
+                                <p className='font-bold m-1'>Waiter</p>
+                            </div>
+                        </Link>
+                    )}
+                    <Link to={`/bill?table=${table}`}>
                         <img src={cartlogo} className='h-12 w-12' alt="cart logo" />
                     </Link>
                     <h1 className="font-bold text-red-500 text-2xl ml-2">{totalquantityforhome}</h1>
                 </div>
             </div>
-            <div className="flex justify-between font-bold  text-xl items-center p-2 ">
-                <label htmlFor="category-select" className="block   mr-7"> Select  Category :</label>
+            <div className="flex justify-between font-bold text-xl items-center p-2 ">
+                <label htmlFor="category-select" className="block mr-7"> Select Category :</label>
                 <select
                     id="category-select"
                     className="mt-1 block pl-3 pr-10 py-2 bg-gray-100 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
@@ -158,7 +161,7 @@ function Homepage() {
                             <p>Rating: {item.rating} stars</p>
                             <p className="font-bold">Price: {selectedPrices[cafes.indexOf(item)]}</p>
                             <div className="mt-2">
-                                <label htmlFor={`size-select-${index}`} className="block text-sm  font-bold text-gray-700">Size:</label>
+                                <label htmlFor={`size-select-${index}`} className="block text-sm font-bold text-gray-700">Size:</label>
                                 <select
                                     id={`size-select-${index}`}
                                     className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
