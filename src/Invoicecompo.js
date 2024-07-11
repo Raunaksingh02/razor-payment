@@ -33,7 +33,7 @@ function Invoicecompo() {
       if (!isDataLoaded) {
         window.location.reload();
       }
-    }, 8000);
+    }, 10000);
 
     // Cleanup the timer on component unmount
     return () => clearTimeout(timer);
@@ -68,10 +68,20 @@ function Invoicecompo() {
         });
     }
 
+   
+
     if (!paymentDetails) {
         return <div className="text-center font-lg font-extrabold">Loading the invoice..</div>;
     }
 
+   
+        const invoiceLink = `https://cafehouse.vercel.app/invoice/${_id}`;
+        const message = `Here is your invoice: ${invoiceLink}`;
+    
+        const whatsappLink = `https://api.whatsapp.com/send?phone=${paymentDetails.customerPhoneNo}&text=${encodeURIComponent(message)}`;
+    
+       
+           
     const totalforinvoice = paymentDetails.cartforpayment.map((item) => item.price * item.quantity).reduce((prev, curr) => prev + curr, 0);
     const grandTotalforinvoice = totalforinvoice + 50; // Assuming 50 is some additional charge (like tax or delivery fee)
 
@@ -153,6 +163,12 @@ function Invoicecompo() {
                     className="h-16 w-28 p-3 m-3 border-2 border-black bg-black text-white rounded-xl font-bold">
                     Download Bill
                 </button>
+                <div>
+                <button onClick={() => window.open(whatsappLink, '_blank')} className="btn btn-primary">
+                    Send via WhatsApp
+                </button>
+            </div>
+  
             </div>
         </div>
     );
