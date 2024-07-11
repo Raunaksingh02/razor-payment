@@ -33,7 +33,7 @@ function Invoicecompo() {
       if (!isDataLoaded) {
         window.location.reload();
       }
-    }, 15000);
+    }, 8000);
 
     // Cleanup the timer on component unmount
     return () => clearTimeout(timer);
@@ -69,7 +69,7 @@ function Invoicecompo() {
     }
 
     if (!paymentDetails) {
-        return <div className="text-center font-lg font-extrabold">Loading the invoice...</div>;
+        return <div className="text-center font-lg font-extrabold">Loading the invoice..</div>;
     }
 
     const totalforinvoice = paymentDetails.cartforpayment.map((item) => item.price * item.quantity).reduce((prev, curr) => prev + curr, 0);
