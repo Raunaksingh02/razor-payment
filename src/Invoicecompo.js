@@ -1,12 +1,44 @@
-import React, { useContext, useRef } from 'react';
-import {  useSelector } from 'react-redux';
+import React, { useContext, useRef, useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import axios from 'axios';
 import html2canvas from "html2canvas";
 import jsPDF from 'jspdf';
-import { CustomerContext } from './CustomerContext.js'; // Import your context here
+import { CustomerContext } from './CustomerContext.js';
 
 function Invoicecompo() {
-
+    const { _id } = useParams();
     const pdfRef = useRef();
+    const [paymentDetails, setPaymentDetails] = useState(null);
+   
+    const [isDataLoaded, setIsDataLoaded] = useState(false);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`https://backendcafe-ceaj.onrender.com/api/payments/${_id}`);
+        setPaymentDetails(response.data);
+        setIsDataLoaded(true); // Set data loaded to true on successful fetch
+        console.log(response.data);
+      } catch (error) {
+        console.error('Error fetching payment details:', error.message);
+        setIsDataLoaded(false); // Set data loaded to false on error
+      }
+    };
+
+    fetchData();
+
+    // Set a timer to reload the page after 3 seconds if data is not loaded
+    const timer = setTimeout(() => {
+      if (!isDataLoaded) {
+        window.location.reload();
+      }
+    }, 15000);
+
+    // Cleanup the timer on component unmount
+    return () => clearTimeout(timer);
+  }, [_id, isDataLoaded]);
+
 
     const downloadPDF = () => {
         const input = pdfRef.current;
@@ -36,14 +68,11 @@ function Invoicecompo() {
         });
     }
 
-   
-   
-  
+    if (!paymentDetails) {
+        return <div className="text-center font-lg font-extrabold">Loading the invoice...</div>;
+    }
 
-    const { customerName, customerTable, customerPhone } = useContext(CustomerContext);
-
-    const cartforinvoice = useSelector((state) => state.cart.cart);
-    const totalforinvoice = cartforinvoice.map((item) => item.price * item.quantity).reduce((prev, curr) => prev + curr, 0);
+    const totalforinvoice = paymentDetails.cartforpayment.map((item) => item.price * item.quantity).reduce((prev, curr) => prev + curr, 0);
     const grandTotalforinvoice = totalforinvoice + 50; // Assuming 50 is some additional charge (like tax or delivery fee)
 
     return (
@@ -62,16 +91,16 @@ function Invoicecompo() {
                     <div className="text-right">
                         <h2 className="text-2xl font-extrabold">Invoice</h2>
                         <p className="text-gray-600">Date: {new Date().toLocaleDateString()}</p>
-                        <p className="text-gray-600">Invoice #: 000123</p>
+                        <p className="text-gray-600">Invoice #: {paymentDetails.invoiceNumber}</p>
                     </div>
                 </div>
                 
                 {/* Customer Info */}
                 <div className="mb-4">
                     <h3 className="text-lg font-bold mb-2">Bill To:</h3>
-                    <p><strong>Name:</strong> {customerName}</p>
-                    <p><strong>Table:</strong> {customerTable ? customerTable : 'Table 1'}</p>
-                    <p><strong>Phone:</strong> {customerPhone}</p>
+                    <p><strong>Name:</strong> {paymentDetails.name}</p>
+                    <p><strong>Table:</strong> {paymentDetails.customerTable ? paymentDetails.customerTable : 'Table 1'}</p>
+                    <p><strong>Phone:</strong> {paymentDetails.customerPhoneNo}</p>
                 </div>
                 
                 {/* Items Table */}
@@ -85,7 +114,7 @@ function Invoicecompo() {
                         </tr>
                     </thead>
                     <tbody>
-                        {cartforinvoice.map((item, index) => (
+                        {paymentDetails.cartforpayment.map((item, index) => (
                             <tr key={index}>
                                 <td className="border px-4 py-2">{item.name}</td>
                                 <td className="border px-4 py-2">{item.price}</td>
@@ -97,7 +126,7 @@ function Invoicecompo() {
                     <tfoot>
                         <tr>
                             <td colSpan="3" className="border px-4 py-2 text-right">Subtotal:</td>
-                            <td className="border px-4 py-2">${totalforinvoice.toFixed(2)}</td>
+                            <td className="border px-4 py-2">{totalforinvoice.toFixed(2)}</td>
                         </tr>
                         <tr>
                             <td colSpan="3" className="border px-4 py-2 text-right">Additional Charges:</td>
@@ -105,7 +134,7 @@ function Invoicecompo() {
                         </tr>
                         <tr>
                             <td colSpan="3" className="border px-4 py-2 text-right font-bold">Grand Total:</td>
-                            <td className="border px-4 py-2 font-bold">${grandTotalforinvoice.toFixed(2)}</td>
+                            <td className="border px-4 py-2 font-bold">{grandTotalforinvoice.toFixed(2)}</td>
                         </tr>
                     </tfoot>
                 </table>
