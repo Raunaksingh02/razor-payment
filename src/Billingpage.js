@@ -63,7 +63,7 @@ function Billingpage() {
     const grandTotalforbill = totalforbill + 50; // Assuming 50 is some additional charge (like tax or delivery fee)
 
     const invoiceLink = `https://cafehouse.vercel.app/billdata/${_id}`;
-    const message = `Here is your bill: ${invoiceLink}`;
+    const message = `Dear ${customerdata.name} , Here is your bill: ${invoiceLink}`;
     const whatsappLink = `https://api.whatsapp.com/send?phone=91${customerdata.customerPhoneNo}&text=${encodeURIComponent(message)}`;
 
     return (
@@ -83,7 +83,7 @@ function Billingpage() {
                         <h2 className="text-2xl font-extrabold">Bill Details</h2>
                         <p className="text-gray-600">Date: {new Date().toLocaleDateString()}</p>
                         {/* Assuming invoice number or unique identifier for the bill */}
-                        <p className="text-gray-600">Bill: {_id}</p>
+                       
                     </div>
                 </div>
 
