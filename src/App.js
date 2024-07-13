@@ -16,6 +16,7 @@ import Salechart from "./Salechart.js";
 import Month from "./Month.js"
 import Address from "./Address.js";
 import Webisteorder from './Webisteorder.js';
+import Billingpage from "./Billingpage.js";
 
 const PaymentComponent = () => {
  
@@ -24,9 +25,11 @@ const PaymentComponent = () => {
       <Routes>
         <Route path="/:table" element={<Homepage />} />
         <Route path="/" element={<Homepage />} />
+        
         <Route path="/Owner" element={<Owner/>} />
         <Route path="/Invoice/:_id" element={<Invoicecompo/>} />
         <Route path="/Order" element={<OrderDetails/>} />
+        <Route path="/Billdata/:_id" element={<Billingpage/>} />
         <Route path="/Website" element={<Webisteorder/>} />
         <Route path="/Call" element={<Callwaiter/>} />
         <Route path="/Address" element={<Address/>} />

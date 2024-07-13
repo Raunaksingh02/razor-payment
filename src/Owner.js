@@ -8,6 +8,7 @@ import { IoFastFoodOutline } from "react-icons/io5";
 import { GiCook } from "react-icons/gi";
 import { FaChartLine } from "react-icons/fa6";
 import Calling from "./Calling";
+import { FaFileInvoiceDollar } from "react-icons/fa";
 import { io } from 'socket.io-client';
 
 const socket = io("https://backendcafe-ceaj.onrender.com");
@@ -83,6 +84,12 @@ function Owner(props) {
           <div className='m-3 p-3 h-56 rounded-2xl transition duration-150 ease-in-out  bg-[#18196c] flex flex-col items-center justify-center'>
          <h1 className='text-center text-4xl font-mono font-extrabold text-white'>Order Details</h1>
             <GiCook  fill='white'  className="h-12 w-12 mt-4" />
+            </div>
+          </Link>
+          <Link to="/Takeaway">
+          <div className='m-3 p-3 h-56 rounded-2xl transition duration-150 ease-in-out  bg-[#18196c] flex flex-col items-center justify-center'>
+         <h1 className='text-center text-4xl font-mono font-extrabold text-white'>Create Bill</h1>
+         <FaFileInvoiceDollar  fill='white'  className="h-12 w-12 mt-4" />
             </div>
           </Link>
           <Link to="/Dishmanage">

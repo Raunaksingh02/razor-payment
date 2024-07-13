@@ -5,17 +5,29 @@ import axios from 'axios';
 import html2canvas from "html2canvas";
 import { FaWhatsapp } from "react-icons/fa";
 import jsPDF from 'jspdf';
-import { FaFilePdf } from "react-icons/fa6";
+import { FaFilePdf } from "react-icons/fa";
 import { CustomerContext } from './CustomerContext.js';
 
-function Invoicecompo() {
+function Billingpage() {
     const { _id } = useParams();
     const pdfRef = useRef();
-    const customerDetails = useContext(CustomerContext); // Assuming CustomerContext provides customer details
-    const paymentDetails = useSelector((state) => state.cart.cart); // Assuming paymentDetails is fetched using Redux
+    const [customerdata, setcustomerdata] = useState("");
+    
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await axios.get(`https://backendcafe-ceaj.onrender.com/api/payments/${_id}`);
+                setcustomerdata(response.data);
+                console.log(response.data);
+            } catch (error) {
+                console.error('Error fetching payment details:', error.message);
+            }
+        };
 
-  
-       const downloadPDF = () => {
+        fetchData();
+    }, [_id]);
+
+    const downloadPDF = () => {
         const input = pdfRef.current;
         html2canvas(input).then((canvas) => {
             const imgData = canvas.toDataURL('image/png');
@@ -43,16 +55,16 @@ function Invoicecompo() {
         });
     }
 
-    if (!paymentDetails) {
-        return <div className="text-center font-lg font-extrabold">Loading the invoice..</div>;
+    if (!customerdata) {
+        return <div className="text-center font-lg font-extrabold">Loading the bill details..</div>;
     }
 
-    const totalforinvoice = paymentDetails.map((item) => item.price * item.quantity).reduce((prev, curr) => prev + curr, 0);
-    const grandTotalforinvoice = totalforinvoice + 50; // Assuming 50 is some additional charge (like tax or delivery fee)
+    const totalforbill = customerdata.cartforpayment.map((item) => item.price * item.quantity).reduce((prev, curr) => prev + curr, 0);
+    const grandTotalforbill = totalforbill + 50; // Assuming 50 is some additional charge (like tax or delivery fee)
 
     const invoiceLink = `https://cafehouse.vercel.app/billdata/${_id}`;
-    const message = `Here is your invoice: ${invoiceLink}`;
-    const whatsappLink = `https://api.whatsapp.com/send?phone=91${customerDetails.customerPhone}&text=${encodeURIComponent(message)}`;
+    const message = `Here is your bill: ${invoiceLink}`;
+    const whatsappLink = `https://api.whatsapp.com/send?phone=91${customerdata.customerPhoneNo}&text=${encodeURIComponent(message)}`;
 
     return (
         <div>
@@ -68,18 +80,19 @@ function Invoicecompo() {
                         <p className="text-gray-600">Phone: (123) 456-7890</p>
                     </div>
                     <div className="text-right">
-                        <h2 className="text-2xl font-extrabold">Invoice</h2>
+                        <h2 className="text-2xl font-extrabold">Bill Details</h2>
                         <p className="text-gray-600">Date: {new Date().toLocaleDateString()}</p>
-                        <p className="text-gray-600">Invoice #: {paymentDetails.invoiceNumber}</p>
+                        {/* Assuming invoice number or unique identifier for the bill */}
+                        <p className="text-gray-600">Bill: {_id}</p>
                     </div>
                 </div>
 
                 {/* Customer Info */}
                 <div className="mb-4">
                     <h3 className="text-lg font-bold mb-2">Bill To:</h3>
-                    <p><strong>Name:</strong> {customerDetails.customerName}</p>
-                    <p><strong>Venue:</strong> {customerDetails.customerTable ? customerDetails.customerTable : 'Table 1'}</p>
-                    <p><strong>Phone:</strong> {customerDetails.customerPhone}</p>
+                    <p><strong>Name:</strong> {customerdata.name}</p>
+                    <p><strong>Venue:</strong> {customerdata.customerTable? customerdata.customerTable : 'Table 1'}</p>
+                    <p><strong>Phone:</strong> {customerdata.customerPhoneNo}</p>
                 </div>
 
                 {/* Items Table */}
@@ -93,7 +106,7 @@ function Invoicecompo() {
                         </tr>
                     </thead>
                     <tbody>
-                        {paymentDetails.map((item, index) => (
+                        {customerdata.cartforpayment.map((item, index) => (
                             <tr key={index}>
                                 <td className="border px-4 py-2">{item.name}</td>
                                 <td className="border px-4 py-2">{item.price}</td>
@@ -105,7 +118,7 @@ function Invoicecompo() {
                     <tfoot>
                         <tr>
                             <td colSpan="3" className="border px-4 py-2 text-right">Subtotal:</td>
-                            <td className="border px-4 py-2">{totalforinvoice.toFixed(2)}</td>
+                            <td className="border px-4 py-2">{totalforbill.toFixed(2)}</td>
                         </tr>
                         <tr>
                             <td colSpan="3" className="border px-4 py-2 text-right">Additional Charges:</td>
@@ -113,51 +126,60 @@ function Invoicecompo() {
                         </tr>
                         <tr>
                             <td colSpan="3" className="border px-4 py-2 text-right font-bold">Grand Total:</td>
-                            <td className="border px-4 py-2 font-bold">{grandTotalforinvoice.toFixed(2)}</td>
+                            <td className="border px-4 py-2 font-bold">{grandTotalforbill.toFixed(2)}</td>
                         </tr>
                     </tfoot>
                 </table>
 
                 {/* Footer */}
                 <div className="text-center pt-4 border-t mt-4">
-                    <p className="text-gray-600">Thank you for dining with us!</p>
-                    <p className="text-gray-600">Please visit us again.</p>
+                    <p className="text-gray-600">Thank you for your business!</p>
+                    <p className="text-gray-600">We appreciate your patronage.</p>
                 </div>
             </div>
 
-            {/* Download Button */}
-            <div className="flex-1 text-center items-center">
+            {/* Download and WhatsApp Buttons */}
+            <div className="flex justify-center mt-4">
                 <button
                     onClick={downloadPDF}
-                    className="h-16 w-32 p-3 m-3 border-2 border-black bg-black text-white rounded-xl font-bold">
-                   <div className="flex items-center "> 
-                  <div >
-                    Download
-                   </div>
-                 <div>
-               <FaFilePdf  fill="white"  className='h-4 w-4 m-2 ' />
-              
-                </div>
-                  </div>
-                 
-              
+                    className="flex items-center justify-center h-16 w-32 p-3 m-3 border-2 border-black bg-black text-white rounded-xl font-bold">
+                    <div className="flex items-center">
+                        <div>Download</div>
+                        <div><FaFilePdf className="ml-2" /></div>
+                    </div>
                 </button>
-                <button onClick={() => window.open(whatsappLink, '_blank')} className="h-16 w-32 p-4 m-3 border-2 border-black bg-black text-white rounded-xl font-bold">
-                  
-                <div className="flex items-center "> 
-                  <div >
-                    Whatsapp
-                   </div>
-                 <div>
-               <FaWhatsapp fill="white"  className='h-4 w-4 m-2 ' />
-                </div>
-                  </div>
-                 
-              
-             </button>
+                <button
+                    onClick={() => window.open(whatsappLink, '_blank')}
+                    className="flex items-center justify-center h-16 w-32 p-4 m-3 border-2 border-black bg-black text-white rounded-xl font-bold">
+                    <div className="flex items-center">
+                        <div>WhatsApp</div>
+                        <div><FaWhatsapp className="ml-2" /></div>
+                    </div>
+                </button>
             </div>
         </div>
     );
 }
 
-export default Invoicecompo;
+export default Billingpage ;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

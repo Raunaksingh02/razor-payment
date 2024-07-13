@@ -15,6 +15,7 @@ function Billpart() {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const tableQueryParam = queryParams.get('table');
+  console.log("the table query is" , tableQueryParam);
   const navigate = useNavigate();
   const [orderId, setOrderId] = useState('');
   const [paymentId, setPaymentId] = useState('');
@@ -182,6 +183,9 @@ function Billpart() {
     dispatch(removeToCart(item));
   };
 
+
+  
+
   return (
     <div className='container mx-auto p-4'>
       <div className='flex items-center mb-4'>
@@ -270,6 +274,8 @@ function Billpart() {
                 </select>
               </div>
             )}
+   
+           
 
             <div className='flex flex-col items-center mt-5'>
               <button onClick={loadRazorpay} className='h-12 w-30 bg-black font-bold text-xl p-3 mt-3 text-white rounded-xl'>
@@ -278,6 +284,7 @@ function Billpart() {
               <button onClick={savePaymentDetails2} className='h-12 w-30 bg-black font-bold text-xl p-3 mt-3 text-white rounded-xl'>
                 Pay Cash
               </button>
+              
             </div>
           </div>
         </div>

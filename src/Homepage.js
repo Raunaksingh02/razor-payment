@@ -9,7 +9,9 @@ import { CiSearch } from "react-icons/ci";
 import { addToCart, removeToCart } from './redux/cartSlice.js';
 
 function Homepage() {
-    const { table } = useParams(); // Get the table parameter from the URL
+    const { table } = useParams(); 
+    console.log(table);
+    // Get the table parameter from the URL
     const [cafes, setCafes] = useState([]);
     const [quantities, setQuantities] = useState([]);
     const [selectedSizes, setSelectedSizes] = useState([]);
