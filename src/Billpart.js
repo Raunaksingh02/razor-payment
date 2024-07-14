@@ -8,6 +8,7 @@ import closebutton from './images/closebutton.png';
 import { CustomerContext } from './CustomerContext';
 import axios from 'axios';
 import { removeToCart } from './redux/cartSlice.js';
+import Calling from './Calling.js';
 
 Modal.setAppElement('#root');
 
@@ -188,6 +189,17 @@ function Billpart() {
 
   return (
     <div className='container mx-auto p-4'>
+       {
+                 tableQueryParam==="Takeaway" && (
+                    <>
+                    <div>
+                        <h2 className='font-bold text-red-700 text-center '>In Billing mode ,Select items for customer </h2>
+                        <Calling/>
+                    </div>
+                    
+                    </>
+                )
+            }
       <div className='flex items-center mb-4'>
         <div className='mr-4'>
           <Link to="/">
