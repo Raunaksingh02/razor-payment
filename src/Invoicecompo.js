@@ -51,7 +51,7 @@ function Invoicecompo() {
     const grandTotalforinvoice = totalforinvoice + 50; // Assuming 50 is some additional charge (like tax or delivery fee)
 
     const invoiceLink = `https://cafehouse.vercel.app/billdata/${_id}`;
-    const message = `Dear ${customerDetails.name}, Here is your invoice: ${invoiceLink}`;
+    const message = `Dear Customer, Here is your invoice: ${invoiceLink}`;
     const whatsappLink = `https://api.whatsapp.com/send?phone=91${customerDetails.customerPhone}&text=${encodeURIComponent(message)}`;
 
     return (

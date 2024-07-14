@@ -5,6 +5,7 @@ import axios from 'axios';
 import { GrCafeteria } from "react-icons/gr";
 import cartlogo from "./images/cartlogo.png";
 import dialicon from './images/dialicon.png';
+import deliverylogo from './images/delivery.gif';
 import { CiSearch } from "react-icons/ci";
 import { addToCart, removeToCart } from './redux/cartSlice.js';
 import Calling from './Calling.js';
@@ -22,7 +23,7 @@ function Homepage() {
     const [loading, setLoading] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
     const [searchTerm, setSearchTerm] = useState('');
-    const itemsPerPage = 5;
+    const itemsPerPage = 6;
 
     const dispatch = useDispatch();
     const cartfortotal = useSelector((state) => state.cart.cart);
@@ -92,13 +93,28 @@ function Homepage() {
 
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
-    if (loading) {
-        return <div className="flex justify-center items-center text-center mt-20">
-            <h1 className="font-bold ml-3">Loading the menu...</h1>
-            <GrCafeteria fill='white' className='h-10 w-10' />
-        </div>;
-    }
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setLoading(false);
+        }, 7000); // 3000 milliseconds = 3 seconds
 
+        return () => clearTimeout(timer);
+    }, []);
+
+    if (loading) {
+        return (
+            <div className="flex flex-col justify-center items-center h-screen bg-gradient-to-r from-yellow-300 to-yellow-200">
+            <h1 className="font-extrabold text-2xl text-center mb-4">Loading the menu...</h1>
+            <GrCafeteria  className="h-10  w-10" />
+            <img
+                src={deliverylogo}
+                className='h-auto w-auto max-h-full max-w-full'
+                alt="Loading"
+            />
+        </div>
+        );
+    }
+    
     return (
         <div className="container mx-auto p-4">
             {
@@ -133,7 +149,7 @@ function Homepage() {
                     <h1 className="font-bold text-red-500 text-2xl ml-2">{totalquantityforhome}</h1>
                 </div>
             </div>
-            <div className="flex justify-between font-bold text-xl items-center p-2 ">
+            <div className="flex justify-between font-bold text-xl items-center p-3 mr-2 ">
                 <label htmlFor="category-select" className="block mr-7"> Select Category :</label>
                 <select
                     id="category-select"
@@ -162,11 +178,11 @@ function Homepage() {
                     </button>
                 </div>
             </div>
-            <div className="grid grid-cols-1 mt-3">
+            <div className="grid grid-cols-1 mt-3 sm:grid sm:grid-cols-3 sm:gap-4">
                 {currentCafes.map((item, index) => (
                     <div className="flex flex-row bg-gray-100 ease-in duration-300 rounded-2xl shadow-lg shadow-gray-400 p-4 mb-4 hover:bg-gray-400" key={index}>
                         <img
-                            className='w-full mt-4 p-2 h-48 object-cover rounded-3xl'
+                            className='w-full sm:w-40 mt-4 p-2 h-40 object-cover rounded-3xl'
                             src={item.image}
                             alt={item.name}
                         />
@@ -179,7 +195,7 @@ function Homepage() {
                                 <label htmlFor={`size-select-${index}`} className="block text-sm font-bold text-gray-700">Size:</label>
                                 <select
                                     id={`size-select-${index}`}
-                                    className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                                    className="mt-1 block w-full sm:w-40 pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
                                     value={selectedSizes[cafes.indexOf(item)]}
                                     onChange={(e) => {
                                         const size = e.target.value;

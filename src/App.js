@@ -24,8 +24,7 @@ const PaymentComponent = () => {
     <Router>
       <Routes>
         <Route path="/:table" element={<Homepage />} />
-        <Route path="/" element={<Homepage />} />
-        
+        <Route path="/" element={<Homepage />} />  
         <Route path="/Owner" element={<Owner/>} />
         <Route path="/Invoice/:_id" element={<Invoicecompo/>} />
         <Route path="/Order" element={<OrderDetails/>} />
