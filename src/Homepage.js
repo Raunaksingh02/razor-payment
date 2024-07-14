@@ -7,6 +7,7 @@ import cartlogo from "./images/cartlogo.png";
 import dialicon from './images/dialicon.png';
 import { CiSearch } from "react-icons/ci";
 import { addToCart, removeToCart } from './redux/cartSlice.js';
+import Calling from './Calling.js';
 
 function Homepage() {
     const { table } = useParams(); 
@@ -100,6 +101,17 @@ function Homepage() {
 
     return (
         <div className="container mx-auto p-4">
+            {
+                table==="Takeaway" && (
+                    <>
+                    <div>
+                        <h2 className='font-bold text-red-700 text-center '>In Billing mode ,Select items for customer </h2>
+                        <Calling/>
+                    </div>
+                    
+                    </>
+                )
+            }
             <div className='flex items-center justify-between'>
                 <h1 className="text-3xl font-extrabold text-center m-2">Cafe Coffee </h1>
                 <div className='flex items-center'>
@@ -114,6 +126,7 @@ function Homepage() {
                             </div>
                         </Link>
                     )}
+
                     <Link to={`/bill?table=${table}`}>
                         <img src={cartlogo} className='h-12 w-12' alt="cart logo" />
                     </Link>
