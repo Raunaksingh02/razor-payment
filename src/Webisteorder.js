@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import backarrowlogo from './images/backarrowlogo.png';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
+import Calling from "./Calling.js";
 
 const WebsiteOrder = () => {
   const [selectedTab, setSelectedTab] = useState('today');
@@ -84,8 +85,9 @@ const handleMove = (_id) => {
   return (
     <div className="my-4">
         <div className='flex items-center mb-4'>
+          <Calling/>
         <div className='mr-4'>
-          <Link to="/">
+          <Link to="/owner">
             <img src={backarrowlogo} className='h-10 w-10' alt="Back" />
           </Link>
         </div>
@@ -117,6 +119,7 @@ const handleMove = (_id) => {
           <div key={payment.id} className="p-4 border rounded shadow-lg">
             <p className="text-lg font-bold">Customer Name: {payment.name}</p>
             <p className="text-lg font-semibold">Customer status: {payment.status}</p>
+            <p className="text-lg font-semibold">Payment Status: {payment.paymentmode}</p>
             <p className="mt-2 text-gray-700"><strong>Address:</strong></p>
             <ul className="ml-4 list-disc text-gray-700">
               <li><strong>House No:</strong> {payment.address.houseNo}</li>

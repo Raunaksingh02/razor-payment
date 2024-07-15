@@ -6,6 +6,7 @@ import { FaMoneyCheckDollar } from "react-icons/fa6";
 import { TbReport } from "react-icons/tb";
 import { IoFastFoodOutline } from "react-icons/io5";
 import { GiCook } from "react-icons/gi";
+import { TbTruckDelivery } from "react-icons/tb";
 import { FaChartLine } from "react-icons/fa6";
 import Calling from "./Calling";
 import { FaFileInvoiceDollar } from "react-icons/fa";
@@ -92,6 +93,12 @@ function Owner(props) {
          <FaFileInvoiceDollar  fill='white'  className="h-12 w-12 mt-4" />
             </div>
           </Link>
+          <Link to="/Website">
+         <div className='m-3 p-3 h-56 rounded-2xl transition duration-150 ease-in-out bg-[#18196c] flex flex-col items-center justify-center'>
+         <h1 className='text-center text-4xl font-mono font-extrabold text-white'>Website Order</h1>
+         <TbTruckDelivery fill='white' className="h-12 w-12 mt-4  text-white"  />
+       </div>
+        </Link>
           <Link to="/Dishmanage">
          <div className='m-3 p-3 h-56 rounded-2xl transition duration-150 ease-in-out bg-[#18196c] flex flex-col items-center justify-center'>
          <h1 className='text-center text-4xl font-mono font-extrabold text-white'>Dish Management</h1>
