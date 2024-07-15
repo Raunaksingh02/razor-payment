@@ -55,14 +55,12 @@ function Billingpage() {
         });
     }
 
-    if (customerdata) {
-        return (
-            <div className="flex flex-col justify-center items-center h-screen ">
-            <h1 className="font-extrabold text-2xl text-center mb-4">Loading the Invoice...</h1>
-            
-        </div>
-        );
+    if (!customerdata) {
+        return <div className="flex justify-center items-center h-screen text-center font-lg font-extrabold">
+            <h1 className='text-2xl text-gray-500 font-bold'>Loading the bill details..</h1>
+        </div>;
     }
+
     const totalforbill = customerdata.cartforpayment.map((item) => item.price * item.quantity).reduce((prev, curr) => prev + curr, 0);
     const grandTotalforbill = totalforbill + 50; // Assuming 50 is some additional charge (like tax or delivery fee)
 
