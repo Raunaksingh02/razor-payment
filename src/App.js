@@ -17,12 +17,13 @@ import Month from "./Month.js"
 import Address from "./Address.js";
 import Webisteorder from './Webisteorder.js';
 import Billingpage from "./Billingpage.js";
-
+import Splash from './Splash.js';
 const PaymentComponent = () => {
  
   return (
     <Router>
       <Routes>
+      <Route path="/Splash" element={<Splash />} />
         <Route path="/:table" element={<Homepage />} />
         <Route path="/" element={<Homepage />} />  
         <Route path="/Owner" element={<Owner/>} />

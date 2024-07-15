@@ -31,6 +31,7 @@ function Billpart() {
   const [city, setCity] = useState('');
   const [pincode, setPincode] = useState('');
   const [landmark, setLandmark] = useState('');
+  const [validationMessage, setValidationMessage] = useState('');
 
   useEffect(() => {
     const fetchOrder = async () => {
@@ -142,7 +143,6 @@ function Billpart() {
     }
   };
 
-
   const handlename = (event) => {
     setCustomerName(event.target.value);
   };
@@ -178,14 +178,34 @@ function Billpart() {
 
   const closeModal = () => {
     setModalIsOpen(false);
+    setValidationMessage('');
   };
 
   const handleRemove = (item) => {
     dispatch(removeToCart(item));
   };
 
+  const isFormValid = () => {
+    return customerName && customerPhone && (tableQueryParam !== "undefined" || (houseNo && city && pincode && landmark));
+  };
 
-  
+  const handleValidation = () => {
+    if (!isFormValid()) {
+      setValidationMessage('All input fields are required.');
+    } else {
+      setValidationMessage('');
+      loadRazorpay();
+    }
+  };
+
+  const handleCashPayment = () => {
+    if (!isFormValid()) {
+      setValidationMessage('All input fields are required.');
+    } else {
+      setValidationMessage('');
+      savePaymentDetails2();
+    }
+  };
 
   return (
     <div className='container mx-auto p-4'>
@@ -231,20 +251,24 @@ function Billpart() {
       ))}
 
       <div className='mt-4 text-center'>
-        <h1 className='font-bold text-2xl'>Total Amount = {grandTotalforpayment}</h1>
-        <button onClick={openModal} className='h-12 w-38 p-3 mt-2 bg-black text-white font-bold rounded-lg'>
-          Place Order
+        <h1 className='font-bold text-2xl'>Total Amount = {totalforpayment}</h1>
+        <h1 className='font-bold text-2xl'>Grand Total = {grandTotalforpayment}</h1>
+      </div>
+     
+      <div className='text-center mt-4'>
+        <button onClick={openModal} className='h-12 w-60 bg-black text-white text-lg font-bold rounded-2xl'>
+          Pay Now
         </button>
       </div>
-
-      <Modal isOpen={modalIsOpen} onRequestClose={closeModal} contentLabel="Example Modal">
-        <div className='flex justify-end'>
+      
+      <Modal isOpen={modalIsOpen} onRequestClose={closeModal} className="custom-modal">
+        <div className='flex justify-end text-center items-start m-2 p-2 rounded-full '>
           <button onClick={closeModal}>
-            <img src={closebutton} className='h-6 w-8 rounded-2xl' alt="Close" />
+            <img src={closebutton} className='h-8 w-8 rounded-2xl'  />
           </button>
         </div>
-        <div className="m-3 p-3">
-          <div className='flex-col'>
+        <div className="m-3 p-3 ">
+          <div className='flex-col ml-6'>
             <div>
               <h1 className='font-bold m-2 text-lg'>Enter name</h1>
               <input type="text" value={customerName} className='h-10 w-60 border-2 border-black rounded-xl' required onChange={handlename} />
@@ -290,13 +314,15 @@ function Billpart() {
            
 
             <div className='flex flex-col items-center mt-5'>
-              <button onClick={loadRazorpay} className='h-12 w-30 bg-black font-bold text-xl p-3 mt-3 text-white rounded-xl'>
+              <button onClick={handleValidation} className='h-12 w-30 bg-black font-bold text-xl p-3 mt-3 text-white rounded-xl'>
                 Pay Now
               </button>
-              <button onClick={savePaymentDetails2} className='h-12 w-30 bg-black font-bold text-xl p-3 mt-3 text-white rounded-xl'>
+              <button onClick={handleCashPayment} className='h-12 w-30 bg-black font-bold text-xl p-3 mt-3 text-white rounded-xl'>
                 Pay Cash
               </button>
-              
+              {validationMessage && (
+                <p className='text-red-500 font-bold mt-2'>{validationMessage}</p>
+              )}
             </div>
           </div>
         </div>

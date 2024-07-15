@@ -96,7 +96,7 @@ function Homepage() {
     useEffect(() => {
         const timer = setTimeout(() => {
             setLoading(false);
-        }, 7000); // 3000 milliseconds = 3 seconds
+        }, 11000); // 3000 milliseconds = 3 seconds
 
         return () => clearTimeout(timer);
     }, []);
