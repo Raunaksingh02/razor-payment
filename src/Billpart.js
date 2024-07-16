@@ -260,73 +260,122 @@ function Billpart() {
           Pay Now
         </button>
       </div>
-      
-      <Modal isOpen={modalIsOpen} onRequestClose={closeModal} className="custom-modal">
-        <div className='flex justify-end text-center items-start m-2 p-2 rounded-full '>
-          <button onClick={closeModal}>
-            <img src={closebutton} className='h-8 w-8 rounded-2xl'  />
-          </button>
-        </div>
-        <div className="m-3 p-3 ">
-          <div className='flex-col ml-6'>
-            <div>
-              <h1 className='font-bold m-2 text-lg'>Enter name</h1>
-              <input type="text" value={customerName} className='h-10 w-60 border-2 border-black rounded-xl' required onChange={handlename} />
-            </div>
-            <div>
-              <h1 className='font-bold text-lg m-2'>Enter mobile no</h1>
-              <input type="text" required className='h-10 w-60 border-2 border-black rounded-xl' onChange={handlePhoneNo} value={customerPhone} />
-            </div>
-           
-            {tableQueryParam === "undefined" && (
-              <>
-                <div>
-                  <h1 className='font-bold text-lg m-2'>House No</h1>
-                  <input type="text" required className='h-10 w-60 border-2 border-black rounded-xl' onChange={handleHouseNo} value={houseNo} />
-                </div>
-                <div>
-                  <h1 className='font-bold text-lg m-2'>City</h1>
-                  <input type="text" required className='h-10 w-60 border-2 border-black rounded-xl' onChange={handleCity} value={city} />
-                </div>
-                <div>
-                  <h1 className='font-bold text-lg m-2'>Pincode</h1>
-                  <input type="text" required className='h-10 w-60 border-2 border-black rounded-xl' onChange={handlePincode} value={pincode} />
-                </div>
-                <div>
-                  <h1 className='font-bold text-lg m-2'>Landmark</h1>
-                  <input type="text" required className='h-10 w-60 border-2 border-black rounded-xl' onChange={handleLandmark} value={landmark} />
-                </div>
-              </>
-            )}
-
-            {tableQueryParam === "table" && (
-              <div className='flex ml-3 mt-4'>
-                <h1 className="font-bold text-lg">Choose table:</h1>
-                <select required onChange={handleTableNo} className="font-bold text-lg ml-2" name="table" value={customerTable}>
-                  <option value="table 1">table 1</option>
-                  <option value="table 2">table 2</option>
-                  <option value="table 3">table 3</option>
-                  <option value="table 4">table 4</option>
-                </select>
-              </div>
-            )}
-   
-           
-
-            <div className='flex flex-col items-center mt-5'>
-              <button onClick={handleValidation} className='h-12 w-30 bg-black font-bold text-xl p-3 mt-3 text-white rounded-xl'>
-                Pay Now
-              </button>
-              <button onClick={handleCashPayment} className='h-12 w-30 bg-black font-bold text-xl p-3 mt-3 text-white rounded-xl'>
-                Pay Cash
-              </button>
-              {validationMessage && (
-                <p className='text-red-500 font-bold mt-2'>{validationMessage}</p>
-              )}
-            </div>
+      <Modal
+  isOpen={modalIsOpen}
+  onRequestClose={closeModal}
+  className="fixed inset-0 flex items-center justify-center p-4 z-50"
+  overlayClassName="fixed inset-0 bg-black bg-opacity-50"
+>
+  <div className="bg-white w-full max-w-md md:max-w-lg lg:max-w-xl mx-auto p-6 rounded-lg shadow-lg relative max-h-full overflow-y-auto">
+    <div className="flex justify-end items-start mb-4">
+      <button onClick={closeModal}>
+        <img src={closebutton} className="h-8 w-8 rounded-2xl" alt="Close" />
+      </button>
+    </div>
+    <div className="space-y-6">
+      <div>
+        <h1 className="font-bold text-lg mb-2">Enter name</h1>
+        <input
+          type="text"
+          value={customerName}
+          className="h-10 w-full border border-gray-300 rounded-lg p-2 focus:border-blue-500 focus:outline-none"
+          required
+          onChange={handlename}
+        />
+      </div>
+      <div>
+        <h1 className="font-bold text-lg mb-2">Enter mobile no</h1>
+        <input
+          type="text"
+          required
+          className="h-10 w-full border border-gray-300 rounded-lg p-2 focus:border-blue-500 focus:outline-none"
+          onChange={handlePhoneNo}
+          value={customerPhone}
+        />
+      </div>
+      {tableQueryParam === "undefined" && (
+        <>
+          <div>
+            <h1 className="font-bold text-lg mb-2">House No</h1>
+            <input
+              type="text"
+              required
+              className="h-10 w-full border border-gray-300 rounded-lg p-2 focus:border-blue-500 focus:outline-none"
+              onChange={handleHouseNo}
+              value={houseNo}
+            />
           </div>
+          <div>
+            <h1 className="font-bold text-lg mb-2">City</h1>
+            <input
+              type="text"
+              required
+              className="h-10 w-full border border-gray-300 rounded-lg p-2 focus:border-blue-500 focus:outline-none"
+              onChange={handleCity}
+              value={city}
+            />
+          </div>
+          <div>
+            <h1 className="font-bold text-lg mb-2">Pincode</h1>
+            <input
+              type="text"
+              required
+              className="h-10 w-full border border-gray-300 rounded-lg p-2 focus:border-blue-500 focus:outline-none"
+              onChange={handlePincode}
+              value={pincode}
+            />
+          </div>
+          <div>
+            <h1 className="font-bold text-lg mb-2">Landmark</h1>
+            <input
+              type="text"
+              required
+              className="h-10 w-full border border-gray-300 rounded-lg p-2 focus:border-blue-500 focus:outline-none"
+              onChange={handleLandmark}
+              value={landmark}
+            />
+          </div>
+        </>
+      )}
+      {tableQueryParam === "table" && (
+        <div className="flex items-center mt-4">
+          <h1 className="font-bold text-lg">Choose table:</h1>
+          <select
+            required
+            onChange={handleTableNo}
+            className="font-bold text-lg ml-2 border border-gray-300 rounded-lg p-2 focus:border-blue-500 focus:outline-none"
+            name="table"
+            value={customerTable}
+          >
+            <option value="table 1">table 1</option>
+            <option value="table 2">table 2</option>
+            <option value="table 3">table 3</option>
+            <option value="table 4">table 4</option>
+          </select>
         </div>
-      </Modal>
+      )}
+      <div className="flex flex-col items-center mt-5 space-y-3">
+        <button
+          onClick={handleValidation}
+          className="h-12 w-40 bg-blue-600 hover:bg-blue-700 font-bold text-xl text-white rounded-lg transition duration-300"
+        >
+          Pay Now
+        </button>
+        <button
+          onClick={handleCashPayment}
+          className="h-12 w-40 bg-blue-600 hover:bg-blue-700  font-bold text-xl text-white rounded-lg transition duration-300"
+        >
+          Pay Cash
+        </button>
+        {validationMessage && (
+          <p className="text-red-500 font-bold mt-2">{validationMessage}</p>
+        )}
+      </div>
+    </div>
+  </div>
+</Modal>
+
+           
     </div>
   );
 }
