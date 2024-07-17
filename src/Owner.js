@@ -9,7 +9,6 @@ import { GiCook } from "react-icons/gi";
 import { TbTruckDelivery } from "react-icons/tb";
 import { FaChartLine } from "react-icons/fa6";
 import Calling from "./Calling.js"
-import Salechart from './Salechart.js';
 import { FaFileInvoiceDollar } from "react-icons/fa";
 
 function Owner(props) {
@@ -81,6 +80,7 @@ function Owner(props) {
       <footer className="bg-gray-700 text-white p-4 text-center">
         <p>© 2024 Cafehouse Pvt ltd. All rights reserved.</p>
       </footer>
+    </div>
     </div>
     </div>
   );
