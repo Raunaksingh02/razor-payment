@@ -24,14 +24,8 @@ function Owner(props) {
           </Link>
           <h1 className="font-extrabold text-3xl text-center text-[#18196c] ml-10">Admin Panel</h1>
         </div>
-
-        <div className='rounded-4x shadow-blue-400 shadow-xl m-2 p-2 w-full h-50'>
-          <Salechart/>
-        </div>
         <div>
-        <h1 className="font-extrabold text-3xl p-3 text-center mt-2 text-[#18196c] ml-10">Management Panel</h1>
-    
-        </div>
+        
         <div className="grid grid-cols-2 shadow-xl shadow-blue-400">
           <Link to="/Order">
           <div className='m-3 p-3 h-56 rounded-3xl  transition duration-150 ease-in-out  bg-[#18196c] flex flex-col items-center justify-center'>
