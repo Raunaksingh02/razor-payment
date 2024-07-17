@@ -184,7 +184,7 @@ function Homepage() {
            
             <div className="grid grid-cols-1 mt-3 sm:grid sm:grid-cols-3 sm:gap-4">
                 {currentCafes.map((item, index) => (
-                    <div className="flex flex-row bg-gray-100 ease-in duration-300 rounded-2xl  shadow-2xl shadow-orange-400 p-4 mb-4 hover:bg-gray-400" key={index}>
+                    <div className="flex flex-row bg-gray-100 ease-in duration-300 rounded-2xl  shadow-inner shadow-gray-400  p-4 mb-4 hover:bg-gray-400" key={index}>
                         <img
                             className='w-full sm:w-40 mt-4 p-2 h-40 object-cover rounded-3xl'
                             src={item.image}
