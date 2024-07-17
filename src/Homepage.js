@@ -5,10 +5,12 @@ import axios from 'axios';
 import { GrCafeteria } from "react-icons/gr";
 import cartlogo from "./images/cartlogo.png";
 import dialicon from './images/dialicon.png';
+import { FaShoppingCart } from "react-icons/fa";
 import deliverylogo from './images/delivery.gif';
 import { CiSearch } from "react-icons/ci";
 import { addToCart, removeToCart } from './redux/cartSlice.js';
 import Calling from './Calling.js';
+import Footer from "./Footer.js"
 
 function Homepage() {
     const { table } = useParams(); 
@@ -116,7 +118,7 @@ function Homepage() {
     }
     
     return (
-        <div className="container mx-auto p-4">
+        <div className="container mx-auto p-4 ">
             {
                 table==="Takeaway" && (
                     <>
@@ -128,15 +130,15 @@ function Homepage() {
                     </>
                 )
             }
-            <div className='flex items-center justify-between'>
-                <h1 className="text-3xl font-extrabold text-center m-2">Cafe Coffee </h1>
+            <div className='flex items-center justify-between bg-[#f6931e] rounded-t-3xl  p-3 mt-1'>
+                <h1 className="text-3xl font-extrabold text-white text-center m-2 mr-3">Cafe Coffee </h1>
                 <div className='flex items-center'>
                     {table && (
                         <Link to="/Call">
-                            <div className='flex items-center p-2 bg-gray-100 shadow-lg shadow-gray-400 hover:bg-gray-400 rounded-2xl mr-2'>
+                            <div className='flex items-center py-1 p-2 bg-gray-100 shadow-lg shadow-gray-400 hover:bg-gray-400 rounded-2xl mr-2'>
                                 <img
                                     src={dialicon}
-                                    className='h-6 w-6 animate-ring'
+                                    className='h-4 w-4 animate-ring'
                                 />
                                 <p className='font-bold m-1'>Waiter</p>
                             </div>
@@ -144,16 +146,31 @@ function Homepage() {
                     )}
 
                     <Link to={`/bill?table=${table}`}>
-                        <img src={cartlogo} className='h-12 w-12' alt="cart logo" />
+                    <FaShoppingCart fill="white" className="h-8 w-8" />
                     </Link>
-                    <h1 className="font-bold text-red-500 text-2xl ml-2">{totalquantityforhome}</h1>
+                    <h1 className="font-bold text-white font-bold text-2xl ml-2">{totalquantityforhome}</h1>
+                </div>
+              </div>
+               <div className="flex justify-center bg-[#f6931e] bg-[] rounded-b-3xl  mb-2 p-4 ">
+                <div className="flex w-full max-w-md border-2 mb-3 border-gray-300 rounded-full shadow-lg">
+                    <input
+                        type="text"
+                        placeholder="Enter dish name..."
+                        className="w-full h-12 px-4 text-gray-700  placeholder-gray-400 rounded-l-full focus:outline-none"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                    <button onClick={() => setCurrentPage(1)} className="flex items-center justify-center w-12 h-12 bg-gray-800 rounded-r-full hover:bg-gray-700 focus:outline-none">
+                        <CiSearch fill="white" className="w-8 h-8" />
+                    </button>
                 </div>
             </div>
-            <div className="flex justify-between font-bold text-xl items-center p-3 mr-2 ">
+
+            <div className="flex justify-between font-bold text-xl items-center p-3 mr-2  ">
                 <label htmlFor="category-select" className="block mr-7"> Select Category :</label>
                 <select
                     id="category-select"
-                    className="mt-1 block pl-3 pr-10 py-2 bg-gray-100 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                    className="mt-1 block pl-3 pr-10 py-2 bg-gray-100 text-base border--300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
                     value={selectedCategory}
                     onChange={(e) => setSelectedCategory(e.target.value)}
                 >
@@ -164,23 +181,10 @@ function Homepage() {
                     ))}
                 </select>
             </div>
-            <div className="flex justify-center p-4">
-                <div className="flex w-full max-w-md border-2 border-gray-300 rounded-full shadow-lg">
-                    <input
-                        type="text"
-                        placeholder="Enter dish name..."
-                        className="w-full h-12 px-4 text-gray-700 placeholder-gray-400 rounded-l-full focus:outline-none"
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                    />
-                    <button onClick={() => setCurrentPage(1)} className="flex items-center justify-center w-12 h-12 bg-gray-800 rounded-r-full hover:bg-gray-700 focus:outline-none">
-                        <CiSearch fill="white" className="w-8 h-8" />
-                    </button>
-                </div>
-            </div>
+           
             <div className="grid grid-cols-1 mt-3 sm:grid sm:grid-cols-3 sm:gap-4">
                 {currentCafes.map((item, index) => (
-                    <div className="flex flex-row bg-gray-100 ease-in duration-300 rounded-2xl shadow-lg shadow-gray-400 p-4 mb-4 hover:bg-gray-400" key={index}>
+                    <div className="flex flex-row bg-gray-100 ease-in duration-300 rounded-2xl  shadow-2xl shadow-orange-400 p-4 mb-4 hover:bg-gray-400" key={index}>
                         <img
                             className='w-full sm:w-40 mt-4 p-2 h-40 object-cover rounded-3xl'
                             src={item.image}
@@ -244,6 +248,7 @@ function Homepage() {
                     Next
                 </button>
             </div>
+            <Footer/>
         </div>
     );
 }

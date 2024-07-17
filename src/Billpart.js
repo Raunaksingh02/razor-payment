@@ -9,6 +9,7 @@ import { CustomerContext } from './CustomerContext';
 import axios from 'axios';
 import { removeToCart } from './redux/cartSlice.js';
 import Calling from './Calling.js';
+import Footer from './Footer.js';
 
 Modal.setAppElement('#root');
 
@@ -370,12 +371,11 @@ function Billpart() {
         {validationMessage && (
           <p className="text-red-500 font-bold mt-2">{validationMessage}</p>
         )}
-      </div>
-    </div>
-  </div>
-</Modal>
-
-           
+         </div>
+          </div>
+          </div>
+          </Modal> 
+          <Footer/>
     </div>
   );
 }
