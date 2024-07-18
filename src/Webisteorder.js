@@ -45,33 +45,18 @@ const WebsiteOrder = () => {
 
   const handleDelete = async (paymentId) => {
     try {
-        console.log(paymentId);
-        const response = await axios.delete(`https://backendcafe-ceaj.onrender.com/${paymentId}`);
-        console.log('Delete response:', response);
-        setPayments(payments.filter(payment => payment._id !== paymentId));
+      const response = await axios.delete(`https://backendcafe-ceaj.onrender.com/${paymentId}`);
+      setPayments(payments.filter(payment => payment._id !== paymentId));
     } catch (error) {
-        console.error('There was an error deleting the payment!', error);
-        if (error.response) {
-            console.error('Error response data:', error.response.data);
-            console.error('Error response status:', error.response.status);
-            console.error('Error response headers:', error.response.headers);
-        } else if (error.request) {
-            console.error('Error request data:', error.request);
-        } else {
-            console.error('Error message:', error.message);
-        }
+      console.error('There was an error deleting the payment!', error);
     }
-};
+  };
 
-const move1 = useNavigate();
+  const move1 = useNavigate();
 
-const handleMove = (_id) => {
-    console.log(_id);
+  const handleMove = (_id) => {
     move1(`/update/${_id}`);
-};
-
-
-
+  };
 
   const formatDate = (dateString) => {
     const options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' };
@@ -82,10 +67,14 @@ const handleMove = (_id) => {
     setSelectedTab(tab);
   };
 
+  const getStatusColor = (status, condition) => {
+    return status === condition ? 'text-green-600' : 'text-red-600';
+  };
+
   return (
     <div className="my-4">
-        <div className='flex items-center mb-4'>
-          <Calling/>
+      <div className='flex items-center mb-4'>
+        <Calling />
         <div className='mr-4'>
           <Link to="/owner">
             <img src={backarrowlogo} className='h-10 w-10' alt="Back" />
@@ -116,10 +105,10 @@ const handleMove = (_id) => {
       )}
       <div className="grid grid-cols-1 gap-4">
         {filteredPayments.map((payment) => (
-          <div key={payment.id} className="p-4 border rounded shadow-lg">
+          <div key={payment._id} className="p-4 border rounded shadow-lg">
             <p className="text-lg font-bold">Customer Name: {payment.name}</p>
-            <p className="text-lg font-semibold">Customer status: {payment.status}</p>
-            <p className="text-lg font-semibold">Payment Status: {payment.paymentmode}</p>
+            <p className={`text-lg font-semibold ${getStatusColor(payment.status, 'delivered')}`}>Customer Status: {payment.status}</p>
+            <p className={`text-lg font-semibold ${getStatusColor(payment.paymentmode, 'Received')}`}>Payment Status: {payment.paymentmode}</p>
             <p className="mt-2 text-gray-700"><strong>Address:</strong></p>
             <ul className="ml-4 list-disc text-gray-700">
               <li><strong>House No:</strong> {payment.address.houseNo}</li>
@@ -128,7 +117,7 @@ const handleMove = (_id) => {
               <li><strong>Landmark:</strong> {payment.address.landmark}</li>
             </ul>
             <p className="mt-2 text-gray-700"><strong>Date:</strong> {formatDate(payment.date)}</p>
-            <p className="mt-2 text-gray-700"><strong>Amount:</strong> ${payment.amount}</p>
+            <p className="mt-2 text-gray-700"><strong>Amount:</strong> {payment.amount}</p>
             {payment.cartforpayment && payment.cartforpayment.length > 0 ? (
               <div className="mt-2">
                 <p className="text-gray-700"><strong>Cart:</strong></p>
@@ -137,28 +126,28 @@ const handleMove = (_id) => {
                     <li key={index} className="mt-1">
                       <p><strong>Item Name:</strong> {item.name}</p>
                       <p><strong>Quantity:</strong> {item.quantity}</p>
-                      <p><strong>Price:</strong> ${item.price}</p>
+                      <p><strong>Price:</strong> {item.price}</p>
                     </li>
                   ))}
                 </ul>
-                      <div className="flex justify-around mt-4">
-                                <button
-                                    onClick={() => handleDelete(payment._id)}
-                                    className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-700 transition duration-300"
-                                >
-                                    Delete
-                                </button>
-                                <button
-                                    onClick={() => handleMove(payment._id)}
-                                    className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 transition duration-300"
-                                >
-                                    Update
-                                </button>
-                            </div>
               </div>
             ) : (
               <p className="mt-2 text-gray-700"><strong>Cart:</strong> No items</p>
             )}
+            <div className="flex justify-around mt-4">
+              <button
+                onClick={() => handleDelete(payment._id)}
+                className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-700 transition duration-300"
+              >
+                Delete
+              </button>
+              <button
+                onClick={() => handleMove(payment._id)}
+                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 transition duration-300"
+              >
+                Update
+              </button>
+            </div>
           </div>
         ))}
       </div>

@@ -18,6 +18,11 @@ import Address from "./Address.js";
 import Webisteorder from './Webisteorder.js';
 import Billingpage from "./Billingpage.js";
 import Splash from './Splash.js';
+import Termcondition from './documents/Termcondition.js';
+import Refundpolicy from './documents/Refundpolicy.js';
+import Shipping from './documents/Shipping.js';
+import Aboutus from "./documents/Aboutus.js";
+import Cancellation from './documents/Cancellation.js';
 const PaymentComponent = () => {
  
   return (
@@ -27,6 +32,11 @@ const PaymentComponent = () => {
         <Route path="/:table" element={<Homepage />} />
         <Route path="/" element={<Homepage />} />  
         <Route path="/Owner" element={<Owner/>} />
+        <Route path="/docs/terms" element={<Termcondition/>} />
+        <Route path="/docs/Refund" element={<Refundpolicy/>} />
+        <Route path="/docs/Shippingdetail" element={<Shipping/>} />
+        <Route path="/docs/About" element={<Aboutus/>} />
+        <Route path="/docs/Cancel" element={<Cancellation/>} />
         <Route path="/Invoice/:_id" element={<Invoicecompo/>} />
         <Route path="/Order" element={<OrderDetails/>} />
         <Route path="/Billdata/:_id" element={<Billingpage/>} />

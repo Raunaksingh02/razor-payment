@@ -5,6 +5,7 @@ import axios from 'axios';
 import { GrCafeteria } from "react-icons/gr";
 import cartlogo from "./images/cartlogo.png";
 import dialicon from './images/dialicon.png';
+
 import { FaShoppingCart } from "react-icons/fa";
 import deliverylogo from './images/delivery.gif';
 import { CiSearch } from "react-icons/ci";
@@ -130,10 +131,14 @@ function Homepage() {
                     </>
                 )
             }
-            <div className='flex items-center justify-between bg-[#f6931e] rounded-t-3xl  p-3 mt-1'>
+            <div className='flex items-center justify-between bg-[#f6931e] rounded-t-3xl  p-3 '>
+            
+           
                 <h1 className="text-3xl font-extrabold text-white text-center m-2 mr-3">Cafe Coffee </h1>
+                
+              
                 <div className='flex items-center'>
-                    {table && (
+                {table && (
                         <Link to="/Call">
                             <div className='flex items-center py-1 p-2 bg-gray-100 shadow-lg shadow-gray-400 hover:bg-gray-400 rounded-2xl mr-2'>
                                 <img
@@ -151,7 +156,7 @@ function Homepage() {
                     <h1 className="font-bold text-white font-bold text-2xl ml-2">{totalquantityforhome}</h1>
                 </div>
               </div>
-               <div className="flex justify-center bg-[#f6931e] bg-[] rounded-b-3xl  mb-2 p-4 ">
+               <div className="flex justify-center bg-[#f6931e]  rounded-b-3xl shadow-inner shadow-orange-200  mb-2 p-4 ">
                 <div className="flex w-full max-w-md border-2 mb-3 border-gray-300 rounded-full shadow-lg">
                     <input
                         type="text"
@@ -186,7 +191,7 @@ function Homepage() {
                 {currentCafes.map((item, index) => (
                     <div className="flex flex-row bg-gray-100 ease-in duration-300 rounded-2xl  shadow-inner shadow-gray-400  p-4 mb-4 hover:bg-gray-400" key={index}>
                         <img
-                            className='w-full sm:w-40 mt-4 p-2 h-40 object-cover rounded-3xl'
+                            className='w-full sm:w-40 mt-4 p-2 h-40 object-cover rounded-3xl shadow-lg shadow-gray-300'
                             src={item.image}
                             alt={item.name}
                         />

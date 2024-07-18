@@ -80,6 +80,10 @@ const PaymentDetails = () => {
         }
     };
 
+    const getStatusColor = (status, condition) => {
+        return status === condition ? 'text-green-600' : 'text-red-600';
+      };
+
     const handleMove = (_id) => {
         console.log(_id);
         move(`/update/${_id}`);
@@ -171,7 +175,7 @@ const PaymentDetails = () => {
                 </div>
                 <div>
                     {filterPayments().map(payment => (
-                        <div key={payment._id} className='border-3 border-gray-300 rounded-2xl shadow-xl  shadow-gray-500 m-4 p-6'>
+                        <div key={payment._id} className=' rounded-3xl  shadow-xl shadow-gray-400   mt-4 mb-3 p-2'>
                             {payment.paymentmode === "online" && (
                                 <h1 className="text-xl font-semibold">PaymentId: {payment.paymentId}</h1>
                             )}
@@ -179,13 +183,10 @@ const PaymentDetails = () => {
                             <h1 className="text-lg font-bold">Customer Table:  {payment.customerTable}</h1>
                             <h1 className="text-lg font-bold" >Amount: {payment.amount}</h1>
                             <h1 className="text-lg font-bold">Contact No: {payment.customerPhoneNo}</h1>
-                           
-                            <h1 className={`text-lg ${payment.status === 'pending' ? 'text-red-400 ' : 'text-green-500 font-bold'}`}>
-                               Order Status: {payment.status}
-                            </h1>
-                            <h1 className={`text-lg ${payment.paymentmode === 'Cash-Not Received' ? 'text-red-400' : 'text-green-500 font-bold'}`}>
-                              Payment Status: {payment.paymentmode}
-                            </h1>
+                            
+                            <p className={`text-lg font-semibold ${getStatusColor(payment.status, 'delivered')}`}>Customer Status: {payment.status}</p>
+                            <p className={`text-lg font-semibold ${getStatusColor(payment.paymentmode, 'Received')}`}>Payment Status: {payment.paymentmode}</p>
+            
                             <h1 className="text-lg font-bold">Date: {formatDate(payment.date)}</h1>
                             <div className="mt-4">
                                 {payment.cartforpayment.map(item => (

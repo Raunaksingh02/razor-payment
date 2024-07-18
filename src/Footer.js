@@ -28,8 +28,8 @@ const Footer = () => {
           <div className="w-full md:w-1/3 px-4">
             <h5 className="text-xl font-bold text-white mb-2">Contact Us</h5>
             <p className="mb-2 font-bold">Address: DA-11 Defence Colony, Bhopura, Ghaziabad</p>
-            <p className='font-extrabold' >Email: <a href="mailto:info@company.com" className="text-gray-800 font-bold hover:text-gray-600">info@company.com</a></p>
-            <p className='font-extrabold'>Phone: <a href="tel:+1234567890" className="text-gray-800 font-bold hover:text-gray-600">+123 456 7890</a></p>
+            <p className='font-extrabold' >Email: <a href="rs3287275@gmail.com" className="text-gray-800 font-bold hover:text-gray-600">info@company.com</a></p>
+            <p className='font-extrabold'>Phone: <a href="91-9971299049" className="text-gray-800 font-bold hover:text-gray-600">+123 456 7890</a></p>
           </div>
         </div>
       </div>

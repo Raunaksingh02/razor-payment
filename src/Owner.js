@@ -4,6 +4,7 @@ import { MdOutlinePayments } from "react-icons/md";
 import backarrowlogo from "./images/backarrowlogo.png";
 import { FaMoneyCheckDollar } from "react-icons/fa6";
 import { TbReport } from "react-icons/tb";
+import { FaUser } from "react-icons/fa";
 import { IoFastFoodOutline } from "react-icons/io5";
 import { GiCook } from "react-icons/gi";
 import { TbTruckDelivery } from "react-icons/tb";
@@ -24,7 +25,8 @@ function Owner(props) {
           <h1 className="font-extrabold text-3xl text-center text-[#18196c] ml-10">Admin Panel</h1>
         </div>
         <div>
-        
+
+              
         <div className="grid grid-cols-2 shadow-xl shadow-blue-400">
           <Link to="/Order">
           <div className='m-3 p-3 h-56 rounded-3xl  transition duration-150 ease-in-out  bg-[#18196c] flex flex-col items-center justify-center'>
