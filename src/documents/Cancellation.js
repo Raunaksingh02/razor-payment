@@ -12,7 +12,7 @@ function Cancellation() {
           </Link>
         </div>
         <div className='flex-1 text-center'>
-          <h1 className='font-bold text-2xl'>Terms and Conditions</h1>
+          <h1 className='font-bold text-2xl'>Cancellation Policy</h1>
         </div>
       </div>
       <p>At CafeHouse, we understand that sometimes plans change and you may need to cancel your order. Please read our cancellation policy carefully to understand our guidelines and procedures.</p>

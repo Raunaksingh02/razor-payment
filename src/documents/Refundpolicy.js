@@ -12,7 +12,7 @@ function Refundpolicy() {
           </Link>
         </div>
         <div className='flex-1 text-center'>
-          <h1 className='font-bold text-2xl'>Terms and Conditions</h1>
+          <h1 className='font-bold text-2xl'>Refund Policy</h1>
         </div>
       </div>
     

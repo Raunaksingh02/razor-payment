@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const Footer = () => {
   return (
@@ -14,15 +15,21 @@ const Footer = () => {
           <div className="w-full md:w-1/3 px-4">
             <h5 className="text-xl text-white font-extrabold  mb-2">Important Links</h5>
             <ul className="list-none">
-              <li className="mb-2">
-                <a href="/refund-policy" className="text-gray-800 font-bold hover:text-gray-600">Refund Policy</a>
-              </li>
-              <li className="mb-2">
-                <a href="/terms-and-conditions" className="text-gray-800 font-bold hover:text-gray-600">Terms and Conditions</a>
-              </li>
-              <li className="mb-2">
-                <a href="/about-us" className="text-gray-800 font-bold hover:text-gray-600">About Us</a>
-              </li>
+            <Link to="/docs/Shippingdetail" className="mb-2">
+                <p className="text-gray-800 font-bold hover:text-gray-600">Shipping Details</p>
+              </Link>
+              <Link to="/docs/Refund" className="mb-2">
+                <p className="text-gray-800 font-bold hover:text-gray-600">Refund Policy</p>
+              </Link> 
+              <Link to="/docs/Cancel" className="mb-2">
+                <p className="text-gray-800 font-bold hover:text-gray-600">Cancellation</p>
+              </Link> 
+              <Link to="/docs/terms" className="mb-2">
+                <p className="text-gray-800 font-bold hover:text-gray-600">Terms and Condition</p>
+              </Link>
+              <Link to="/docs/About" className="mb-2">
+                <p className="text-gray-800 font-bold hover:text-gray-600">About Us</p>
+              </Link>
             </ul>
           </div>
           <div className="w-full md:w-1/3 px-4">
@@ -34,7 +41,7 @@ const Footer = () => {
         </div>
       </div>
       <div className="text-center text-white mt-4">
-        <p>&copy; 2024 Your Company. All rights reserved.</p>
+        <p>&copy; 2024 Cafe House. All rights reserved.</p>
       </div>
     </footer>
   );

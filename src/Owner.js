@@ -1,19 +1,29 @@
-import React, { useEffect, useState, useRef }  from  'react';
+import React, { useEffect, useState }  from  'react';
 import { Link } from 'react-router-dom';
 import { MdOutlinePayments } from "react-icons/md";
 import backarrowlogo from "./images/backarrowlogo.png";
 import { FaMoneyCheckDollar } from "react-icons/fa6";
 import { TbReport } from "react-icons/tb";
-import { FaUser } from "react-icons/fa";
 import { IoFastFoodOutline } from "react-icons/io5";
 import { GiCook } from "react-icons/gi";
 import { TbTruckDelivery } from "react-icons/tb";
 import { FaChartLine } from "react-icons/fa6";
 import Calling from "./Calling.js"
 import { FaFileInvoiceDollar } from "react-icons/fa";
+import axios from "axios"
 
 function Owner(props) {
  
+   const [dataofdish, setdataofdish] = useState("")
+  useEffect(() => {
+    axios.get('https://backendcafe-ceaj.onrender.com/getdish')
+        .then(response => {
+           setdataofdish(response.data);
+           console.log(response.data);
+        })
+        .catch(error => console.error('Error fetching data:', error));
+}, []);
+
   return (
     <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
       <Calling />
