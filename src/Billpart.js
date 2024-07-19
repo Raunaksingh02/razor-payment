@@ -223,9 +223,32 @@ function Billpart() {
             }
       <div className='flex items-center mb-4'>
         <div className='mr-4'>
-          <Link to="/">
+        
+             {
+              tableQueryParam==="table" && (
+                 <>
+                 <div>                  
+                   <Link to="/table">
             <img src={backarrowlogo} className='h-10 w-10' alt="Back" />
           </Link>
+          </div>
+
+                 </>
+             )
+         }
+            {
+              tableQueryParam==="undefined" && (
+                 <>
+                 <div>                  
+                   <Link to="/">
+            <img src={backarrowlogo} className='h-10 w-10' alt="Back" />
+          </Link>
+          </div>
+
+                 </>
+             )
+         }
+          
         </div>
         <div className='flex-1 text-center'>
           <h1 className='font-bold text-2xl'>Bill Generated</h1>
