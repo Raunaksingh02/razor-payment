@@ -22,6 +22,7 @@ import Termcondition from './documents/Termcondition.js';
 import Refundpolicy from './documents/Refundpolicy.js';
 import Shipping from './documents/Shipping.js';
 import Aboutus from "./documents/Aboutus.js";
+import Privacy from "./documents/Privacy.js"
 import Cancellation from './documents/Cancellation.js';
 const PaymentComponent = () => {
  
@@ -36,6 +37,7 @@ const PaymentComponent = () => {
         <Route path="/docs/Refund" element={<Refundpolicy/>} />
         <Route path="/docs/Shippingdetail" element={<Shipping/>} />
         <Route path="/docs/About" element={<Aboutus/>} />
+        <Route path="/docs/Privacy" element={<Privacy/>} />
         <Route path="/docs/Cancel" element={<Cancellation/>} />
         <Route path="/Invoice/:_id" element={<Invoicecompo/>} />
         <Route path="/Order" element={<OrderDetails/>} />
