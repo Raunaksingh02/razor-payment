@@ -33,6 +33,9 @@ const Footer = () => {
               <Link to="/docs/About" className="mb-2">
                 <p className="text-gray-800 font-bold hover:text-gray-600">About Us</p>
               </Link>
+              <Link to="/docs/Contact" className="mb-2">
+                <p className="text-gray-800 font-bold hover:text-gray-600">Contact us</p>
+              </Link>
             </ul>
           </div>
           <div className="w-full md:w-1/3 px-4">
@@ -44,6 +47,7 @@ const Footer = () => {
         </div>
       </div>
       <div className="text-center text-white mt-4">
+      <p>&copy; Da 11 defence colony,Ghaziabad ,UP 201005  </p>
         <p>&copy; 2024 Cafe House. All rights reserved.</p>
       </div>
     </footer>

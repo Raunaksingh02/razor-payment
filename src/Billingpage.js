@@ -78,8 +78,8 @@ function Billingpage() {
                 <div className="flex justify-between items-center mb-4 border-b pb-4">
                     <div>
                         <h1 className="text-2xl font-extrabold">Cafe House</h1>
-                        <p className="text-gray-600">123 Coffee St, Coffee City</p>
-                        <p className="text-gray-600">Phone: (123) 456-7890</p>
+                        <p className="text-gray-600">Da11 Defence Colony Ghz, Up</p>
+                        <p className="text-gray-600">Phone: 9971299049</p>
                     </div>
                     <div className="text-right">
                         <h2 className="text-2xl font-extrabold">Bill Details</h2>

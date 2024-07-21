@@ -24,6 +24,9 @@ import Shipping from './documents/Shipping.js';
 import Aboutus from "./documents/Aboutus.js";
 import Privacy from "./documents/Privacy.js"
 import Cancellation from './documents/Cancellation.js';
+import Contactus from "./documents/Contactus.js";
+
+
 const PaymentComponent = () => {
  
   return (
@@ -34,6 +37,7 @@ const PaymentComponent = () => {
         <Route path="/" element={<Homepage />} />  
         <Route path="/Owner" element={<Owner/>} />
         <Route path="/docs/terms" element={<Termcondition/>} />
+        <Route path="/docs/Contact" element={<Contactus/>} />
         <Route path="/docs/Refund" element={<Refundpolicy/>} />
         <Route path="/docs/Shippingdetail" element={<Shipping/>} />
         <Route path="/docs/About" element={<Aboutus/>} />

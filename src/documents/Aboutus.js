@@ -46,8 +46,8 @@ function AboutUs() {
         <p>We love hearing from our customers! Whether you have feedback, questions, or just want to say hello, feel free to reach out to us:</p>
         <p><strong>CafeHouse</strong></p>
         <p>DA11 Defence Colony, Ghaziabad</p>
-        <p>Email: <a href="mailto:support@cafehouse.com" className="text-blue-600 hover:underline">support@cafehouse.com</a></p>
-        <p>Phone: <a href="tel:+919876543210" className="text-blue-600 hover:underline">+91 98765 43210</a></p>
+        <p>Email: <a href="mailto:support@cafehouse.com" className="text-blue-600 hover:underline">rs3287274@gmail.com</a></p>
+        <p>Phone: <a href="tel:+919876543210" className="text-blue-600 hover:underline">+91 9971299049</a></p>
       </div>
 
       <div className="mb-6">
