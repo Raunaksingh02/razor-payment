@@ -12,7 +12,7 @@ import Calling from "./Calling.js"
 import { FaFileInvoiceDollar } from "react-icons/fa";
 import axios from "axios"
 
-function Owner(props) {
+function Owner() {
  
    const [dataofdish, setdataofdish] = useState("")
   useEffect(() => {

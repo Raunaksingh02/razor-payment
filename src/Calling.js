@@ -44,9 +44,10 @@ function Calling(props) {
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50">
+    <div className="relative flex justify-center items-center min-h-screen">
+    <div className="absolute">
       {requests.map((request, index) => (
-        <div key={index} className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4 animate-bounce shadow-lg max-w-xs mx-auto">
+        <div key={index} className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
           <strong className="font-extrabold">Incoming Call from {request.table}!</strong>
           <span className="block sm:inline"> {request.query} at {request.time}</span>
           <button
@@ -58,10 +59,14 @@ function Calling(props) {
         </div>
       ))}
     </div>
+  </div>
+  
   );
 }
 
 export default Calling;
+
+
 
 
 
