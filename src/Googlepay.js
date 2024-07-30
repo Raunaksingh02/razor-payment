@@ -4,7 +4,7 @@ import { useNavigate} from 'react-router-dom';
 const Googlepay = () => {
   const history = useNavigate();
 
-  const upiId = '9266148949@ybl';
+  const upiId = '8800835834@paytm';
   const payeeName = 'Raunak';
   const transactionId = '123456';
   const transactionNote = 'this is my order page';
