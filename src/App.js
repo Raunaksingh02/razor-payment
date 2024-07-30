@@ -9,6 +9,7 @@ import Updatepart from './Updatepart.js';
 import Invoicecompo from './Invoicecompo.js';
 import Chart from "./Chart.js";
 import Dishmanage from './Dishmanage.js';
+
 import Callwaiter from './Callwaiter.js';
 import Waiterpage from './Waiterpage.js';
 import Profitpage from './Profitpage.js';
@@ -25,7 +26,9 @@ import Aboutus from "./documents/Aboutus.js";
 import Privacy from "./documents/Privacy.js"
 import Cancellation from './documents/Cancellation.js';
 import Contactus from "./documents/Contactus.js";
-
+import Googlepay from './Googlepay.js';
+import Successpage from "./Successpage.js"
+import Failurepage from "./Failurepage.js"
 
 const PaymentComponent = () => {
  
@@ -36,6 +39,8 @@ const PaymentComponent = () => {
         <Route path="/:table" element={<Homepage />} />
         <Route path="/" element={<Homepage />} />  
         <Route path="/Owner" element={<Owner/>} />
+        <Route path="/Success" element={<Successpage/>} />
+        <Route path="/Fail" element={<Failurepage/>} />
         <Route path="/docs/terms" element={<Termcondition/>} />
         <Route path="/docs/Contact" element={<Contactus/>} />
         <Route path="/docs/Refund" element={<Refundpolicy/>} />
@@ -49,6 +54,7 @@ const PaymentComponent = () => {
         <Route path="/Website" element={<Webisteorder/>} />
         <Route path="/Call" element={<Callwaiter/>} />
         <Route path="/Address" element={<Address/>} />
+        <Route path="/Pay" element={<Googlepay/>} />
         <Route path="/Waiter" element={<Waiterpage/>} />
         <Route path="/Profit" element={<Profitpage/>} />
         <Route  path="/Month" element={<Month/>} />
