@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const Googlepay = () => {
-  const history = useNavigate();
+  const navigate = useNavigate();
 
   const upiId = '8800835834@paytm';
   const payeeName = 'Raunak';
@@ -10,22 +10,22 @@ const Googlepay = () => {
   const transactionNote = 'this is my order page';
   const amount = '1';
   const currency = 'INR';
-  const callbackUrl = 'https://cafehouse.vercel.app/Success';
+  const callbackUrl = 'https://cafehouse.vercel.app/success';
 
   const handleRedirect = () => {
     const upiIntentUrl = `phonepe://pay?pa=${encodeURIComponent(upiId)}&pn=${encodeURIComponent(payeeName)}&tr=${encodeURIComponent(transactionId)}&tn=${encodeURIComponent(transactionNote)}&am=${encodeURIComponent(amount)}&cu=${encodeURIComponent(currency)}&url=${encodeURIComponent(callbackUrl)}`;
 
-    const fallbackUrl = `https://cafehouse.vercel.app/Failure`;
+    const fallbackUrl = `https://cafehouse.vercel.app/failure`;
 
     const redirectTimeout = setTimeout(() => {
-      history(fallbackUrl);
+      navigate(fallbackUrl);
     }, 5000);
 
     window.location.href = upiIntentUrl;
 
     window.addEventListener('blur', () => {
       clearTimeout(redirectTimeout);
-      window.location.href = callbackUrl;
+      navigate('/success');
     });
 
     window.addEventListener('focus', () => {
