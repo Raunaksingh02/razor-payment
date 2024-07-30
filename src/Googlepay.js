@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const Googlepay = () => {
   const history = useNavigate();
@@ -13,9 +13,9 @@ const Googlepay = () => {
   const callbackUrl = 'https://cafehouse.vercel.app/Success';
 
   const handleRedirect = () => {
-    const upiIntentUrl = `phonepe://pay?pa=${upiId}&pn=${payeeName}&tr=${transactionId}&tn=${transactionNote}&am=${amount}&cu=${currency}&url=${callbackUrl}`;
+    const upiIntentUrl = `phonepe://pay?pa=${encodeURIComponent(upiId)}&pn=${encodeURIComponent(payeeName)}&tr=${encodeURIComponent(transactionId)}&tn=${encodeURIComponent(transactionNote)}&am=${encodeURIComponent(amount)}&cu=${encodeURIComponent(currency)}&url=${encodeURIComponent(callbackUrl)}`;
 
-    const fallbackUrl = `https://cafehouse.vercel.app/Fail`;
+    const fallbackUrl = `https://cafehouse.vercel.app/Failure`;
 
     const redirectTimeout = setTimeout(() => {
       history(fallbackUrl);
@@ -25,7 +25,7 @@ const Googlepay = () => {
 
     window.addEventListener('blur', () => {
       clearTimeout(redirectTimeout);
-      window.location.href = `https://cafehouse.vercel.app/Success`;
+      window.location.href = callbackUrl;
     });
 
     window.addEventListener('focus', () => {
