@@ -9,7 +9,7 @@ const PaymentPage = () => {
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [enteredTransactionId, setEnteredTransactionId] = useState('');
 
-  const upiId = '8800835834@paytm';  // Receiver's UPI ID
+  const upiId = '319588779577441@cnrb';  // Receiver's UPI ID
   const payeeName = 'Raunak';        // Receiver's Name
   const transactionId = '123456';    // Unique Transaction ID
   const transactionNote = 'this is my order page';  // Transaction Note
@@ -30,9 +30,9 @@ const PaymentPage = () => {
       // Simulate verifying the transaction ID
       // For now, just check if the enteredTransactionId matches a predefined value
       if (enteredTransactionId === transactionId) {
-        navigate('/success');
+        navigate('/Success');
       } else {
-        navigate('/failure');
+        navigate('/fail');
       }
     } else {
       navigate('/failure');
