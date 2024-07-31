@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import phonepelogo from "./images/phonepelogo.png";
+import gpaylogo from "./images/gpaylogo.png";
+import paytmlogo from "./images/paytmlogo.png";
 
-const Googlepay = () => {
+const PaymentPage = () => {
   const navigate = useNavigate();
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [enteredTransactionId, setEnteredTransactionId] = useState('');
@@ -13,8 +16,8 @@ const Googlepay = () => {
   const amount = '1';                // Amount to be paid
   const currency = 'INR';            // Currency Code
 
-  const handleRedirect = () => {
-    const upiIntentUrl = `intent://pay?pa=${encodeURIComponent(upiId)}&pn=${encodeURIComponent(payeeName)}&tr=${encodeURIComponent(transactionId)}&tn=${encodeURIComponent(transactionNote)}&am=${encodeURIComponent(amount)}&cu=${encodeURIComponent(currency)}#Intent;scheme=upi;package=com.phonepe.app;end`;
+  const handleRedirect = (appPackage) => {
+    const upiIntentUrl = `intent://pay?pa=${encodeURIComponent(upiId)}&pn=${encodeURIComponent(payeeName)}&tr=${encodeURIComponent(transactionId)}&tn=${encodeURIComponent(transactionNote)}&am=${encodeURIComponent(amount)}&cu=${encodeURIComponent(currency)}#Intent;scheme=upi;package=${appPackage};end`;
 
     window.location.href = upiIntentUrl;
 
@@ -39,11 +42,37 @@ const Googlepay = () => {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
       <button
-        onClick={handleRedirect}
-        className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg mb-4"
+        onClick={() => handleRedirect('com.phonepe.app')}
+        className="bg-gray-200 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg mb-4"
       >
-        PhonePe 
+        <img 
+        src={phonepelogo}
+        className='h-14 w-18'
+        />
       </button>
+      <h1 className='text-bold text-black font-mono'>Phone Pay</h1>
+
+      <button
+        onClick={() => handleRedirect('com.google.android.apps.nbu.paisa.user')}
+        className="bg-gray-200 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg mb-4"
+      >
+        <img 
+        src={gpaylogo}
+        className='h-14 w-18'
+        />
+      </button>
+      <h1 className='text-bold text-black font-mono'>Google Pay</h1>
+
+      <button
+        onClick={() => handleRedirect('net.one97.paytm')}
+        className="bg-gray-200 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg mb-4"
+      >
+        <img 
+        src={paytmlogo}
+        className='h-14 w-18'
+        />
+      </button>
+      <h1 className='text-bold text-black font-mono'>Paytm</h1>
 
       {showConfirmation && (
         <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center">
@@ -78,4 +107,4 @@ const Googlepay = () => {
   );
 };
 
-export default Googlepay;
+export default PaymentPage;
