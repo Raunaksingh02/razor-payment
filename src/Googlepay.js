@@ -3,7 +3,7 @@ import React from 'react';
 const Googlepay = () => {
   const upiId = '8800835834@paytm';  // Receiver's UPI ID
   const payeeName = 'Receiver Name';      // Receiver's Name
-  const amount = '10.00';                 // Amount to be paid
+  const amount = '2.00';                 // Amount to be paid
   const currency = 'INR';                 // Currency Code
   const transactionId = '123456789';      // Transaction ID (Optional)
   const transactionNote = 'Payment for Order';  // Transaction Note (Optional)
@@ -19,8 +19,8 @@ const Googlepay = () => {
   return (
     <div>
       <h1>Payment</h1>
-      <button onClick={handleGooglePayRedirect}>
-        Pay with Google Pay
+      <button className='bg-red-400' onClick={handleGooglePayRedirect}>
+         Google Pay
       </button>
     </div>
   );
