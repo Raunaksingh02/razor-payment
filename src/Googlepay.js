@@ -1,20 +1,26 @@
 import React from 'react';
 
 const Googlepay = () => {
-  const receiver = "8800835834@paytm"; // Replace with actual receiver
-  const amount = "10.00"; // Replace with actual amount
-  const transactionId = "123456789"; // Replace with actual transaction ID
+  const upiId = '8800835834@paytm';  // Receiver's UPI ID
+  const payeeName = 'Receiver Name';      // Receiver's Name
+  const amount = '10.00';                 // Amount to be paid
+  const currency = 'INR';                 // Currency Code
+  const transactionId = '123456789';      // Transaction ID (Optional)
+  const transactionNote = 'Payment for Order';  // Transaction Note (Optional)
 
   const handleGooglePayRedirect = () => {
-    const googlePayUrl = `googlepay://pay?recipient=${encodeURIComponent(receiver)}&amount=${encodeURIComponent(amount)}&transactionId=${encodeURIComponent(transactionId)}`;
-    window.location.href = googlePayUrl;
+    const upiIntentUrl = `intent://pay?pa=${encodeURIComponent(upiId)}&pn=${encodeURIComponent(payeeName)}&mc=&tid=${encodeURIComponent(transactionId)}&tn=${encodeURIComponent(transactionNote)}&am=${encodeURIComponent(amount)}&cu=${encodeURIComponent(currency)}&url=#Intent;scheme=upi;package=com.google.android.apps.nbu.paisa.user;end`;
+
+    console.log('UPI Intent URL:', upiIntentUrl);
+
+    window.location.href = upiIntentUrl;
   };
 
   return (
     <div>
       <h1>Payment</h1>
-      <button className='bg-red-900' onClick={handleGooglePayRedirect}>
-        Pay with Google
+      <button onClick={handleGooglePayRedirect}>
+        Pay with Google Pay
       </button>
     </div>
   );
