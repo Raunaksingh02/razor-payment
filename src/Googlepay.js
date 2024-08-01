@@ -13,8 +13,8 @@ const Googlepay = () => {
   return (
     <div>
       <h1>Payment</h1>
-      <button onClick={handleGooglePayRedirect}>
-        Pay with Google Pay
+      <button className='bg-red-900' onClick={handleGooglePayRedirect}>
+        Pay with Google
       </button>
     </div>
   );
