@@ -1,25 +1,23 @@
 import React from 'react';
 
-const UpiPaymentIntent = () => {
-  const upiId = '8800835834@paytm';  // Receiver's UPI ID
-  const payeeName = 'Raunak';        // Receiver's Name
-  const transactionNote = 'Order payment';  // Transaction Note
-  const amount = '1';                // Amount to be paid
-  const currency = 'INR';            // Currency Code
+const Googlepay = () => {
+  const receiver = "receiver@example.com"; // Replace with actual receiver
+  const amount = "10.00"; // Replace with actual amount
+  const transactionId = "123456789"; // Replace with actual transaction ID
 
-  const handleRedirect = () => {
-    const upiIntentUrl = `upi://pay?pa=${encodeURIComponent(upiId)}&pn=${encodeURIComponent(payeeName)}&tn=${encodeURIComponent(transactionNote)}&am=${encodeURIComponent(amount)}&cu=${encodeURIComponent(currency)}`;
-    window.location.href = upiIntentUrl;
+  const handleGooglePayRedirect = () => {
+    const googlePayUrl = `googlepay://pay?recipient=${encodeURIComponent(receiver)}&amount=${encodeURIComponent(amount)}&transactionId=${encodeURIComponent(transactionId)}`;
+    window.location.href = googlePayUrl;
   };
 
   return (
-    <button
-      onClick={handleRedirect}
-      className="bg-blue-500 text-white p-4 rounded-lg"
-    >
-      Pay with UPI Now
-    </button>
+    <div>
+      <h1>Payment</h1>
+      <button onClick={handleGooglePayRedirect}>
+        Pay with Google Pay
+      </button>
+    </div>
   );
 };
 
-export default UpiPaymentIntent;
+export default Googlepay;
