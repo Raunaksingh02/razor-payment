@@ -1,7 +1,7 @@
 import React from 'react';
 
 const Googlepay = () => {
-  const receiver = "receiver@example.com"; // Replace with actual receiver
+  const receiver = "8800835834@paytm"; // Replace with actual receiver
   const amount = "10.00"; // Replace with actual amount
   const transactionId = "123456789"; // Replace with actual transaction ID
 
