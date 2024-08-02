@@ -72,6 +72,11 @@ export default function Callwaiter() {
               <option value="Table 3">Table 3</option>
               <option value="Table 4">Table 4</option>
               <option value="Table 5">Table 5</option>
+              <option value="Table 5">Table 6</option>
+              <option value="Table 5">Table 7</option>
+              <option value="Table 5">Table 8</option>
+              <option value="Table 5">Table 9</option>
+              <option value="Table 5">Table 10</option>
             </select>
           </div>
           <div className="mb-4">

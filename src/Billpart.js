@@ -4,6 +4,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import backarrowlogo from './images/backarrowlogo.png';
 import deletelogo from './images/deletelogo.png';
 import Modal from 'react-modal';
+import QRCode from 'qrcode.react';
 import closebutton from './images/closebutton.png';
 import { CustomerContext } from './CustomerContext';
 import axios from 'axios';
@@ -198,6 +199,10 @@ function Billpart() {
       loadRazorpay();
     }
   };
+   
+  const generateQRCodeValue = () => {
+    return `upi://pay?pa=9971299049@ibl&pn=${customerName}&am=${grandTotalforpayment}&cu=INR`;
+  };
 
   const handleCashPayment = () => {
     if (!isFormValid()) {
@@ -378,8 +383,16 @@ function Billpart() {
           </select>
         </div>
       )}
+         {tableQueryParam === "Takeaway" && (
+  <div className="mb-4 flex flex-col items-center justify-center">
+    <h2 className="text-lg font-bold text-center mb-2">Scan QR Code to Pay</h2>
+    <QRCode value={generateQRCodeValue()} />
+  </div>
+)}
+
+     
       <div className="flex flex-col items-center mt-5 space-y-3">
-        <button
+            <button
           onClick={handleValidation}
           className="h-12 w-40 bg-blue-600 hover:bg-blue-700 font-bold text-xl text-white rounded-lg transition duration-300"
         >
