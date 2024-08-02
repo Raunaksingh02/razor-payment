@@ -1,7 +1,7 @@
 import React from 'react';
 
 const Googlepay = () => {
-  const upiId = '9971299049@ibl';  // Receiver's UPI ID
+  const upiId = '9136441516@ybl';  // Receiver's UPI ID
   const payeeName = 'Receiver Name';      // Receiver's Name
   const amount = '2.00';                 // Amount to be paid
   const currency = 'INR';                 // Currency Code

@@ -383,12 +383,13 @@ function Billpart() {
           </select>
         </div>
       )}
-         {tableQueryParam === "Takeaway" && (
-  <div className="mb-4 flex flex-col items-center justify-center">
+    
+      {tableQueryParam === "Takeaway" && (
+     <div className="mb-4 flex flex-col items-center justify-center">
     <h2 className="text-lg font-bold text-center mb-2">Scan QR Code to Pay</h2>
     <QRCode value={generateQRCodeValue()} />
-  </div>
-)}
+    </div>
+   )}
 
      
       <div className="flex flex-col items-center mt-5 space-y-3">
