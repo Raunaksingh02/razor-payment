@@ -1,9 +1,10 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext, useEffect,useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import backarrowlogo from './images/backarrowlogo.png';
 import deletelogo from './images/deletelogo.png';
 import Modal from 'react-modal';
+import { toPng } from 'html-to-image';
 import QRCode from 'qrcode.react';
 import closebutton from './images/closebutton.png';
 import { CustomerContext } from './CustomerContext';
@@ -213,6 +214,25 @@ function Billpart() {
     }
   };
 
+  const qrCodeRef = useRef();
+
+  const handleDownloadQRCode = () => {
+    if (qrCodeRef.current) {
+      toPng(qrCodeRef.current)
+        .then((dataUrl) => {
+          const link = document.createElement('a');
+          link.href = dataUrl;
+          link.download = 'QRCode.png';
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        })
+        .catch((error) => {
+          console.error('Failed to generate image:', error);
+        });
+    }
+  };
+
   return (
     <div className='container mx-auto p-4'>
        {
@@ -379,16 +399,31 @@ function Billpart() {
             <option value="table 1">table 1</option>
             <option value="table 2">table 2</option>
             <option value="table 3">table 3</option>
-            <option value="table 4">table 4</option>
+             <option value="table 4">table 4</option>
+             <option value="table 4">table 5</option>
+              <option value="table 4">table 6</option>
+               <option value="table 4">table 7</option>
+               <option value="table 4">table 8</option>
+              <option value="table 4">table 9</option> 
+                       <option value="table 4">table 10</option>
+
           </select>
         </div>
       )}
     
       {tableQueryParam === "Takeaway" && (
-     <div className="mb-4 flex flex-col items-center justify-center">
-    <h2 className="text-lg font-bold text-center mb-2">Scan QR Code to Pay</h2>
-    <QRCode value={generateQRCodeValue()} />
-    </div>
+        <div className="mb-4 flex flex-col items-center justify-center">
+        <h2 className="text-lg font-bold text-center mb-2">Scan QR Code to Pay</h2>
+        <div ref={qrCodeRef}>
+          <QRCode value={generateQRCodeValue()} />
+        </div>
+        <button
+          onClick={handleDownloadQRCode}
+          className="mt-2 px-4 py-2 bg-blue-500 text-white rounded"
+        >
+          Download QR Code
+        </button>
+      </div>
    )}
 
      
