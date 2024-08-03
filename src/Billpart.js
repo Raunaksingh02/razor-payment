@@ -77,9 +77,10 @@ function Billpart() {
       description: 'Test Payment',
       order_id: orderId,
       handler: (response) => {
-        setPaymentId(response.razorpay_payment_id);    
+     setPaymentId(response.razorpay_payment_id);    
      savePaymentDetails(orderId, response, customerName, grandTotalforpayment, customerPhone, customerTable, cartforpayment, houseNo, city, pincode, landmark); 
     },
+
       prefill: {
         name: customerName,
         email: 'rs3297275@gmail.com',
@@ -110,7 +111,6 @@ function Billpart() {
           landmark
         },
         customerPhoneNo: customerPhone,
-      
       });
       
       const paymentId = res.data._id; // Assuming _id is your payment object ID
@@ -197,7 +197,19 @@ function Billpart() {
       setValidationMessage('All input fields are required.');
     } else {
       setValidationMessage('');
-      loadRazorpay();
+      navigate('/Upi', {
+        state: {
+          customerName,
+          customerPhone,
+          customerTable,
+          grandTotalforpayment,
+          houseNo,
+          city,
+          pincode,
+          landmark,
+          cartforpayment,
+        },
+      });
     }
   };
    
@@ -234,7 +246,7 @@ function Billpart() {
   };
 
   return (
-    <div className='container mx-auto p-4'>
+    <div className='container  mx-auto p-4'>
        {
                  tableQueryParam==="Takeaway" && (
                     <>
@@ -298,30 +310,30 @@ function Billpart() {
           </div>
         </div>
       ))}
-
       <div className='mt-4 text-center'>
-        <h1 className='font-bold text-2xl'>Total Amount = {totalforpayment}</h1>
-        <h1 className='font-bold text-2xl'>Grand Total = {grandTotalforpayment}</h1>
+      <h1 className='font-bold text-2xl'>Total Amount = {totalforpayment}</h1>
+      <h1 className='font-bold text-2xl'>Grand Total = {grandTotalforpayment}</h1>
       </div>
-     
       <div className='text-center mt-4'>
-        <button onClick={openModal} className='h-12 w-60 bg-black text-white text-lg font-bold rounded-2xl'>
-          Pay Now
-        </button>
-      </div>
-      <Modal
-  isOpen={modalIsOpen}
-  onRequestClose={closeModal}
-  className="fixed inset-0 flex items-center justify-center p-4 z-50"
-  overlayClassName="fixed inset-0 bg-black bg-opacity-50"
->
-  <div className="bg-white w-full max-w-md md:max-w-lg lg:max-w-xl mx-auto p-6 rounded-lg shadow-lg relative max-h-full overflow-y-auto">
-    <div className="flex justify-end items-start mb-4">
-      <button onClick={closeModal}>
-        <img src={closebutton} className="h-8 w-8 rounded-2xl" alt="Close" />
+      <button onClick={openModal} className='h-12 w-60 bg-black text-white text-lg font-bold rounded-2xl'>
+       Pay Now
       </button>
-    </div>
-    <div className="space-y-6">
+      </div>
+
+
+      <Modal
+       isOpen={modalIsOpen}
+       onRequestClose={closeModal}
+       className="fixed inset-0 flex items-center justify-center p-4 z-50"
+       overlayClassName="fixed inset-0 bg-black bg-opacity-50"
+       >
+      <div className="bg-white w-full max-w-md md:max-w-lg lg:max-w-xl mx-auto p-6 rounded-lg shadow-lg relative max-h-full overflow-y-auto">
+      <div className="flex justify-end items-start mb-4">
+      <button onClick={closeModal}>
+      <img src={closebutton} className="h-8 w-8 rounded-2xl" alt="Close" />
+      </button>
+      </div>
+      <div className="space-y-6">
       <div>
         <h1 className="font-bold text-lg mb-2">Enter name</h1>
         <input
@@ -399,40 +411,39 @@ function Billpart() {
             <option value="table 1">table 1</option>
             <option value="table 2">table 2</option>
             <option value="table 3">table 3</option>
-             <option value="table 4">table 4</option>
-             <option value="table 4">table 5</option>
-              <option value="table 4">table 6</option>
-               <option value="table 4">table 7</option>
-               <option value="table 4">table 8</option>
-              <option value="table 4">table 9</option> 
-                       <option value="table 4">table 10</option>
-
+            <option value="table 4">table 4</option>
+            <option value="table 5">table 5</option>
+            <option value="table 6">table 6</option>
+            <option value="table 7">table 7</option>
+            <option value="table 8">table 8</option>
+            <option value="table 9">table 9</option> 
+            <option value="table 10">table 10</option>
           </select>
         </div>
       )}
     
       {tableQueryParam === "Takeaway" && (
-        <div className="mb-4 flex flex-col items-center justify-center">
-        <h2 className="text-lg font-bold text-center mb-2">Scan QR Code to Pay</h2>
-        <div ref={qrCodeRef}>
-          <QRCode value={generateQRCodeValue()} />
+          <div className="mb-4 flex flex-col items-center justify-center">
+          <h2 className="text-lg font-bold text-center mb-2">Scan QR Code to Pay</h2>
+          <div className="relative p-4 bg-white animate-slideInFromBottom" ref={qrCodeRef}>
+            <QRCode value={generateQRCodeValue()} />
+          </div>
+          <button
+            onClick={handleDownloadQRCode}
+            className="mt-2 px-4 py-2 bg-blue-500 text-white rounded"
+          >
+            Download QR Code
+          </button>
         </div>
-        <button
-          onClick={handleDownloadQRCode}
-          className="mt-2 px-4 py-2 bg-blue-500 text-white rounded"
-        >
-          Download QR Code
-        </button>
-      </div>
    )}
 
      
       <div className="flex flex-col items-center mt-5 space-y-3">
-            <button
+        <button
           onClick={handleValidation}
           className="h-12 w-40 bg-blue-600 hover:bg-blue-700 font-bold text-xl text-white rounded-lg transition duration-300"
         >
-          Pay Now
+         Pay Now
         </button>
         <button
           onClick={handleCashPayment}

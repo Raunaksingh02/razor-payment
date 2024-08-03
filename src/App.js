@@ -9,7 +9,7 @@ import Updatepart from './Updatepart.js';
 import Invoicecompo from './Invoicecompo.js';
 import Chart from "./Chart.js";
 import Dishmanage from './Dishmanage.js';
-
+import Upi from "./Upi.js";
 import Callwaiter from './Callwaiter.js';
 import Waiterpage from './Waiterpage.js';
 import Profitpage from './Profitpage.js';
@@ -53,6 +53,7 @@ const PaymentComponent = () => {
         <Route path="/Billdata/:_id" element={<Billingpage/>} />
         <Route path="/Website" element={<Webisteorder/>} />
         <Route path="/Call" element={<Callwaiter/>} />
+        <Route path="/Upi" element={<Upi/>} />
         <Route path="/Address" element={<Address/>} />
         <Route path="/Pay" element={<Googlepay/>} />
         <Route path="/Waiter" element={<Waiterpage/>} />
