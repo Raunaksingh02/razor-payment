@@ -128,7 +128,7 @@ function Upi() {
 
   return (
     <div  >
-      <div className="flex items-center">
+      <div className="flex items-center shadow-lg shadow-gray-300">
         <div>
           <Link to="/bill">
             <img

@@ -6,16 +6,15 @@ import reportWebVitals from './reportWebVitals';
 import { Provider } from 'react-redux';
 import store from './store';
 import { CustomerProvider } from './CustomerContext';
-
+import { AuthProvider } from './AuthContext';
 
 ReactDOM.render(
   <Provider store={store}>
-  
+  <AuthProvider>
     <CustomerProvider>
-   
-    <App />
-   
+    <App /> 
     </CustomerProvider>
+    </AuthProvider>
   </Provider>,
   document.getElementById('root')
 );

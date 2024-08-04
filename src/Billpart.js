@@ -258,7 +258,7 @@ function Billpart() {
                     </>
                 )
             }
-      <div className='flex items-center mb-4'>
+      <div className='flex items-center mb-4 shadow-lg  shadow-gray-300'>
         <div className='mr-4'>
         
              {
@@ -300,12 +300,12 @@ function Billpart() {
          }
         </div>
         <div className='flex-1 text-center'>
-          <h1 className='font-bold text-2xl'>Bill Generated</h1>
+          <h1 className='font-bold text-2xl mb-2'>Bill Generated</h1>
         </div>
       </div>
 
       {cartforpayment.map((item, index) => (
-        <div className='flex flex-row md:flex-row items-center bg-gray-200 shadow-xl shadow-gray-500 rounded-2xl mb-4 p-4' key={index}>
+        <div className='flex flex-row md:flex-row items-center bg-gray-200 shadow-xl shadow-gray-500 animate-slideInFromBottom rounded-2xl mb-4 p-4' key={index}>
           <div>
             <img src={item.image} alt={`Product ${index}`} className='h-20 w-20 rounded-2xl mb-4 md:mb-0' />
           </div>
