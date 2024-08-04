@@ -178,7 +178,7 @@ function Upi() {
           <h3>Amount-{grandTotalforpayment}</h3>
           </div>
            </div>
-            <button onClick={handleDownloadQRCode} className="mt-2 px-4 py-2 bg-black  text-white rounded-lg" >
+            <button onClick={handleDownloadQRCode} className="mt-2 px-4 py-2 bg-black animate-slideInFromBottom  text-white rounded-lg" >
                 
                <div className='flex flex-row'>
                 <div>
@@ -191,7 +191,7 @@ function Upi() {
                 </button>
           </div>
           <div className="mb-4 w-full max-w-md">
-            <label className="block text-lg font-bold mb-2 text-center">Enter payment Transaction ID/UTR</label>
+            <label className="block text-lg font-bold mb-2 text-center">Enter Transaction ID/UTR/UPI-ID</label>
             <input type="text" value={transactionId} onChange={handleTransactionIdChange} className="w-full h-10 border border-gray-500 rounded-lg p-2 focus:outline-[#f6931e]  focus:outline-none" />
           </div>
           {

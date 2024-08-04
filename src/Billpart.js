@@ -286,6 +286,18 @@ function Billpart() {
              )
          }
           
+          {
+              tableQueryParam==="bill" && (
+                 <>
+                 <div>                  
+                   <Link to="/">
+            <img src={backarrowlogo} className='h-10 w-10' alt="Back" />
+          </Link>
+          </div>
+
+                 </>
+             )
+         }
         </div>
         <div className='flex-1 text-center'>
           <h1 className='font-bold text-2xl'>Bill Generated</h1>
@@ -295,9 +307,9 @@ function Billpart() {
       {cartforpayment.map((item, index) => (
         <div className='flex flex-row md:flex-row items-center bg-gray-200 shadow-xl shadow-gray-500 rounded-2xl mb-4 p-4' key={index}>
           <div>
-            <img src={item.image} alt={`Product ${index}`} className='h-40 w-40 rounded-2xl mb-4 md:mb-0' />
+            <img src={item.image} alt={`Product ${index}`} className='h-20 w-20 rounded-2xl mb-4 md:mb-0' />
           </div>
-          <div className='ml-0 md:ml-4 flex-1 p-2'>
+          <div className='ml-2 md:ml-4 flex-1 p-2'>
             <p className='font-bold'>{item.name} (Size: {item.size})</p>
             <p>Price: ${item.price}</p>
             <p>Rating: {item.rating}</p>
@@ -345,7 +357,7 @@ function Billpart() {
         />
       </div>
       <div>
-        <h1 className="font-bold text-lg mb-2">Enter mobile no</h1>
+        <h1 className="font-bold text-lg mb-2">Enter Whatsapp no for invoice </h1>
         <input
           type="text"
           required
