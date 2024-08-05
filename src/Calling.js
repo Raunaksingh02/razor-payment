@@ -3,7 +3,7 @@ import { io } from 'socket.io-client';
 
 const socket = io("https://backendcafe-ceaj.onrender.com");
 
-function Calling(props) {
+function Calling() {
   const [requests, setRequests] = useState([]);
   const audioRef = useRef(new Audio('/alertsound.mp3'));
 
@@ -44,17 +44,25 @@ function Calling(props) {
   };
 
   return (
-    <div>
+    <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center pointer-events-none">
       {requests.map((request, index) => (
-        <div key={index} className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
-          <strong className="font-extrabold">Incoming Call from {request.table}!</strong>
-          <span className="block sm:inline"> {request.query} at {request.time}</span>
-          <button
-            onClick={() => removeRequest(index)}
-            className="absolute top-0 bottom-0 right-0 px-4 py-3"
-          >
-            <span className="text-2xl">&times;</span>
-          </button>
+        <div 
+          key={index} 
+          className="bg-white border border-red-400 text-red-700 px-6 py-4 rounded shadow-lg relative mb-4 pointer-events-auto animate-bounce-in-down max-w-sm mx-auto"
+          role="alert"
+        >
+          <div className="flex justify-between items-start">
+            <div>
+              <strong className="font-extrabold text-lg">Incoming Call from {request.table}!</strong>
+              <span className="block sm:inline"> {request.query} at {request.time}</span>
+            </div>
+            <button
+              onClick={() => removeRequest(index)}
+              className="text-gray-500 hover:text-gray-700"
+            >
+              <span className="text-2xl">&times;</span>
+            </button>
+          </div>
         </div>
       ))}
     </div>
@@ -62,8 +70,3 @@ function Calling(props) {
 }
 
 export default Calling;
-
-
-
-
-
