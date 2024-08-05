@@ -44,7 +44,7 @@ function Calling() {
   };
 
   return (
-    <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center pointer-events-none">
+    <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center  pointer-events-none">
       {requests.map((request, index) => (
         <div 
           key={index} 

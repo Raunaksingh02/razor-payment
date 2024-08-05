@@ -1,5 +1,5 @@
-import React, { useEffect, useState }  from  'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState ,useContext}  from  'react';
+import { Link ,useNavigate} from 'react-router-dom';
 import { MdOutlinePayments } from "react-icons/md";
 import backarrowlogo from "./images/backarrowlogo.png";
 import { FaMoneyCheckDollar } from "react-icons/fa6";
@@ -10,11 +10,17 @@ import { TbTruckDelivery } from "react-icons/tb";
 import { FaChartLine } from "react-icons/fa6";
 import Calling from "./Calling.js"
 import { FaFileInvoiceDollar } from "react-icons/fa";
+import { IoIosLogOut } from "react-icons/io";
 import axios from "axios"
+import { AuthContext } from './AuthContext';
 
 function Owner() {
  
    const [dataofdish, setdataofdish] = useState("")
+   const [showModal, setShowModal] = useState(false);
+   const { logout } = useContext(AuthContext); // Access the logout function from AuthContext
+   const navigate = useNavigate();
+
   useEffect(() => {
     axios.get('https://backendcafe-ceaj.onrender.com/getdish')
         .then(response => {
@@ -24,15 +30,27 @@ function Owner() {
         .catch(error => console.error('Error fetching data:', error));
 }, []);
 
+const handleLogout = () => {
+  logout(); // Call the logout function from AuthContext
+  navigate('/login'); // Redirect to login page
+};
+
   return (
     <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
       <Calling />
       <div style={{ flex: "1" }}>
-        <div className='flex items-center '>
+        <div className='flex justify-between items-center  '>
           <Link to="/">
             <img src={backarrowlogo} className='h-10 w-10 m-2' alt="Back" />
           </Link>
-          <h1 className="font-extrabold text-3xl text-center text-[#18196c] ml-10">Admin Panel</h1>
+          <div>
+          <h1 className="font-extrabold text-3xl text-center text-[#18196c] ml-6">Admin Panel</h1>
+          </div>
+          <div>
+          <button onClick={() => setShowModal(true)}>
+              <IoIosLogOut className='h-8 w-8' />
+            </button>
+          </div>
         </div>
         <div>
 
@@ -94,6 +112,28 @@ function Owner() {
       </footer>
     </div>
     </div>
+    {showModal && (
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-800 bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg">
+            <h2 className="text-lg font-bold mb-4">Confirm Logout</h2>
+            <p className="mb-4">Are you sure you want to log out?</p>
+            <div className="flex justify-end space-x-4">
+              <button 
+                className="px-4 py-2 bg-gray-500 text-white rounded" 
+                onClick={() => setShowModal(false)}
+              >
+                Cancel
+              </button>
+              <button 
+                className="px-4 py-2 bg-red-500 text-white rounded" 
+                onClick={handleLogout}
+              >
+                Logout
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

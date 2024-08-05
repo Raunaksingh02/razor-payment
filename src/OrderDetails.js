@@ -4,8 +4,6 @@ import { useNavigate, Link } from 'react-router-dom';
 import backarrowlogo from './images/backarrowlogo.png';
 import Calling from "./Calling.js";
 
-
-
 const PaymentDetails = () => {
     const [payments, setPayments] = useState([]);
     const [loading, setLoading] = useState(true);
