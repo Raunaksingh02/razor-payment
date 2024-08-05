@@ -76,9 +76,19 @@ const PaymentComponent = () => {
         <Route  path="/Admin " element={<Admin />} />
         <Route  path="/Chart" element={<Chart />} />
         <Route  path="/Sale" element={<Salechart />} />
-        <Route  path="/Dishmanage" element={<Dishmanage />} />
+        <Route  path="/Dishmanage" element={
+          <ProtectedRoute>
+             <Dishmanage />
+          </ProtectedRoute>
+          } />
         <Route path="/bill" element={<Billpart  />} />
-        <Route path="/update/:_id" element={<Updatepart />} />   
+        <Route path="/update/:_id" element={
+          <ProtectedRoute>
+              <Updatepart />
+          </ProtectedRoute>
+        
+
+          } />   
       </Routes>
     </Router>
   );

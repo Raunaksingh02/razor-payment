@@ -2,6 +2,7 @@ import React, { useState, useContext } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from './AuthContext';
+import loginlogo1 from "./images/loginlogo1.jpg";
 
 const LoginPage = () => {
   const [username, setUsername] = useState('');
@@ -26,8 +27,15 @@ const LoginPage = () => {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="w-full max-w-sm p-4 bg-white rounded-lg shadow-md">
-        <h2 className="mb-6 text-2xl font-bold text-center">Login</h2>
+      <div className="w-full max-w-sm p-6 bg-white rounded-lg shadow-md">
+        <h2 className="mb-6 text-3xl font-bold text-center">Cafe House</h2>
+        <div className="flex justify-center mb-6">
+          <img
+            src={loginlogo1}
+            alt="Login Logo"
+            className="h-50 w-50 "
+          />
+        </div>
         <form onSubmit={handleLogin}>
           <div className="mb-4">
             <label className="block mb-2 text-sm font-bold text-gray-700">Username</label>
@@ -36,6 +44,7 @@ const LoginPage = () => {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500"
+              required
             />
           </div>
           <div className="mb-6">
@@ -45,6 +54,7 @@ const LoginPage = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500"
+              required
             />
           </div>
           <div className="flex items-center justify-between">
@@ -56,70 +66,9 @@ const LoginPage = () => {
             </button>
           </div>
         </form>
-     {/*    <div className="mt-4 text-center">
-          <a href="/signup" className="text-sm text-blue-500 hover:underline">Don't have an account? Sign up</a>
-        </div>    */}
       </div>
     </div>
   );
 };
 
 export default LoginPage;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

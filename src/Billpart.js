@@ -258,7 +258,7 @@ function Billpart() {
                     </>
                 )
             }
-      <div className='flex items-center mb-4 shadow-lg  shadow-gray-300'>
+      <div className='flex items-center mb-4 '>
         <div className='mr-4'>
         
              {
