@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { io } from 'socket.io-client';
+import { GiCancel } from "react-icons/gi";
 
 const socket = io("https://backendcafe-ceaj.onrender.com");
 
@@ -60,7 +61,8 @@ function Calling() {
               onClick={() => removeRequest(index)}
               className="text-gray-500 hover:text-gray-700"
             >
-              <span className="text-2xl">&times;</span>
+            {/* <span className="text-2xl">&times;</span> */}
+            <GiCancel className='h-10 w-10' />
             </button>
           </div>
         </div>
