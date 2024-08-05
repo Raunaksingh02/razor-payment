@@ -59,10 +59,10 @@ function Calling() {
             </div>
             <button
               onClick={() => removeRequest(index)}
-              className="text-gray-500 hover:text-gray-700"
+              className="text-black"
             >
             {/* <span className="text-2xl">&times;</span> */}
-            <GiCancel className='h-10 w-10' />
+            <GiCancel fill="black" className='h-6 w-6' />
             </button>
           </div>
         </div>
