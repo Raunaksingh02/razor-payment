@@ -55,7 +55,7 @@ const handleLogout = () => {
         <div>
 
               
-        <div className="grid grid-cols-2 shadow-xl shadow-blue-400">
+        <div className="grid grid-cols-2 shadow-xl animate-slideInFromBottom shadow-blue-400">
           <Link to="/Order">
           <div className='m-3 p-3 h-56 rounded-3xl  transition duration-150 ease-in-out  bg-[#18196c] flex flex-col items-center justify-center'>
           <h1 className='text-center text-lg font-mono font-extrabold text-white'>Order Details</h1>
