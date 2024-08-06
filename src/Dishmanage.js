@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate ,Link} from 'react-router-dom';
 import Calling from "./Calling";
+import backarrowlogo from "./images/backarrowlogo.png";
 
 
 const DishManagement = () => {
@@ -107,10 +108,26 @@ const DishManagement = () => {
   };
 
   return (
+      <div> 
+     <div className="flex flex-row sm:flex-row items-center justify-between p-4">
+     <div className="mb-4 sm:mb-0 sm:mr-4">
+     <Link to="/Owner">
+    <img
+    src={backarrowlogo}
+    className="h-10 w-10"
+    alt="Back Arrow"
+      />
+      </Link>
+     </div>
+     <div className="flex-1">  
+     <h1 className="text-3xl font-bold text-center mb-2">Management</h1>
+    </div>
+    </div>
     <div className="container mx-auto p-6">
       <Calling/>
-      <h1 className="text-3xl font-bold mb-6 text-center">Dish Management</h1>
+     
 
+      
       <div className="mb-6">
         <h2 className="text-2xl font-semibold mb-4">Add New Dish</h2>
         <div className="flex flex-col space-y-4">
@@ -314,6 +331,7 @@ const DishManagement = () => {
     </div>
 )}
 
+    </div>
     </div>
   );
 };

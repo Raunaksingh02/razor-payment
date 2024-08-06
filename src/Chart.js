@@ -70,7 +70,7 @@ const OrdersChart = () => {
        <div>
         <div className='flex m-3'>
         <div className='mr-14'>
-         <Link to="/">
+         <Link to="/Owner">
          <img src={backarrowlogo} className='h-10 w-10' />
          </Link>
         </div>
