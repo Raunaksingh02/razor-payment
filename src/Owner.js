@@ -39,7 +39,7 @@ const handleLogout = () => {
   return (
     <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
       <Calling />
-      <OrderPopup/>
+      <OrderPopup />
       <div style={{ flex: "1" }}>
         <div className='flex justify-between items-center  '>
           <Link to="/">

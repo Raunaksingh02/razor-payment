@@ -7,12 +7,14 @@ const socket = io("https://backendcafe-ceaj.onrender.com");
 
 const OrderPopup = () => {
   const [showPopup, setShowPopup] = useState(false);
+  const [orderDetails, setOrderDetails] = useState(null);
 
   useEffect(() => {
-    socket.on("newOrder", () => {
+    socket.on("newOrder", (data) => {
+      setOrderDetails(data);
       setShowPopup(true);
+      console.log(data);
 
-      // Hide the popup after a few seconds
       setTimeout(() => {
         setShowPopup(false);
       }, 5000); // Change this duration as needed
@@ -26,9 +28,17 @@ const OrderPopup = () => {
   if (!showPopup) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50">
+    <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-black bg-opacity-50">
       <div className="bg-white p-8 rounded-lg shadow-lg max-w-md w-full">
         <h2 className="text-xl font-semibold mb-4">New Order Received</h2>
+        {orderDetails && (
+          <div className="mb-4">
+            <p>Order ID: {orderDetails.orderId}</p>
+            <p>Name: {orderDetails.name}</p>
+            <p>Amount: {orderDetails.amount}</p>
+            {/* Add more order details here if needed */}
+          </div>
+        )}
         <button
           onClick={() => setShowPopup(false)}
           className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg"
