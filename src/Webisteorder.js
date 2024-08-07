@@ -3,6 +3,7 @@ import backarrowlogo from './images/backarrowlogo.png';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
 import Calling from "./Calling.js";
+import OrderPopup from "./OrderPopup.js";
 
 const WebsiteOrder = () => {
   const [selectedTab, setSelectedTab] = useState('today');
@@ -75,6 +76,7 @@ const WebsiteOrder = () => {
     <div className="my-4">
       <div className='flex items-center mb-4'>
         <Calling />
+        <OrderPopup/>
         <div className='mr-4'>
           <Link to="/owner">
             <img src={backarrowlogo} className='h-10 w-10' alt="Back" />

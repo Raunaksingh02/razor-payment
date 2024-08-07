@@ -5,7 +5,7 @@ import axios from 'axios';
 import { GrCafeteria } from "react-icons/gr";
 import cartlogo from "./images/cartlogo.png";
 import dialicon from './images/dialicon.png';
-
+import OrderPopup from "./OrderPopup.js";
 import { FaShoppingCart } from "react-icons/fa";
 import deliverylogo from './images/delivery.gif';
 import { CiSearch } from "react-icons/ci";
@@ -126,6 +126,7 @@ function Homepage() {
                     <div>
                         <h2 className='font-bold text-red-700 text-center '>In Billing mode ,Select items for customer </h2>
                         <Calling/>
+                        <OrderPopup/>
                     </div>
                     
                     </>

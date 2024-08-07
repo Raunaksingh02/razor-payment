@@ -4,6 +4,7 @@ import axios from 'axios';
 import { useNavigate ,Link} from 'react-router-dom';
 import Calling from "./Calling";
 import backarrowlogo from "./images/backarrowlogo.png";
+import OrderPopup from "./OrderPopup.js";
 
 
 const DishManagement = () => {
@@ -125,7 +126,7 @@ const DishManagement = () => {
     </div>
     <div className="container mx-auto p-6">
       <Calling/>
-     
+     <OrderPopup />
 
       
       <div className="mb-6">

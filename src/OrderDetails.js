@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
 import backarrowlogo from './images/backarrowlogo.png';
 import Calling from "./Calling.js";
+import OrderPopup from "./OrderPopup.js";
 
 const PaymentDetails = () => {
     const [payments, setPayments] = useState([]);
@@ -86,7 +87,7 @@ const PaymentDetails = () => {
     return (
         <div>
             <Calling/>
-
+            <OrderPopup />
             <div className="flex items-center">
                 <div>
                     <Link to="/Owner">

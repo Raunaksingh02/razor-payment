@@ -5,6 +5,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import Chart from 'react-apexcharts';
 import backarrowlogo from "./images/backarrowlogo.png";
 import { Link } from 'react-router-dom';
+import OrderPopup from "./OrderPopup.js";
 import './App.css';
 import Calling from "./Calling";
 
@@ -49,6 +50,7 @@ export default function Profitpage() {
   return (
     <div className="min-h-screen flex flex-col bg-gray-100">
       <Calling/>
+      <OrderPopup/>
       <header className="flex items-center bg-gray-400 text-white p-4">
         <Link to="/Owner">
           <img

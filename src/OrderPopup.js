@@ -14,8 +14,6 @@ const OrderPopup = () => {
       setOrderDetails(data);
       setShowPopup(true);
       console.log(data);
-
-    
     });
 
     return () => {
@@ -31,7 +29,7 @@ const OrderPopup = () => {
         <h2 className="text-xl font-semibold mb-4">New Order Received</h2>
         {orderDetails && (
           <div className="mb-4">
-            <p>Order ID: {orderDetails.orderId}</p>
+            
             <p>Name: {orderDetails.name}</p>
             <p>Amount: {orderDetails.amount}</p>
             <p>Location: {orderDetails.customerTable}</p>
