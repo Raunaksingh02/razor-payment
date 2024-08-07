@@ -187,48 +187,85 @@ function Homepage() {
                     ))}
                 </select>
             </div>
-           
+
             <div className="grid grid-cols-1 mt-3 sm:grid sm:grid-cols-3 sm:gap-4">
-                {currentCafes.map((item, index) => (
-                    <div className="flex flex-row bg-gray-100 ease-in duration-300 rounded-2xl  shadow-inner shadow-gray-400  animate-slideInFromBottom p-4 mb-4 hover:bg-gray-400" key={index}>
-                        <img
-                            className='w-full sm:w-40 mt-4 p-2 h-40 object-cover rounded-3xl shadow-lg shadow-gray-300'
-                            src={item.image}
-                            alt={item.name}
-                        />
-                        <div className='p-2'>
-                            <h2 className="font-bold text-xl">{item.name}</h2>
-                            <p>Category: {item.category}</p>
-                            <p>Rating: {item.rating} stars</p>
-                            <p className="font-bold">Price: {selectedPrices[cafes.indexOf(item)]}</p>
-                            <div className="mt-2">
-                                <label htmlFor={`size-select-${index}`} className="block text-sm font-bold text-gray-700">Size:</label>
-                                <select
-                                    id={`size-select-${index}`}
-                                    className="mt-1 block w-full sm:w-40 pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
-                                    value={selectedSizes[cafes.indexOf(item)]}
-                                    onChange={(e) => {
-                                        const size = e.target.value;
-                                        handleSizeChange(cafes.indexOf(item), size);
-                                    }}
-                                >
-                                    {item.sizes.map(size => (
-                                        <option key={size.size} value={size.size} className="w-full">
-                                            {`${size.size}`}
-                                        </option>
-                                    ))}
-                                </select>
-                            </div>
-                            <p className="mt-2">{item.description}</p>
-                            <div className='flex items-center mt-4'>
-                                <button onClick={() => { increase(cafes.indexOf(item)); additemtocart(item, selectedSizes[cafes.indexOf(item)], selectedPrices[cafes.indexOf(item)], selectedCostPrices[cafes.indexOf(item)]); }} className="h-10 w-10 bg-black text-white rounded-l-lg">+</button>
-                                <h1 className='font-bold text-2xl mx-4'>{quantities[cafes.indexOf(item)]}</h1>
-                                <button onClick={() => { decrease(cafes.indexOf(item)); removeitemtocart(item, selectedSizes[cafes.indexOf(item)], selectedPrices[cafes.indexOf(item)]); }} className="h-10 w-10 bg-black text-white rounded-r-lg">-</button>
-                            </div>
-                        </div>
-                    </div>
-                ))}
-            </div>
+  {currentCafes.map((item, index) => (
+    <div
+      className="flex flex-row bg-gray-100 ease-in duration-300 rounded-2xl shadow-inner shadow-gray-400 animate-slideInFromBottom p-4 mb-4 hover:bg-gray-400"
+      key={index}
+    >
+      <img
+        className="w-40 h-40 object-cover mt-4 p-2 rounded-3xl shadow-lg shadow-gray-300"
+        src={item.image}
+        alt={item.name}
+      />
+      <div className="p-2">
+        <h2 className="font-bold text-xl">{item.name}</h2>
+        <p>Category: {item.category}</p>
+        <p>Rating: {item.rating} stars</p>
+        <p className="font-bold">Price: {selectedPrices[cafes.indexOf(item)]}</p>
+        <div className="mt-2">
+          <label
+            htmlFor={`size-select-${index}`}
+            className="block text-sm font-bold text-gray-700"
+          >
+            Size:
+          </label>
+          <select
+            id={`size-select-${index}`}
+            className="mt-1 block w-full sm:w-40 pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+            value={selectedSizes[cafes.indexOf(item)]}
+            onChange={(e) => {
+              const size = e.target.value;
+              handleSizeChange(cafes.indexOf(item), size);
+            }}
+          >
+            {item.sizes.map((size) => (
+              <option key={size.size} value={size.size} className="w-full">
+                {`${size.size}`}
+              </option>
+            ))}
+          </select>
+        </div>
+        <p className="mt-2">{item.description}</p>
+        <div className="flex items-center mt-4">
+          <button
+            onClick={() => {
+              increase(cafes.indexOf(item));
+              additemtocart(
+                item,
+                selectedSizes[cafes.indexOf(item)],
+                selectedPrices[cafes.indexOf(item)],
+                selectedCostPrices[cafes.indexOf(item)]
+              );
+            }}
+            className="h-10 w-10 bg-black text-white rounded-l-lg"
+          >
+            +
+          </button>
+          <h1 className="font-bold text-2xl mx-4">
+            {quantities[cafes.indexOf(item)]}
+          </h1>
+          <button
+            onClick={() => {
+              decrease(cafes.indexOf(item));
+              removeitemtocart(
+                item,
+                selectedSizes[cafes.indexOf(item)],
+                selectedPrices[cafes.indexOf(item)]
+              );
+            }}
+            className="h-10 w-10 bg-black text-white rounded-r-lg"
+          >
+            -
+          </button>
+        </div>
+      </div>
+    </div>
+  ))}
+</div>
+   
+        
             <div className="flex justify-center mt-4">
                 <button
                     onClick={() => paginate(currentPage - 1)}
