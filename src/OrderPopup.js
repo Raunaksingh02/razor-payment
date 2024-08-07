@@ -15,9 +15,7 @@ const OrderPopup = () => {
       setShowPopup(true);
       console.log(data);
 
-      setTimeout(() => {
-        setShowPopup(false);
-      }, 5000); // Change this duration as needed
+    
     });
 
     return () => {
@@ -36,7 +34,8 @@ const OrderPopup = () => {
             <p>Order ID: {orderDetails.orderId}</p>
             <p>Name: {orderDetails.name}</p>
             <p>Amount: {orderDetails.amount}</p>
-            {/* Add more order details here if needed */}
+            <p>Location: {orderDetails.customerTable}</p>
+            <p>Payment Mode : {orderDetails.paymentmode}</p>
           </div>
         )}
         <button
