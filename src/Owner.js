@@ -10,6 +10,7 @@ import { TbTruckDelivery } from "react-icons/tb";
 import { FaChartLine } from "react-icons/fa6";
 import Calling from "./Calling.js"
 import { FaFileInvoiceDollar } from "react-icons/fa";
+import OrderPopup from "./OrderPopup.js"
 import { IoIosLogOut } from "react-icons/io";
 import axios from "axios"
 import { AuthContext } from './AuthContext';
@@ -38,6 +39,7 @@ const handleLogout = () => {
   return (
     <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
       <Calling />
+      <OrderPopup/>
       <div style={{ flex: "1" }}>
         <div className='flex justify-between items-center  '>
           <Link to="/">
