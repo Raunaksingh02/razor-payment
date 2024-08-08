@@ -10,19 +10,29 @@ const OrderPopup = () => {
 
   useEffect(() => {
     const audioElement = audioRef.current;
-    audioElement.load(); 
 
-    socket.on("newOrder", (data) => {
-      setOrderDetails(data);
-      setShowPopup(true);
-      playAlertSound();
-      console.log(data);
+    // Load the audio element
+    const loadAudio = () => {
+      return new Promise((resolve) => {
+        audioElement.addEventListener('canplaythrough', resolve, { once: true });
+        audioElement.load();
+      });
+    };
+
+    loadAudio().then(() => {
+      socket.on("newOrder", (data) => {
+        setOrderDetails(data);
+        setShowPopup(true);
+        playAlertSound();
+        console.log(data);
+      });
     });
 
     return () => {
       socket.off("newOrder");
       if (audioRef.current) {
         audioRef.current.pause();
+        audioRef.current.currentTime = 0; // Reset the audio
         audioRef.current = null;
       }
     };
@@ -35,6 +45,15 @@ const OrderPopup = () => {
       audioElement.play().catch(error => {
         console.error('Error playing audio:', error);
       });
+    }
+  };
+
+  const handleClosePopup = () => {
+    setShowPopup(false);
+    const audioElement = audioRef.current;
+    if (audioElement) {
+      audioElement.pause();
+      audioElement.currentTime = 0; // Reset the audio
     }
   };
 
@@ -65,7 +84,7 @@ const OrderPopup = () => {
           </div>
         )}
         <button
-          onClick={() => setShowPopup(false)}
+          onClick={handleClosePopup}
           className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg"
         >
           Close
@@ -76,3 +95,13 @@ const OrderPopup = () => {
 };
 
 export default OrderPopup;
+
+
+
+
+
+
+
+
+
+
