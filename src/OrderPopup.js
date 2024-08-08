@@ -1,6 +1,4 @@
-// src/components/OrderPopup.js
-
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import io from "socket.io-client";
 
 const socket = io("https://backendcafe-ceaj.onrender.com");
@@ -8,25 +6,41 @@ const socket = io("https://backendcafe-ceaj.onrender.com");
 const OrderPopup = () => {
   const [showPopup, setShowPopup] = useState(false);
   const [orderDetails, setOrderDetails] = useState(null);
+  const audioRef = useRef(new Audio('/alertsound.mp3'));
 
   useEffect(() => {
-    const audio = new Audio("/alertsound.mp3");
+    const audioElement = audioRef.current;
+    audioElement.load(); 
 
     socket.on("newOrder", (data) => {
       setOrderDetails(data);
       setShowPopup(true);
-      audio.play();
+      playAlertSound();
       console.log(data);
     });
 
     return () => {
       socket.off("newOrder");
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
     };
   }, []);
 
+  const playAlertSound = () => {
+    const audioElement = audioRef.current;
+    if (audioElement) {
+      audioElement.currentTime = 0; // Ensure the sound plays from the start
+      audioElement.play().catch(error => {
+        console.error('Error playing audio:', error);
+      });
+    }
+  };
+
   if (!showPopup) return null;
 
-  const isWebsiteOrder = orderDetails?.address.houseNo;
+  const isWebsiteOrder = orderDetails?.address?.houseNo;
 
   return (
     <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-black bg-opacity-50">
@@ -38,12 +52,12 @@ const OrderPopup = () => {
             <p>Amount: {orderDetails.amount}</p>
             {isWebsiteOrder ? (
               <>
-                 <p>From:Webiste</p>
+                <p>From: Website</p>
                 <p>Payment Mode: {orderDetails.paymentmode}</p>
               </>
             ) : (
               <>
-                <p>From:Restaurant</p>
+                <p>From: Restaurant</p>
                 <p>Location: {orderDetails.customerTable}</p>
                 <p>Payment Mode: {orderDetails.paymentmode}</p>
               </>
