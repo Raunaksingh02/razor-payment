@@ -26,7 +26,7 @@ const OrderPopup = () => {
 
   if (!showPopup) return null;
 
-  const isWebsiteOrder = orderDetails?.address;
+  const isWebsiteOrder = orderDetails?.address.houseNo;
 
   return (
     <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-black bg-opacity-50">
@@ -38,11 +38,12 @@ const OrderPopup = () => {
             <p>Amount: {orderDetails.amount}</p>
             {isWebsiteOrder ? (
               <>
-                <p>Address: {orderDetails.address}</p>
+                 <p>From:Webiste</p>
                 <p>Payment Mode: {orderDetails.paymentmode}</p>
               </>
             ) : (
               <>
+                <p>From:Restaurant</p>
                 <p>Location: {orderDetails.customerTable}</p>
                 <p>Payment Mode: {orderDetails.paymentmode}</p>
               </>
