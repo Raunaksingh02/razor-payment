@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef,useEffect } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { toPng } from 'html-to-image';
 import QRCode from 'qrcode.react';
@@ -9,7 +9,7 @@ import gpaylogo from "./images/gpaylogo.png"
 import { IoMdDownload } from "react-icons/io";
 import paytmlogo from  "./images/paytmlogo.png";
 import phonepelogo from "./images/phonepelogo.png"
-
+import Stepmodal from "./images/Stepmodal.js";
 
 function Upi() {
   const location = useLocation();
@@ -37,6 +37,17 @@ function Upi() {
   const generateQRCodeValue = () => {
     return `upi://pay?pa=9971299049@ibl&pn=${customerName}&am=${grandTotalforpayment}&cu=INR`;
   };
+
+   const [isModal, setIsModal] = useState(false);
+
+  useEffect(() => {
+    setIsModal(true);
+  }, []);
+
+  const handleCloseModal = () => {
+    setIsModal(false);
+  };
+
 
   const handleDownloadQRCode = () => {
     if (qrCodeRef.current) {
@@ -211,7 +222,7 @@ function Upi() {
           </div>
         </div>
       </div>
-
+      <Stepmodal isOpen={isModal} onClose={handleCloseModal} />
       {isModalOpen && (
         <Modal
           title="Confirm Payment"

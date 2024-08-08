@@ -150,7 +150,7 @@ const PaymentDetails = () => {
                                     <div key={item.id} className='border-2 border-gray-200 rounded-md shadow-md m-3 p-3'>
                                         <h2 className="text-md font-medium">Item Name: {item.name}</h2>
                                         <h3 className="text-sm">Category: {item.category}</h3>
-                                        <h3 className="text-sm">Rating: {item.rating}</h3>
+                                        <h3 className="text-sm">Quantity: {item.quantity}</h3>
                                         <h4 className="text-sm font-semibold">Price: {item.price}</h4>
                                         <h4 className="text-sm font-semibold">Size: {item.size}</h4>
                                     </div>
