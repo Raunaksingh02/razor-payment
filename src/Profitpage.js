@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import Chart from 'react-apexcharts';
+
 import backarrowlogo from "./images/backarrowlogo.png";
 import { Link } from 'react-router-dom';
 import OrderPopup from "./OrderPopup.js";

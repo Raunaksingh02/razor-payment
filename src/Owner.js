@@ -14,6 +14,7 @@ import OrderPopup from "./OrderPopup.js"
 import { IoIosLogOut } from "react-icons/io";
 import axios from "axios"
 import { AuthContext } from './AuthContext';
+import Heartbeat from "./Heartbeat.js"
 
 function Owner() {
  
@@ -22,6 +23,7 @@ function Owner() {
    const { logout } = useContext(AuthContext); // Access the logout function from AuthContext
    const navigate = useNavigate();
 
+  
   useEffect(() => {
     axios.get('https://backendcafe-ceaj.onrender.com/getdish')
         .then(response => {
@@ -40,6 +42,7 @@ const handleLogout = () => {
     <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
       <Calling />
       <OrderPopup />
+      <Heartbeat/>
       <div style={{ flex: "1" }}>
         <div className='flex justify-between items-center  '>
           <Link to="/">
@@ -139,5 +142,6 @@ const handleLogout = () => {
     </div>
   );
 }
+
 
 export default Owner;

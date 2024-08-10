@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useParams,useNavigate } from 'react-router-dom';
+import React, {  useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { GrCafeteria } from "react-icons/gr";
 import deliverylogo from './images/delivery.gif';
 
