@@ -54,16 +54,13 @@ function AboutUs() {
         <h2 className="text-2xl font-bold mb-3">Follow Us</h2>
         <p>Stay connected with us through our social media channels:</p>
         <ul className="list-disc list-inside">
-          <li><a href="#" className="text-blue-600 hover:underline">Facebook</a></li>
-          <li><a href="#" className="text-blue-600 hover:underline">Instagram</a></li>
-          <li><a href="#" className="text-blue-600 hover:underline">Twitter</a></li>
+         
         </ul>
       </div>
 
       <div className="mb-6">
-        <h2 className="text-2xl font-bold mb-3">Join Our Team</h2>
-        <p>If you're passionate about food and customer service, we'd love to hear from you! Check out our <a href="#" className="text-blue-600 hover:underline">careers page</a> for current openings and join the CafeHouse family.</p>
-      </div>
+       
+       </div>
     </div>
   );
 }

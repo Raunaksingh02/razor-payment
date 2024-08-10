@@ -1,92 +1,83 @@
+// src/components/TopSellingProducts.jsx
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import axios from 'axios';
 
-import backarrowlogo from "./images/backarrowlogo.png";
-import { Link } from 'react-router-dom';
-import OrderPopup from "./OrderPopup.js";
-import './App.css';
-import Calling from "./Calling";
-
-export default function Profitpage() {
-  const [dailyProfit, setDailyProfit] = useState(null);
-  const [monthlyProfit, setMonthlyProfit] = useState(null);
-  const [monthlyProfitData, setMonthlyProfitData] = useState([]);
-  const [selectedDate, setSelectedDate] = useState(new Date());
-  const [selectedMonth, setSelectedMonth] = useState(new Date());
-
-  const fetchDailyProfit = async (date) => {
-    try {
-      const response = await axios.get('https://backendcafe-ceaj.onrender.com/profit/daily', {
-        params: { date: date.toISOString() }
-      });
-      console.log('Daily Profit Response:', response.data);
-      setDailyProfit(response.data.dailyProfit);
-    } catch (error) {
-      console.error('Error fetching daily profit:', error);
-    }
-  };
-
-  const fetchMonthlyProfit = async (date) => {
-    try {
-      const response = await axios.get('https://backendcafe-ceaj.onrender.com/profit/monthly', {
-        params: { date: date.toISOString() }
-      });
-      console.log('Monthly Profit Response:', response.data);
-      setMonthlyProfit(response.data.monthlyProfit);
-      setMonthlyProfitData(response.data.dailyProfits || []); // Use an empty array if dailyProfits is undefined
-    } catch (error) {
-      console.error('Error fetching monthly profit:', error);
-    }
-  };
+const Profitpage = () => {
+  const [startDate, setStartDate] = useState(new Date());
+  const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    fetchDailyProfit(selectedDate);
-    fetchMonthlyProfit(selectedMonth);
-  }, [selectedDate, selectedMonth]);
+    const fetchTopSellingProducts = async () => {
+      const month = startDate.getMonth() + 1;
+      const year = startDate.getFullYear();
+      
+      try {
+        const response = await axios.get(`http://localhost:1000/top-selling-products`, {
+          params: { month, year },
+        });
+        setProducts(response.data);
+      } catch (error) {
+        console.error('Error fetching top-selling products:', error);
+      }
+    };
 
+    fetchTopSellingProducts();
+  }, [startDate]);
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-100">
-      <Calling/>
-      <OrderPopup/>
-      <header className="flex items-center bg-gray-400 text-white p-4">
-        <Link to="/Owner">
-          <img
-            src={backarrowlogo}
-            className='h-10 w-10'
-          />
-        </Link>
-        <h1 className="text-2xl font-bold ml-10">Profit Analysis</h1>
-      </header>
-      <main className="flex-grow p-4">
-        <div className="bg-white shadow-md rounded-lg p-6 mb-4">
-          <h2 className="text-xl font-semibold text-gray-800 mb-2 text-center">Select Date for Daily Profit</h2>
-          <DatePicker
-            selected={selectedDate}
-            onChange={(date) => setSelectedDate(date)}
-            dateFormat="yyyy/MM/dd"
-            className="block w-full mt-1 bg-white border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
-          />
-          <p className="text-lg text-gray-600 mt-4 font-bold">Daily Profit: {dailyProfit !== null ? dailyProfit.toFixed(2) : 'Loading...'}</p>
-        </div>
-        <div className="bg-white shadow-md rounded-lg p-6 mb-4">
-          <h2 className="text-xl font-semibold text-gray-800 mb-2 text-center">Select Month for Monthly Profit</h2>
-          <DatePicker
-            selected={selectedMonth}
-            onChange={(date) => setSelectedMonth(date)}
-            dateFormat="yyyy/MM"
-            showMonthYearPicker
-            className="block w-full mt-1 bg-white border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
-          />
-          <p className="text-lg text-gray-600 mt-4 font-bold">Monthly Profit: {monthlyProfit !== null ? monthlyProfit.toFixed(2) : 'Loading...'}</p>
-        </div>
-       
-      </main>
-      <footer className="bg-gray-800 text-white p-4 text-center">
-        <p>© 2024 Cafehouse Pvt ltd. All rights reserved.</p>
-      </footer>
+    <div className="container mx-auto p-6">
+      <h1 className="text-2xl font-bold mb-4">Top Selling Products</h1>
+      <div className="mb-6">
+        <label htmlFor="date-picker" className="block text-sm font-medium text-gray-700 mb-2">
+          Select Month and Year:
+        </label>
+        <DatePicker
+          id="date-picker"
+          selected={startDate}
+          onChange={(date) => setStartDate(date)}
+          dateFormat="MM/yyyy"
+          showMonthYearPicker
+          className="p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
+      <div className="overflow-x-auto">
+        <table className="min-w-full divide-y divide-gray-200 bg-white shadow rounded-lg">
+          <thead className="bg-gray-50">
+            <tr>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Product Name
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Total Units Sold
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Total Revenue
+              </th>
+            </tr>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200">
+            {products
+              .filter(product => product._id) // Filter out products with null or undefined _id
+              .map((product) => (
+                <tr key={product._id}>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                    {product._id}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {product.totalUnits}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    ${product.totalRevenue.toFixed(2)}
+                  </td>
+                </tr>
+              ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
-}
+};
+
+export default Profitpage;
