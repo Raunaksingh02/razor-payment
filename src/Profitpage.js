@@ -14,7 +14,7 @@ const Profitpage = () => {
       const year = startDate.getFullYear();
       
       try {
-        const response = await axios.get(`http://localhost:1000/top-selling-products`, {
+        const response = await axios.get(`https://backendcafe-ceaj.onrender.com/top-selling-products`, {
           params: { month, year },
         });
         setProducts(response.data);
@@ -69,7 +69,7 @@ const Profitpage = () => {
                     {product.totalUnits}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    ${product.totalRevenue.toFixed(2)}
+                    {product.totalRevenue.toFixed(2)}
                   </td>
                 </tr>
               ))}
