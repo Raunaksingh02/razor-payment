@@ -1,4 +1,3 @@
-// src/components/TopSellingProducts.jsx
 import React, { useState, useEffect } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -17,6 +16,9 @@ const Profitpage = () => {
     responsive: [{
       breakpoint: 480,
       options: {
+        chart: {
+          width: 300
+        },
         legend: {
           position: 'bottom'
         }
@@ -31,7 +33,7 @@ const Profitpage = () => {
       const year = startDate.getFullYear();
       
       try {
-        const response = await axios.get(`http://localhost:1000/top-selling-products`, {
+        const response = await axios.get(`https://backendcafe-ceaj.onrender.com/top-selling-products`, {
           params: { month, year },
         });
         const data = response.data;
@@ -114,12 +116,14 @@ const Profitpage = () => {
       </div>
       <div className="bg-white shadow rounded-lg p-6">
         <h2 className="text-xl font-semibold mb-4">Product Distribution</h2>
-        <Chart
-          options={chartOptions}
-          series={chartSeries}
-          type="pie"
-          width="500"
-        />
+        <div className="chart-container mx-auto" style={{ maxWidth: '600px' }}>
+          <Chart
+            options={chartOptions}
+            series={chartSeries}
+            type="pie"
+            width="100%"
+          />
+        </div>
       </div>
     </div>
   );
