@@ -95,7 +95,7 @@ const handleLogout = () => {
           </Link>
           <Link to="/Profit">
         <div className='m-3 p-3 h-56 rounded-3xl transition duration-150 ease-in-out bg-[#18196c] flex flex-col items-center justify-center'>
-         <h1 className='text-center text-lg font-mono font-extrabold text-white'>Profit Data</h1>
+         <h1 className='text-center text-lg font-mono font-extrabold text-white'>Item Analysis</h1>
              <FaMoneyCheckDollar  fill="white" className="h-12 w-12 mt-4 "  />
             </div>
           </Link>
@@ -107,7 +107,7 @@ const handleLogout = () => {
           </Link>
           <Link to="/Month">
         <div className='m-3 p-3 h-56 rounded-3xl transition duration-150 ease-in-out bg-[#18196c] flex flex-col items-center justify-center'>
-         <h1 className='text-center text-lg font-mono font-extrabold text-white'>Customer Report</h1>
+         <h1 className='text-center text-lg font-mono font-extrabold text-white'>Revenue-Profit</h1>
          <TbReport fill="white" className="h-12 w-12 mt-4" />
             </div>
           </Link>
