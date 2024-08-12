@@ -79,8 +79,11 @@ function Owner() {
                 <h1 className="text-lg font-bold">Profit: <span className="font-bold">{memoizedStats.todaysProfit || 'N/A'}</span></h1>
                 <h1 className="text-lg font-bold">Revenue: <span className="font-bold">{memoizedStats.todaysRevenue || 'N/A'}</span></h1>
                 <h1 className="text-lg font-bold">Units: <span className="font-bold">{memoizedStats.totalDishesSold || 'N/A'}</span></h1>
-              </div>
-              <FaUserTie fill="white" className="h-16 w-16 mr-4" />
+             </div>
+             <div className="shadow-inner shadow-white ">
+                            <FaUserTie fill="white" className="h-16 w-16 m-4   " />
+                            </div>
+
             </div>
           </div>
         </div>
@@ -89,49 +92,49 @@ function Owner() {
           <Link to="/Order">
             <div className="p-3 h-56 rounded-3xl transition duration-150 ease-in-out bg-[#18196c] flex flex-col items-center justify-center">
               <h1 className="text-lg font-mono font-extrabold text-white">Order Details</h1>
-              <GiCook fill="white" className="h-12 w-12 mt-4" />
+              <GiCook fill="white" className="h-12 w-12 mt-4  shadow-2xl shadow-white" />
             </div>
           </Link>
           <Link to="/Takeaway">
             <div className="p-3 h-56 rounded-3xl transition duration-150 ease-in-out bg-[#18196c] flex flex-col items-center justify-center">
               <h1 className="text-lg font-mono font-extrabold text-white">Create Bill</h1>
-              <FaFileInvoiceDollar fill="white" className="h-12 w-12 mt-4" />
+              <FaFileInvoiceDollar fill="white" className="h-12 w-12 mt-4  shadow-2xl shadow-white" />
             </div>
           </Link>
           <Link to="/Website">
             <div className="p-3 h-56 rounded-3xl transition duration-150 ease-in-out bg-[#18196c] flex flex-col items-center justify-center">
               <h1 className="text-lg font-mono font-extrabold text-white">Website Order</h1>
-              <TbTruckDelivery fill="white" className="h-12 w-12 mt-4" />
+              <TbTruckDelivery fill="white" className="h-12 w-12 mt-4 shadow-2xl shadow-white" />
             </div>
           </Link>
           <Link to="/Dishmanage">
             <div className="p-3 h-56 rounded-3xl transition duration-150 ease-in-out bg-[#18196c] flex flex-col items-center justify-center">
               <h1 className="text-lg font-mono font-extrabold text-white">Dish Management</h1>
-              <IoFastFoodSharp className="h-12 w-12 mt-4" fill="white" />
+              <IoFastFoodSharp className="h-12 w-12 mt-4 shadow-2xl shadow-white" fill="white " />
             </div>
           </Link>
           <Link to="/Waiter">
             <div className="p-3 h-56 rounded-3xl transition duration-150 ease-in-out bg-[#18196c] flex flex-col items-center justify-center">
               <h1 className="text-lg font-mono font-extrabold text-white">Cost Price</h1>
-              <MdOutlinePayments fill="white" className="h-12 w-12 mt-4" />
+              <MdOutlinePayments fill="white" className="h-12 w-12 mt-4 shadow-2xl shadow-white" />
             </div>
           </Link>
           <Link to="/Profit">
             <div className="p-3 h-56 rounded-3xl transition duration-150 ease-in-out bg-[#18196c] flex flex-col items-center justify-center">
               <h1 className="text-lg font-mono font-extrabold text-white">Item Analysis</h1>
-              <FaMoneyCheckDollar fill="white" className="h-12 w-12 mt-4" />
+              <FaMoneyCheckDollar fill="white" className="h-12 w-12 mt-4 shadow-2xl shadow-white" />
             </div>
           </Link>
           <Link to="/Chart">
             <div className="p-3 h-56 rounded-3xl transition duration-150 ease-in-out bg-[#18196c] flex flex-col items-center justify-center">
               <h1 className="text-lg font-mono font-extrabold text-white">Sales Chart</h1>
-              <FaChartLine fill="white" className="h-12 w-12 mt-4" />
+              <FaChartLine fill="white" className="h-12 w-12 mt-4 shadow-2xl shadow-white" />
             </div>
           </Link>
           <Link to="/Month">
             <div className="p-3 h-56 rounded-3xl transition duration-150 ease-in-out bg-[#18196c] flex flex-col items-center justify-center">
               <h1 className="text-lg font-mono font-extrabold text-white">Revenue-Profit</h1>
-              <TbReport fill="white" className="h-12 w-12 mt-4" />
+              <TbReport fill="white" className="h-12 w-12 mt-4 shadow-2xl shadow-white" />
             </div>
           </Link>
         </div>

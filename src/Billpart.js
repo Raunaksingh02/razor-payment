@@ -455,13 +455,13 @@ function Billpart() {
           onClick={handleValidation}
           className="h-12 w-40 bg-blue-600 hover:bg-blue-700 font-bold text-xl text-white rounded-lg transition duration-300"
         >
-         Pay Now
+        Pay UPI 
         </button>
         <button
           onClick={handleCashPayment}
           className="h-12 w-40 bg-blue-600 hover:bg-blue-700  font-bold text-xl text-white rounded-lg transition duration-300"
         >
-          Pay Cash
+         Pay Cash 
         </button>
         {validationMessage && (
           <p className="text-red-500 font-bold mt-2">{validationMessage}</p>
