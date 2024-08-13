@@ -151,7 +151,7 @@ function Owner() {
               <FaChartLine fill="white" className="h-12 w-12 mt-4 shadow-2xl shadow-white" />
             </div>
           </Link>
-          <Link to="/Order">
+          <Link to="/Month">
             <div className="p-3 h-56 rounded-3xl transition duration-150 ease-in-out bg-[#18196c] flex flex-col items-center justify-center">
               <h1 className="text-lg font-mono font-extrabold text-white">Total Report</h1>
               <TbReport fill="white" className="h-12 w-12 mt-4 shadow-2xl shadow-white" />
