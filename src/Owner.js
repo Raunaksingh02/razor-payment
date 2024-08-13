@@ -92,8 +92,8 @@ function Owner() {
                   </>
                 )}
               </div>
-              <div className="shadow-inner shadow-white">
-                <FaUserTie fill="white" className="h-16 w-16 m-4" />
+              <div className="shadow-inner shadow-white ml-4">
+                <FaUserTie fill="white" className="h-12 w-12 m-1 ml-3 mt-2 mr-3" />
                 <label className="flex items-center mt-2">
                   <input
                     type="checkbox"
@@ -101,7 +101,7 @@ function Owner() {
                     checked={showStats}
                     onChange={() => setShowStats(!showStats)}
                   />
-                  <span className="ml-2 text-white">Show Stats</span>
+                  <span className="ml-2 text-white">Stats </span>
                 </label>
               </div>
             </div>
