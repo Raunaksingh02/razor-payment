@@ -55,7 +55,7 @@ const Month = () => {
         <td className="border px-4 py-2">{item.day || item.month}</td>
         <td className="border px-4 py-2">{item.revenue || item.totalRevenue}</td>
         <td className="border px-4 py-2">{item.cost || item.totalCost}</td>
-        <td className="border px-4 py-2">{item.profit || item.totalProfit}</td>
+        <td className="border px-4 font-bold text-green-500 py-2">{item.profit || item.totalProfit}</td>
       </tr>
     ));
   }, []);

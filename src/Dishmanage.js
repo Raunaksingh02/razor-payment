@@ -218,7 +218,7 @@ const DishManagement = () => {
                 <div>
                   {dish.sizes.map((size) => (
                     <p key={size.size}>
-                      {size.size}: ${size.price}
+                      {size.size}: {size.price}
                     </p>
                   ))}
                 </div>

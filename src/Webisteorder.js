@@ -16,6 +16,7 @@ const WebsiteOrder = () => {
       .then((response) => response.json())
       .then((data) => {
         // Filter out payments that have a non-empty address
+        console.log(data);
         const paymentsWithAddress = data.filter(payment => {
           const address = payment.address;
           return address && Object.keys(address).some(key => address[key]);
@@ -109,6 +110,8 @@ const WebsiteOrder = () => {
         {filteredPayments.map((payment) => (
           <div key={payment._id} className="p-4 border rounded shadow-lg">
             <p className="text-lg font-bold">Customer Name: {payment.name}</p>
+            <p className="text-lg font-bold">Contact No: {payment.customerPhoneNo}</p>
+           
             <p className={`text-lg font-semibold ${getStatusColor(payment.status, 'delivered')}`}>Customer Status: {payment.status}</p>
             <p className={`text-lg font-semibold ${getStatusColor(payment.paymentmode, 'Received')}`}>Payment Status: {payment.paymentmode}</p>
             <p className="mt-2 text-gray-700"><strong>Address:</strong></p>
@@ -121,18 +124,17 @@ const WebsiteOrder = () => {
             <p className="mt-2 text-gray-700"><strong>Date:</strong> {formatDate(payment.date)}</p>
             <p className="mt-2 text-gray-700"><strong>Amount:</strong> {payment.amount}</p>
             {payment.cartforpayment && payment.cartforpayment.length > 0 ? (
-              <div className="mt-2">
-                <p className="text-gray-700"><strong>Cart:</strong></p>
-                <ul className="ml-4 list-disc text-gray-700">
-                  {payment.cartforpayment.map((item, index) => (
-                    <li key={index} className="mt-1">
-                      <p><strong>Item Name:</strong> {item.name}</p>
-                      <p><strong>Quantity:</strong> {item.quantity}</p>
-                      <p><strong>Price:</strong> {item.price}</p>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+               <div className="mt-4">
+               {payment.cartforpayment.map(item => (
+                   <div key={item.id} className='border-2 border-gray-200 rounded-md shadow-md m-3 p-3'>
+                       <h2 className="text-md font-medium">Item Name: {item.name}</h2>
+                       <h3 className="text-sm">Category: {item.category}</h3>
+                       <h3 className="text-sm">Quantity: {item.quantity}</h3>
+                       <h4 className="text-sm font-semibold">Price: {item.price}</h4>
+                       <h4 className="text-sm font-semibold">Size: {item.size}</h4>
+                   </div>
+               ))}
+           </div>
             ) : (
               <p className="mt-2 text-gray-700"><strong>Cart:</strong> No items</p>
             )}

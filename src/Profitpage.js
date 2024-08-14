@@ -99,7 +99,7 @@ const Profitpage = () => {
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {product.totalUnits || 0}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-green-500">
                       {product.totalRevenue?.toFixed(2) || '0.00'}
                     </td>
                   </tr>

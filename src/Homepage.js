@@ -124,7 +124,7 @@ function Homepage() {
                 table==="Takeaway" && (
                     <>
                     <div>
-                        <h2 className='font-bold text-red-700 text-center '>In Billing mode ,Select items for customer </h2>
+                        <h2 className='font-extrabold text-red-700 text-center '>In Billing mode ,Select items for customer </h2>
                         <Calling/>
                         <OrderPopup/>
                     </div>
