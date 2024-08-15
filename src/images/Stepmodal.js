@@ -10,9 +10,9 @@ const Stepmodal = ({ isOpen, onClose }) => {
       <div className="bg-white p-5 rounded-lg shadow-lg max-w-md w-full">
         <h2 className="text-xl mb-4 font-semibold">Upi Payment Steps :</h2>
         <ol className="list-decimal list-inside font-bold">
-              <li>Download the QR code on your phone.</li>
+              <li>Download the QR code or take screenshot on your phone.</li>
               <li>Scan it through any UPI app like Paytm, Google Pay, or PhonePe, etc.</li>
-              <li>Enter the Transaction ID/UTR for confirmation.</li>
+              <li>Enter the verification code after the payment completion.</li>
               <li>It is 100% safe and secure gateway through SSL and bank partners.</li>
             </ol>
         <button
