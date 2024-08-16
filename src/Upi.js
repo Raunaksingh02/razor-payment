@@ -40,12 +40,50 @@ function Upi() {
   }, []);
 
   const generateRandomCode = () => {
-    const code = Math.floor(100000 + Math.random() * 900000).toString();
-    setGeneratedCode(code);
+    const hexDigits = '0123456789ABCDEF';
+    const numDigits = 5; // Total number of digits to generate
+    let codeArray = [];
+
+    // Generate random hex digits and wrap them in quotes
+    while (codeArray.length < numDigits) {
+      const randomChar = hexDigits[Math.floor(Math.random() * hexDigits.length)];
+      codeArray.push(`"${randomChar}"`); // Enclose each character in quotes
+    }
+
+    // Insert two '%' symbols at random positions
+    const positions = [];
+    while (positions.length < 2) {
+      const randomPosition = Math.floor(Math.random() * (codeArray.length + 1));
+      if (!positions.includes(randomPosition)) {
+        positions.push(randomPosition);
+      }
+    }
+
+    // Insert the '%' symbols
+    positions.forEach((pos) => {
+      codeArray.splice(pos, 0, `"%""`); // Add "%" enclosed in quotes
+    });
+
+    const finalCode = `["${codeArray.join('","')}"]`; // Format with brackets and commas
+    setGeneratedCode(finalCode);
+    console.log(finalCode);
+  };
+
+  const encodeData = (data) => {
+    return encodeURIComponent(data);
+  };
+
+  const extractPlainCode = (obfuscatedCode) => {
+    return obfuscatedCode
+      .replace(/[\[\]"]/g, '') // Remove brackets and quotes
+      .split(',').join(''); // Remove commas
   };
 
   const generateQRCodeValue = () => {
-    return `upi://pay?pa=9971299049@ibl&pn=Cafe-House&am=${grandTotalforpayment}&cu=INR&tn=VerificationCode:${generatedCode}`;
+    const plainCode = extractPlainCode(generatedCode);
+    const obfuscatedVerificationCode = `VerificationCode:-${generatedCode}`;
+    const encodedVerificationCode = encodeData(obfuscatedVerificationCode);
+    return `upi://pay?pa=9971299049@ibl&pn=Cafe-House&am=${grandTotalforpayment}&cu=INR&tn=${encodedVerificationCode}`;
   };
 
   const handleCloseModal = () => {
@@ -56,15 +94,8 @@ function Upi() {
     if (qrCodeRef.current) {
       toPng(qrCodeRef.current)
         .then((dataUrl) => {
-          const byteString = atob(dataUrl.split(',')[1]);
-          const mimeString = dataUrl.split(',')[0].split(':')[1].split(';')[0];
-          const u8arr = new Uint8Array(byteString.length);
-          for (let i = 0; i < byteString.length; i++) {
-            u8arr[i] = byteString.charCodeAt(i);
-          }
-          const blob = new Blob([u8arr], { type: mimeString });
           const link = document.createElement('a');
-          link.href = URL.createObjectURL(blob);
+          link.href = dataUrl;
           link.download = 'QRCode.png';
           document.body.appendChild(link);
           link.click();
@@ -96,7 +127,6 @@ function Upi() {
           landmark
         },
         customerPhoneNo: customerPhone,
-        
       });
 
       const paymentId = res.data._id;
@@ -108,7 +138,8 @@ function Upi() {
   };
 
   const handleSubmit = () => {
-    if (enteredCode !== generatedCode) {
+    const plainEnteredCode = extractPlainCode(enteredCode);
+    if (plainEnteredCode !== extractPlainCode(generatedCode)) {
       setValidationMessage('Invalid verification code.');
     } else {
       setValidationMessage('');
@@ -174,7 +205,7 @@ function Upi() {
           </div>
           <div className="mb-4 flex flex-col items-center justify-center">
             <h2 className="text-lg font-bold text-center mb-2">Download QR Code to Pay</h2>
-            <div className="relative p-4 bg-white shadow-lg shadow-[#f6931e] mb-4  animate-slideInFromBottom" ref={qrCodeRef}>
+            <div className="relative p-4 bg-white shadow-lg shadow-[#f6931e] mb-4 animate-slideInFromBottom" ref={qrCodeRef}>
               <QRCode value={generateQRCodeValue()} />
             </div>
             <div className="flex flex-row justify-evenly">
@@ -185,7 +216,7 @@ function Upi() {
                 <h3>Amount-{grandTotalforpayment}</h3>
               </div>
             </div>
-            <button onClick={handleDownloadQRCode} className="mt-2 px-4 py-2 bg-black animate-slideInFromBottom  text-white rounded-lg">
+            <button onClick={handleDownloadQRCode} className="mt-2 px-4 py-2 bg-black animate-slideInFromBottom text-white rounded-lg">
               <div className="flex flex-row">
                 <div>
                   Download QR
@@ -198,14 +229,14 @@ function Upi() {
           </div>
           <div className="mb-4 w-full max-w-md">
             <label className="block text-lg font-bold mb-2 text-center">Enter Verification Code</label>
-            <input type="text" value={enteredCode} onChange={handleCodeChange} className="w-full h-10 border border-gray-500 rounded-lg p-2 focus:outline-[#f6931e]  focus:outline-none" />
+            <input type="text" value={enteredCode} onChange={handleCodeChange} className="w-full h-10 border border-gray-500 rounded-lg p-2 focus:outline-[#f6931e] focus:outline-none" />
           </div>
           {
             validationMessage && (
               <p className="text-red-500 font-bold mb-2">{validationMessage}</p>
             )
           }
-          <button onClick={handleSubmit} className="h-12 w-40 bg-[#f6931e]  animate-slideInFromBottom hover:bg-green-700 font-bold text-xl text-white rounded-lg transition duration-300">Submit</button>
+          <button onClick={handleSubmit} className="h-12 w-40 bg-[#f6931e] animate-slideInFromBottom hover:bg-green-700 font-bold text-xl text-white rounded-lg transition duration-300">Submit</button>
 
           <div className="mt-4 animate-slideInFromBottom">
           </div>
@@ -216,18 +247,23 @@ function Upi() {
             title="Confirm Transaction"
             message="Are you sure the payment is done?"
             onConfirm={handleConfirm}
-            onClose={() => setIsModal(false)}
+            onClose={handleCloseModal}
           />
         )}
       </div>
-      <Stepmodal />
       <Footer />
     </div>
   );
 }
 
-
 export default Upi;
+
+
+
+
+
+
+
 
 
 
