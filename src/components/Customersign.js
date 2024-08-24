@@ -29,7 +29,7 @@ const CustomerSign = () => {
 
   const sendOtp = async () => {
     try {
-      const response = await axios.post('http://localhost:1000/send-otp', formData);
+      const response = await axios.post('https://backendcafe-ceaj.onrender.com/send-otp', formData);
       if (response.data.success) {
         setOtpSent(true);
         setSubmitDisabled(true);
@@ -44,7 +44,7 @@ const CustomerSign = () => {
 
   const verifyOtp = async () => {
     try {
-      const response = await axios.post('http://localhost:1000/verify-otp', { email: formData.email, otp });
+      const response = await axios.post('https://backendcafe-ceaj.onrender.com/verify-otp', { email: formData.email, otp });
       if (response.data.success) {
         setOtpVerified(true);
         setSubmitDisabled(false);

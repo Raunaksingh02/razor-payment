@@ -14,7 +14,7 @@ function Customerprofile() {
     const fetchBuyerDetails = async () => {
      
         try {
-          const response = await axios.get(`http://localhost:1000/buyerdata?email=${buyeremail}`);
+          const response = await axios.get(`https://backendcafe-ceaj.onrender.com/buyerdata?email=${buyeremail}`);
           setBuyerDetails(response.data);
         } catch (error) {
           setError('Error fetching buyer details.');

@@ -11,7 +11,7 @@ const CustomerOrder = () => {
 
   useEffect(() => {
     if (buyer?.email) {
-      axios.get('http://localhost:1000/orders', { params: { email: buyer.email } })
+      axios.get('https://backendcafe-ceaj.onrender.com/orders', { params: { email: buyer.email } })
         .then(response => {
           setOrders(response.data);
           setLoading(false);
