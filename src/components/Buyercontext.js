@@ -24,7 +24,7 @@ export const BuyerProvider = ({ children }) => {
     setBuyer(buyerData);
     setIsAuthenticated(true);
    // localStorage.setItem('buyer', JSON.stringify(buyerData));
-    localStorage.setItem('buyerauth', 'true'); // Set auth status to true
+   // localStorage.setItem('buyerauth', 'true'); // Set auth status to true
   };
 
   const logout = () => {
