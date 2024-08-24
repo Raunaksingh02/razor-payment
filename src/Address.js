@@ -16,7 +16,7 @@ const Address = () => {
 
     useEffect(() => {
         if (buyer?.email) {
-            axios.get(`http://localhost:1000/addresses?email=${buyer.email}`)
+            axios.get(`https://backendcafe-ceaj.onrender.com/addresses?email=${buyer.email}`)
                 .then(response => setAddresses(response.data))
                 .catch(error => console.error(error));
         }
@@ -29,7 +29,7 @@ const Address = () => {
 
     const handleAddAddress = (e) => {
         e.preventDefault();
-        axios.post('http://localhost:1000/addresses', {
+        axios.post('https://backendcafe-ceaj.onrender.com/addresses', {
             email: buyer.email,
             address: newAddress
         })
@@ -48,7 +48,7 @@ const Address = () => {
     };
 
     const handleDeleteAddress = (addressId) => {
-        axios.delete('http://localhost:1000/addresses', {
+        axios.delete('https://backendcafe-ceaj.onrender.com/addresses', {
             params: {
                 email: buyer.email,
                 addressId: addressId
