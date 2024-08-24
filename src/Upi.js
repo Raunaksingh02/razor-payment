@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect,useContext } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { toPng } from 'html-to-image';
 import QRCode from 'qrcode.react';
@@ -10,9 +10,14 @@ import { IoMdDownload } from "react-icons/io";
 import paytmlogo from "./images/paytmlogo.png";
 import phonepelogo from "./images/phonepelogo.png";
 import Stepmodal from "./images/Stepmodal.js";
+import { BuyerContext } from './components/Buyercontext.js';
 
 function Upi() {
   const location = useLocation();
+
+  const { buyer } = useContext(BuyerContext);
+  console.log(buyer.email);
+  
   const { state } = location;
   const {
     customerName,
@@ -119,6 +124,7 @@ function Upi() {
         name: customerName,
         amount: grandTotalforpayment,
         customerTable,
+        email:buyer.email,
         paymentmode: "online",
         address: {
           houseNo,

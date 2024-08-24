@@ -34,9 +34,17 @@ export default function Callwaiter() {
     }
   };
 
+  const handleTableSelect = (selectedTable) => {
+    setTable(selectedTable);
+  };
+
+  const handleQuerySelect = (selectedQuery) => {
+    setQuery(selectedQuery);
+  };
+
   return (
-    <div className="flex flex-col min-h-screen bg-gray-100">
-      <div className="flex items-center p-4">
+    <div className="flex flex-col min-h-screen bg-gray-100 p-4">
+      <div className="flex items-center mb-4">
         <Link to="/table">
           <img src={backarrowlogo} alt="Back" className="h-8 w-8" />
         </Link>
@@ -44,53 +52,44 @@ export default function Callwaiter() {
       <div className="flex flex-col items-center justify-center flex-1">
         <div className="bg-white p-6 rounded-lg shadow-md w-full max-w-md">
           <div className="flex justify-center mb-4">
-            <img src={waiterphoto} alt="Waiter" className="h-44 w-40 animate-slideInFromBottom  rounded-full object-cover" />
+            <img src={waiterphoto} alt="Waiter" className="h-44 w-40 animate-slideInFromBottom rounded-full object-cover" />
           </div>
           <h1 className="text-center text-2xl font-extrabold mb-6">Call Service</h1>
           <form onSubmit={handleSubmit}>
-            <div className="mb-4">
-              <label htmlFor="table" className="block text-gray-700 font-bold mb-2">Select Table</label>
-              <select
-                id="table"
-                value={table}
-                onChange={(e) => setTable(e.target.value)}
-                className="block appearance-none w-full bg-white border border-gray-300 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
-                required
-              >
-                <option value="" disabled>Select your table</option>
-                <option value="Table 1">Table 1</option>
-                <option value="Table 2">Table 2</option>
-                <option value="Table 3">Table 3</option>
-                <option value="Table 4">Table 4</option>
-                <option value="Table 5">Table 5</option>
-                <option value="Table 6">Table 6</option>
-                <option value="Table 7">Table 7</option>
-                <option value="Table 8">Table 8</option>
-                <option value="Table 9">Table 9</option>
-                <option value="Table 10">Table 10</option>
-              </select>
+            <div className="mb-6">
+              <label className="block text-gray-700 font-bold mb-2 text-center">Select Your Table</label>
+              <div className="flex flex-wrap justify-center gap-2">
+                {['Table 1', 'Table 2', 'Table 3', 'Table 4', 'Table 5', 'Table 6', 'Table 7', 'Table 8', 'Table 9', 'Table 10'].map((tableOption) => (
+                  <button
+                    key={tableOption}
+                    type="button"
+                    onClick={() => handleTableSelect(tableOption)}
+                    className={`px-4 py-2 rounded-full text-white font-semibold focus:outline-none ${table === tableOption ? 'bg-blue-700' : 'bg-blue-500 hover:bg-blue-600'}`}
+                  >
+                    {tableOption}
+                  </button>
+                ))}
+              </div>
             </div>
-            <div className="mb-4">
-              <label htmlFor="query" className="block text-gray-700 font-bold mb-2">Select Request</label>
-              <select
-                id="query"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                className="block appearance-none w-full bg-white border border-gray-300 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
-                required
-              >
-                <option value="" disabled>Select your request</option>
-                <option value="Call the waiter">Call the waiter</option>
-                <option value="Clean the table">Clean the table</option>
-                <option value="Give me water">Give me water</option>
-                <option value="Bring the menu">Bring the menu</option>
-                <option value="Bring the bill">Bring the bill</option>
-              </select>
+            <div className="mb-6">
+              <label className="block text-gray-700 font-bold mb-2 text-center">Select Your Request</label>
+              <div className="flex flex-wrap justify-center gap-2">
+                {['Call the waiter', 'Clean the table', 'Give me water', 'Bring the menu', 'Bring the bill'].map((queryOption) => (
+                  <button
+                    key={queryOption}
+                    type="button"
+                    onClick={() => handleQuerySelect(queryOption)}
+                    className={`px-4 py-2 rounded-full text-white font-semibold focus:outline-none ${query === queryOption ? 'bg-green-700' : 'bg-green-500 hover:bg-green-600'}`}
+                  >
+                    {queryOption}
+                  </button>
+                ))}
+              </div>
             </div>
             <div className="flex items-center justify-center">
               <button
                 type="submit"
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                className="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
               >
                 Send Request
               </button>
@@ -101,3 +100,4 @@ export default function Callwaiter() {
     </div>
   );
 }
+

@@ -80,6 +80,7 @@ function Invoicecompo() {
                     <p><strong>Name:</strong> {customerDetails.customerName}</p>
                     <p><strong>Venue:</strong> {customerDetails.customerTable ? customerDetails.customerTable : 'Table 1'}</p>
                     <p><strong>Phone:</strong> {customerDetails.customerPhone}</p>
+                    <p><strong>Email:</strong> {customerDetails.email}</p>
                 </div>
 
                 {/* Items Table */}

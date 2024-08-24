@@ -3,6 +3,9 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Homepage from './Homepage'; 
 import { AuthProvider } from './AuthContext';
 import ProtectedRoute from './ProtectedRoute';
+import Customerlogin from "./components/Customerlogin.js";
+import Customerotp from './components/Customerotp.js';
+import Customersign from './components/Customersign.js';
 import Billpart from './Billpart'; 
 import Admin from './Admin.js';
 import Owner from './Owner.js'
@@ -29,10 +32,14 @@ import Privacy from "./documents/Privacy.js"
 import Cancellation from './documents/Cancellation.js';
 import Contactus from "./documents/Contactus.js";
 import Googlepay from './Googlepay.js';
+import Customerorder from "./components/Customerorder.js"
 import Successpage from "./Successpage.js"
 import Failurepage from "./Failurepage.js"
+import Customerprofile from "./components/Customerprofile.js"
 import Login from "./Login.js";
 import SignupPage from "./SignupPage.js";
+import { UserProtectedRoute } from './components/UserProtectedRoute.js';
+import {BuyerContext} from "./components/Buyercontext.js";
 
 const PaymentComponent = () => {
  
@@ -40,7 +47,14 @@ const PaymentComponent = () => {
     <Router>
       <Routes>
       <Route path="/Splash" element={<Splash />} />
-        <Route path="/:table" element={<Homepage />} />
+      <Route
+          path="/:table"
+          element={
+           
+              <Homepage />
+           
+          }
+        />
         <Route path="/" element={<Homepage />} />  
         <Route path="/Owner" element={
            <ProtectedRoute>
@@ -48,6 +62,10 @@ const PaymentComponent = () => {
          </ProtectedRoute>
           } />
         <Route path="/Success" element={<Successpage/>} />
+        <Route path="/orders" element={<Customerorder/>} />
+        <Route path="/web/signup" element={<Customersign/>} />
+         <Route path="/web/login" element={<Customerlogin/>} />
+         <Route path="/web/otp" element={<Customerotp/>} />
         <Route path="/Fail" element={<Failurepage/>} />
         <Route path="/docs/terms" element={<Termcondition/>} />
         <Route path="/docs/Contact" element={<Contactus/>} />
@@ -73,6 +91,7 @@ const PaymentComponent = () => {
         <Route path="/Waiter" element={<Waiterpage/>} />
         <Route path="/Profit" element={<Profitpage/>} />
         <Route  path="/Month" element={<Month/>} />
+        <Route  path="/profile" element={<Customerprofile/>} />
         <Route  path="/Admin " element={<Admin />} />
         <Route  path="/Chart" element={<Chart />} />
         <Route  path="/Sale" element={<Salechart />} />
@@ -81,7 +100,15 @@ const PaymentComponent = () => {
              <Dishmanage />
           </ProtectedRoute>
           } />
-        <Route path="/bill" element={<Billpart  />} />
+
+          <Route
+          path="/bill"
+          element={
+           
+              <Billpart />
+           
+          }
+        />
         <Route path="/update/:_id" element={
           <ProtectedRoute>
               <Updatepart />

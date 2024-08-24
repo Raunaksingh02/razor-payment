@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect,useRef } from 'react';
+import React, { useState, useContext, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import backarrowlogo from './images/backarrowlogo.png';
@@ -8,6 +8,7 @@ import { toPng } from 'html-to-image';
 import QRCode from 'qrcode.react';
 import closebutton from './images/closebutton.png';
 import { CustomerContext } from './CustomerContext';
+import { BuyerContext } from './components/Buyercontext.js';
 import axios from 'axios';
 import { removeToCart } from './redux/cartSlice.js';
 import Calling from './Calling.js';
@@ -19,206 +20,87 @@ function Billpart() {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const tableQueryParam = queryParams.get('table');
-  console.log("the table query is" , tableQueryParam);
   const navigate = useNavigate();
-  const [orderId, setOrderId] = useState('');
-  const [paymentId, setPaymentId] = useState('');
   const dispatch = useDispatch();
+
   const cartforpayment = useSelector((state) => state.cart.cart);
-  const totalforpayment = cartforpayment.map((item) => item.price * item.quantity).reduce((prev, curr) => prev + curr, 0);
+  const totalforpayment = cartforpayment
+    .map((item) => item.price * item.quantity)
+    .reduce((prev, curr) => prev + curr, 0);
   const grandTotalforpayment = totalforpayment + 50;
-  const totalquantity = cartforpayment.map((item) => item.quantity).reduce((prev, curr) => prev + curr, 0);
 
+  const [buyeraddress, setBuyerAddress] = useState([]);
   const { setCustomerName, setCustomerTable, setCustomerPhone, customerPhone, customerName, customerTable } = useContext(CustomerContext);
-  const [houseNo, setHouseNo] = useState('');
-  const [city, setCity] = useState('');
-  const [pincode, setPincode] = useState('');
-  const [landmark, setLandmark] = useState('');
-  const [validationMessage, setValidationMessage] = useState('');
-
+  const { buyer } = useContext(BuyerContext);
+  const buyerEmail = buyer?.email || undefined;
+    console.log("the buyer email is ",buyerEmail);
+  // Fetch buyer addresses when component mounts or buyerEmail changes
   useEffect(() => {
-    const fetchOrder = async () => {
-      try {
-        const response = await axios.post('http://localhost:1000/api/orders');
-        const { orderId } = response.data;
-        setOrderId(orderId);
-        loadRazorpay();
-      } catch (error) {
-        console.error('Error creating order:', error);
-      }
-    };
-    fetchOrder();
-  }, []);
+    if (buyerEmail) {
+      axios.get(`http://localhost:1000/addresses?email=${buyerEmail}`)
+        .then(response => setBuyerAddress(response.data))
+        .catch(error => console.error(error));
+    }
+  }, [buyerEmail]);
 
+  const [selectedAddress, setSelectedAddress] = useState(null);
+  const [validationMessage, setValidationMessage] = useState('');
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+
+  // Set customer table when tableQueryParam changes
   useEffect(() => {
     if (tableQueryParam) {
       setCustomerTable(tableQueryParam);
     }
-  }, [tableQueryParam]);
+  }, [tableQueryParam, setCustomerTable]);
 
-  const loadRazorpay = () => {
-    const script = document.createElement('script');
-    script.src = 'https://checkout.razorpay.com/v1/checkout.js';
-    script.onload = () => {
-      displayRazorpay();
-    };
-    script.onerror = () => {
-      console.error('Failed to load Razorpay script');
-    };
-    document.body.appendChild(script);
-  };
+  const openModal = () => setModalIsOpen(true);
+  const closeModal = () => setModalIsOpen(false);
 
-  const displayRazorpay = () => {
-    const options = {
-      key: 'rzp_test_ydI2Bc7GqGrH7b',
-      amount: grandTotalforpayment * 100,
-      currency: 'INR',
-      name: customerName,
-      description: 'Test Payment',
-      order_id: orderId,
-      handler: (response) => {
-     setPaymentId(response.razorpay_payment_id);    
-     savePaymentDetails(orderId, response, customerName, grandTotalforpayment, customerPhone, customerTable, cartforpayment, houseNo, city, pincode, landmark); 
-    },
-
-      prefill: {
-        name: customerName,
-        email: 'rs3297275@gmail.com',
-        contact: customerPhone,
-      },
-      theme: {
-        color: '#F37254',
-      },
-    };
-    const razorpay = new window.Razorpay(options);
-    razorpay.open();
-  };
-
-  const savePaymentDetails = async (orderId, response, customerName, grandTotalforpayment, customerPhone, customerTable, cartforpayment, houseNo, city, pincode, landmark) => {
-    try {
-      const res = await axios.post('https://backendcafe-ceaj.onrender.com/api/payments', {
-        orderId,
-        paymentId: response.razorpay_payment_id,
-        cartforpayment,
-        name: customerName,
-        amount: grandTotalforpayment,
-        customerTable,
-        paymentmode: "Online - Received",
-        address: {
-          houseNo,
-          city,
-          pincode,
-          landmark
-        },
-        customerPhoneNo: customerPhone,
-      });
-      
-      const paymentId = res.data._id; // Assuming _id is your payment object ID
-      console.log('Payment details saved:', paymentId);
-      navigate(`/Invoice/${paymentId}`); // Navigate to Invoice page with paymentId in URL
-    } catch (error) {
-      console.error('Error saving payment details:', error);
-    }
-  };
-  
   const savePaymentDetails2 = async () => {
     try {
       const response = await axios.post('https://backendcafe-ceaj.onrender.com/api/payments', {
         cartforpayment,
         name: customerName,
         amount: grandTotalforpayment,
+        email: buyerEmail,
         customerTable,
         paymentmode: "Cash-Not Received",
-        address: {
-          houseNo,
-          city,
-          pincode,
-          landmark
-        },
+        address: selectedAddress,
         customerPhoneNo: customerPhone,
-    
       });
-      const paymentId = response.data._id; // Assuming _id is your payment object ID
-      console.log('Payment details saved');
+      const paymentId = response.data._id;
       navigate(`/Invoice/${paymentId}`);
     } catch (error) {
       console.error('Error saving payment details:', error);
     }
   };
 
-  const handlename = (event) => {
-    setCustomerName(event.target.value);
-  };
-
-  const handlePhoneNo = (event) => {
-    setCustomerPhone(event.target.value);
-  };
-
-  const handleTableNo = (event) => {
-    setCustomerTable(event.target.value);
-  };
-
-  const handleHouseNo = (event) => {
-    setHouseNo(event.target.value);
-  };
-
-  const handleCity = (event) => {
-    setCity(event.target.value);
-  };
-
-  const handlePincode = (event) => {
-    setPincode(event.target.value);
-  };
-
-  const handleLandmark = (event) => {
-    setLandmark(event.target.value);
-  };
-
-  const [modalIsOpen, setModalIsOpen] = useState(false);
-  const openModal = () => {
-    setModalIsOpen(true);
-  };
-
-  const closeModal = () => {
-    setModalIsOpen(false);
-    setValidationMessage('');
-  };
-
-  const handleRemove = (item) => {
-    dispatch(removeToCart(item));
-  };
-
-  const isFormValid = () => {
-    return customerName && customerPhone && (tableQueryParam !== "undefined" || (houseNo && city && pincode && landmark));
-  };
-
   const handleValidation = () => {
-    if (!isFormValid()) {
+    if (!customerName || !customerPhone || !selectedAddress) {
       setValidationMessage('All input fields are required.');
     } else {
       setValidationMessage('');
       navigate('/Upi', {
         state: {
+          buyerEmail,
           customerName,
           customerPhone,
           customerTable,
           grandTotalforpayment,
-          houseNo,
-          city,
-          pincode,
-          landmark,
+          selectedAddress,
           cartforpayment,
         },
       });
     }
   };
-   
+
   const generateQRCodeValue = () => {
     return `upi://pay?pa=9971299049@ibl&pn=${customerName}&am=${grandTotalforpayment}&cu=INR`;
   };
 
   const handleCashPayment = () => {
-    if (!isFormValid()) {
+    if (!customerName || !customerPhone || !selectedAddress) {
       setValidationMessage('All input fields are required.');
     } else {
       setValidationMessage('');
@@ -246,58 +128,20 @@ function Billpart() {
   };
 
   return (
-    <div className='container  mx-auto p-4'>
-       {
-                 tableQueryParam==="Takeaway" && (
-                    <>
-                    <div>
-                        <h2 className='font-bold text-red-700 text-center '>In Billing mode ,Select items for customer </h2>
-                        <Calling/>
-                    </div>
-                    
-                    </>
-                )
-            }
-      <div className='flex items-center mb-4 '>
+    <div className='container mx-auto p-4'>
+      {tableQueryParam === "Takeaway" && (
+        <div>
+          <h2 className='font-bold text-red-700 text-center'>In Billing mode, Select items for customer</h2>
+          <Calling />
+        </div>
+      )}
+      <div className='flex items-center mb-4'>
         <div className='mr-4'>
-        
-             {
-              tableQueryParam==="table" && (
-                 <>
-                 <div>                  
-                   <Link to="/table">
-            <img src={backarrowlogo} className='h-10 w-10' alt="Back" />
-          </Link>
-          </div>
-
-                 </>
-             )
-         }
-            {
-              tableQueryParam==="undefined" && (
-                 <>
-                 <div>                  
-                   <Link to="/">
-            <img src={backarrowlogo} className='h-10 w-10' alt="Back" />
-          </Link>
-          </div>
-
-                 </>
-             )
-         }
-          
-          {
-              tableQueryParam==="bill" && (
-                 <>
-                 <div>                  
-                   <Link to="/">
-            <img src={backarrowlogo} className='h-10 w-10' alt="Back" />
-          </Link>
-          </div>
-
-                 </>
-             )
-         }
+          {tableQueryParam && (
+            <Link to={tableQueryParam === "table" ? "/table" : "/"}>
+              <img src={backarrowlogo} className='h-10 w-10' alt="Back" />
+            </Link>
+          )}
         </div>
         <div className='flex-1 text-center'>
           <h1 className='font-bold text-2xl mb-2'>Bill Generated</h1>
@@ -316,161 +160,107 @@ function Billpart() {
             <p>Quantity: {item.quantity}</p>
           </div>
           <div className="mb-12">
-            <button onClick={() => handleRemove(item)} className='ml-auto'>
+            <button onClick={() => dispatch(removeToCart(item))} className='ml-auto'>
               <img src={deletelogo} alt="Remove from Cart" className='h-10 w-10' />
             </button>
           </div>
         </div>
       ))}
       <div className='mt-4 text-center'>
-      <h1 className='font-bold text-2xl'>Total Amount = {totalforpayment}</h1>
-      <h1 className='font-bold text-2xl'>Grand Total = {grandTotalforpayment}</h1>
+        <h1 className='font-bold text-2xl'>Total Amount = {totalforpayment}</h1>
+        <h1 className='font-bold text-2xl'>Grand Total = {grandTotalforpayment}</h1>
       </div>
       <div className='text-center mt-4'>
-      <button onClick={openModal} className='h-12 w-60 bg-black text-white text-lg font-bold rounded-2xl'>
-       Pay Now
-      </button>
+        <button onClick={openModal} className='h-12 w-60 bg-black text-white text-lg font-bold rounded-2xl'>
+          Pay Now
+        </button>
       </div>
-
 
       <Modal
-       isOpen={modalIsOpen}
-       onRequestClose={closeModal}
-       className="fixed inset-0 flex items-center justify-center p-4 z-50"
-       overlayClassName="fixed inset-0 bg-black bg-opacity-50"
-       >
-      <div className="bg-white w-full max-w-md md:max-w-lg lg:max-w-xl mx-auto p-6 rounded-lg shadow-lg relative max-h-full overflow-y-auto">
-      <div className="flex justify-end items-start mb-4">
-      <button onClick={closeModal}>
-      <img src={closebutton} className="h-8 w-8 rounded-2xl" alt="Close" />
-      </button>
-      </div>
-      <div className="space-y-6">
-      <div>
-        <h1 className="font-bold text-lg mb-2">Enter name</h1>
-        <input
-          type="text"
-          value={customerName}
-          className="h-10 w-full border border-gray-300 rounded-lg p-2 focus:border-blue-500 focus:outline-none"
-          required
-          onChange={handlename}
-        />
-      </div>
-      <div>
-        <h1 className="font-bold text-lg mb-2">Enter Whatsapp no for invoice </h1>
-        <input
-          type="text"
-          required
-          className="h-10 w-full border border-gray-300 rounded-lg p-2 focus:border-blue-500 focus:outline-none"
-          onChange={handlePhoneNo}
-          value={customerPhone}
-        />
-      </div>
-      {tableQueryParam === "undefined" && (
-        <>
-          <div>
-            <h1 className="font-bold text-lg mb-2">House No</h1>
-            <input
-              type="text"
-              required
-              className="h-10 w-full border border-gray-300 rounded-lg p-2 focus:border-blue-500 focus:outline-none"
-              onChange={handleHouseNo}
-              value={houseNo}
-            />
+        isOpen={modalIsOpen}
+        onRequestClose={closeModal}
+        className="fixed inset-0 flex items-center justify-center p-4 z-50"
+        overlayClassName="fixed inset-0 bg-black bg-opacity-50"
+      >
+        <div className="bg-white w-full max-w-md md:max-w-lg lg:max-w-xl mx-auto p-6 rounded-lg shadow-lg relative max-h-full overflow-y-auto">
+          <div className="flex justify-end items-start mb-4">
+            <button onClick={closeModal}>
+              <img src={closebutton} className="h-8 w-8 rounded-2xl" alt="Close" />
+            </button>
           </div>
-          <div>
-            <h1 className="font-bold text-lg mb-2">City</h1>
-            <input
-              type="text"
-              required
-              className="h-10 w-full border border-gray-300 rounded-lg p-2 focus:border-blue-500 focus:outline-none"
-              onChange={handleCity}
-              value={city}
-            />
-          </div>
-          <div>
-            <h1 className="font-bold text-lg mb-2">Pincode</h1>
-            <input
-              type="text"
-              required
-              className="h-10 w-full border border-gray-300 rounded-lg p-2 focus:border-blue-500 focus:outline-none"
-              onChange={handlePincode}
-              value={pincode}
-            />
-          </div>
-          <div>
-            <h1 className="font-bold text-lg mb-2">Landmark</h1>
-            <input
-              type="text"
-              required
-              className="h-10 w-full border border-gray-300 rounded-lg p-2 focus:border-blue-500 focus:outline-none"
-              onChange={handleLandmark}
-              value={landmark}
-            />
-          </div>
-        </>
-      )}
-      {tableQueryParam === "table" && (
-        <div className="flex items-center mt-4">
-          <h1 className="font-bold text-lg">Choose table:</h1>
-          <select
-            required
-            onChange={handleTableNo}
-            className="font-bold text-lg ml-2 border border-gray-300 rounded-lg p-2 focus:border-blue-500 focus:outline-none"
-            name="table"
-            value={customerTable}
-          >
-            <option value="table 1">table 1</option>
-            <option value="table 2">table 2</option>
-            <option value="table 3">table 3</option>
-            <option value="table 4">table 4</option>
-            <option value="table 5">table 5</option>
-            <option value="table 6">table 6</option>
-            <option value="table 7">table 7</option>
-            <option value="table 8">table 8</option>
-            <option value="table 9">table 9</option> 
-            <option value="table 10">table 10</option>
-          </select>
-        </div>
-      )}
-    
-      {tableQueryParam === "Takeaway" && (
-          <div className="mb-4 flex flex-col items-center justify-center">
-          <h2 className="text-lg font-bold text-center mb-2">Scan QR Code to Pay</h2>
-          <div className="relative p-4 bg-white animate-slideInFromBottom" ref={qrCodeRef}>
-            <QRCode value={generateQRCodeValue()} />
-          </div>
-          <button
-            onClick={handleDownloadQRCode}
-            className="mt-2 px-4 py-2 bg-blue-500 text-white rounded"
-          >
-            Download QR Code
-          </button>
-        </div>
-   )}
+          <div className="space-y-6">
+            <div>
+              <h1 className="font-bold text-lg mb-2">Enter name</h1>
+              <input
+                type="text"
+                value={customerName}
+                className="h-10 w-full border border-gray-300 rounded-lg p-2 focus:border-blue-500 focus:outline-none"
+                required
+                onChange={(e) => setCustomerName(e.target.value)}
+              />
+            </div>
+            <div>
+              <h1 className="font-bold text-lg mb-2">Enter Mobile No.</h1>
+              <input
+                type="number"
+                value={customerPhone}
+                className="h-10 w-full border border-gray-300 rounded-lg p-2 focus:border-blue-500 focus:outline-none"
+                required
+                onChange={(e) => setCustomerPhone(e.target.value)}
+              />
+            </div>
+            {tableQueryParam === "undefined" && buyeraddress && (
+              <div>
+                <h1 className="font-bold text-lg mb-2">Select an Address</h1>
+                <select
+                  value={selectedAddress ? JSON.stringify(selectedAddress) : ""}
+                  onChange={(e) => setSelectedAddress(JSON.parse(e.target.value))}
+                  className="h-10 w-full border border-gray-300 rounded-lg p-2 focus:border-blue-500 focus:outline-none"
+                >
+                  {buyeraddress.map((address, index) => (
+                    <option key={index} value={JSON.stringify(address)}>
+                      {`${address.houseNo}, ${address.streetNo}, ${address.city}, ${address.state}, ${address.pincode}, ${address.landmark}`}
+                    </option>
+                  ))}
+                </select>
+                <div className="mt-4">
+                  <Link to="/Address">
+                    <button className="h-10 w-full bg-green-500 text-white font-bold rounded-lg">
+                      Add New Address
+                    </button>
+                  </Link>
+                </div>
+              </div>
+            )}
 
-     
-      <div className="flex flex-col items-center mt-5 space-y-3">
-        <button
-          onClick={handleValidation}
-          className="h-12 w-40 bg-blue-600 hover:bg-blue-700 font-bold text-xl text-white rounded-lg transition duration-300"
-        >
-        Pay UPI 
-        </button>
-        <button
-          onClick={handleCashPayment}
-          className="h-12 w-40 bg-blue-600 hover:bg-blue-700  font-bold text-xl text-white rounded-lg transition duration-300"
-        >
-         Pay Cash 
-        </button>
-        {validationMessage && (
-          <p className="text-red-500 font-bold mt-2">{validationMessage}</p>
-        )}
-         </div>
+            <div className="mt-4 text-red-600">{validationMessage}</div>
+            <div className="mt-6 flex justify-center space-x-4">
+              <button onClick={handleValidation} className="h-12 w-32 bg-black text-white text-lg font-bold rounded-2xl">
+                 Pay UPI
+              </button>
+              <button onClick={handleCashPayment} className="h-12 w-32 bg-black text-white text-lg font-bold rounded-2xl">
+                Pay Cash
+              </button>
+            </div>
+            {tableQueryParam === "Takeaway" && (
+        <div className="flex flex-col items-center justify-center mt-6">
+        <div ref={qrCodeRef} className="flex justify-center p-4 border border-gray-300 rounded-lg shadow-lg bg-white">
+      <QRCode value={generateQRCodeValue()} size={180} />
+        </div>
+        <div className="text-center mt-4">
+      <button
+        onClick={handleDownloadQRCode}
+        className="px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+      >
+        Download QR Code
+      </button>
+    </div>
+  </div>
+)}
           </div>
-          </div>
-          </Modal> 
-          <Footer/>
+        </div>
+      </Modal>
+      <Footer />
     </div>
   );
 }

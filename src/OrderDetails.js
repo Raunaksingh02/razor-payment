@@ -137,6 +137,7 @@ const PaymentDetails = () => {
                                 <h1 className="text-xl font-semibold">PaymentId: {payment.paymentId}</h1>
                             )}
                             <h1 className="text-xl font-bold">Name: {payment.name}</h1>
+                            <h1 className="text-xl font-bold">Email: {payment.email}</h1>
                             <h1 className="text-lg font-bold">Customer Table:  {payment.customerTable}</h1>
                             <h1 className="text-lg font-bold" >Amount: {payment.amount}</h1>
                             <h1 className="text-lg font-bold">Contact No: {payment.customerPhoneNo}</h1>

@@ -7,14 +7,18 @@ import { Provider } from 'react-redux';
 import store from './store';
 import { CustomerProvider } from './CustomerContext';
 import { AuthProvider } from './AuthContext';
+import { BuyerProvider } from './components/Buyercontext.js';
 
 ReactDOM.render(
   <Provider store={store}>
-  <AuthProvider>
+    <BuyerProvider>
+        <AuthProvider>
     <CustomerProvider>
     <App /> 
     </CustomerProvider>
     </AuthProvider>
+    </BuyerProvider>
+
   </Provider>,
   document.getElementById('root')
 );

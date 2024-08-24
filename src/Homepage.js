@@ -1,22 +1,26 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import React, { useState, useEffect, useContext } from 'react';
+import { Link, useParams, useNavigate } from 'react-router-dom'; // import useNavigate for navigation
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import { GrCafeteria } from "react-icons/gr";
+import { FaUser } from "react-icons/fa";
 import cartlogo from "./images/cartlogo.png";
 import dialicon from './images/dialicon.png';
+import Sidebar from './Sidebar.js';
 import OrderPopup from "./OrderPopup.js";
-import { FaShoppingCart } from "react-icons/fa";
 import deliverylogo from './images/delivery.gif';
+import { FaShoppingCart } from "react-icons/fa";
 import { CiSearch } from "react-icons/ci";
 import { addToCart, removeToCart } from './redux/cartSlice.js';
 import Calling from './Calling.js';
-import Footer from "./Footer.js"
+import Footer from "./Footer.js";
+import { BuyerContext } from './components/Buyercontext.js'; // Import BuyerContext for user authentication
 
 function Homepage() {
     const { table } = useParams(); 
-    console.log(table);
-    // Get the table parameter from the URL
+    const navigate = useNavigate(); // useNavigate hook for navigation
+    const { buyer } = useContext(BuyerContext); // Destructure buyer from BuyerContext
+
     const [cafes, setCafes] = useState([]);
     const [quantities, setQuantities] = useState([]);
     const [selectedSizes, setSelectedSizes] = useState([]);
@@ -24,6 +28,7 @@ function Homepage() {
     const [selectedCostPrices, setSelectedCostPrices] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState('All');
     const [loading, setLoading] = useState(true);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const [searchTerm, setSearchTerm] = useState('');
     const itemsPerPage = 6;
@@ -107,39 +112,61 @@ function Homepage() {
     if (loading) {
         return (
             <div className="flex flex-col justify-center items-center h-screen bg-gradient-to-r from-yellow-300 to-yellow-200">
-            <h1 className="font-extrabold text-2xl text-center mb-4">Loading the menu...</h1>
-            <GrCafeteria  className="h-10  w-10" />
-            <img
-                src={deliverylogo}
-                className='h-auto w-auto max-h-full max-w-full'
-                alt="Loading"
-            />
-        </div>
+                <h1 className="font-extrabold text-2xl text-center mb-4">Loading the menu...</h1>
+                <GrCafeteria className="h-10 w-10" />
+                <img
+                    src={deliverylogo}
+                    className='h-auto w-auto max-h-full max-w-full'
+                    alt="Loading"
+                />
+            </div>
         );
     }
+
+    const handleCartClick = () => {
+        if (!buyer && !table) {
+            // Redirect to login if not authenticated and no table parameter
+            navigate('/web/login');
+        } else if (!buyer && table) {
+            // Navigate to bill page with table parameter if user is not authenticated but table is present
+            navigate(`/bill?table=${table}`);
+        } else if (buyer && table) {
+            // Navigate to bill page with table parameter if user is authenticated and table is present
+            navigate(`/bill?table=${table}`);
+        } else if (buyer && !table) {
+            // Navigate to a general bill page if user is authenticated but no table parameter is present
+            navigate(`/bill?table=${table}`);
+        }
+    };
     
+
+    const handlemodalClick = () => {
+        if (!buyer && !table) {
+            navigate('/web/login'); 
+            // Redirect to login if not authenticated and no table parameter
+
+        } else {
+            setIsSidebarOpen(true); // Navigate to bill page if authenticated or table parameter is present
+        }
+    };
+
     return (
         <div className="container mx-auto p-3 ">
             {
-                table==="Takeaway" && (
+                table === "Takeaway" && (
                     <>
-                    <div>
-                        <h2 className='font-extrabold text-red-700 text-center '>In Billing mode ,Select items for customer </h2>
-                        <Calling/>
-                        <OrderPopup/>
-                    </div>
-                    
+                        <div>
+                            <h2 className='font-extrabold text-red-700 text-center '>In Billing mode, Select items for customer </h2>
+                            <Calling />
+                            <OrderPopup />
+                        </div>
                     </>
                 )
             }
-            <div className='flex items-center  justify-between bg-[#f6931e]  rounded-t-3xl  p-3 '>
-            
-           
-                <h1 className="text-3xl font-extrabold text-white text-center  m-2 mr-3">Cafe Coffee </h1>
-                
-              
+            <div className='flex items-center justify-between bg-[#f6931e] rounded-t-3xl p-3 '>
+                <h1 className="text-3xl font-extrabold text-white text-center m-2 mr-3">Cafe Coffee </h1>
                 <div className='flex items-center'>
-                {table && (
+                    {table && (
                         <Link to="/Call">
                             <div className='flex items-center py-1 p-2 bg-gray-100 shadow-lg shadow-gray-400 hover:bg-gray-400 rounded-2xl mr-2'>
                                 <img
@@ -151,14 +178,23 @@ function Homepage() {
                         </Link>
                     )}
 
-                    <Link to={`/bill?table=${table}`}>
-                    <FaShoppingCart fill="white" className="h-8 w-8" />
-                    </Link>
-                    <h1 className="font-bold text-white font-bold text-2xl ml-2">{totalquantityforhome}</h1>
-                </div>
-              </div>
-               <div className="flex justify-center bg-[#f6931e]  rounded-b-3xl shadow-inner shadow-orange-200  mb-2 p-4 ">
-                <div className="flex w-full max-w-md border-2 mb-3 border-gray-300 rounded-full shadow-lg">
+                    {!table && (
+                        <>
+                            <button onClick={handlemodalClick} className="ml-4">
+                                <FaUser fill="white" className='h-8 w-8 ' />
+                            </button>
+                            <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
+                        </>
+                    )}
+
+                    <button onClick={handleCartClick}>
+                    <FaShoppingCart fill="white" className="h-8 w-8 " />
+                    </button>
+                    <h1 className="font-bold text-white text-2xl ">{totalquantityforhome}</h1>
+                 </div>
+                 </div>
+                  <div className="flex justify-center bg-[#f6931e]  rounded-b-3xl shadow-inner shadow-orange-200  mb-2 p-4 ">
+                   <div className="flex w-full max-w-md border-2 mb-3 border-gray-300 rounded-full shadow-lg">
                     <input
                         type="text"
                         placeholder="Enter dish name..."

@@ -1,88 +1,146 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import axios from 'axios';
+import { BuyerContext } from './components/Buyercontext';
 
 const Address = () => {
-  const [isReadyToPay, setIsReadyToPay] = useState(false);
+    const { buyer } = useContext(BuyerContext);
+    const [addresses, setAddresses] = useState([]);
+    const [newAddress, setNewAddress] = useState({
+        houseNo: '',
+        streetNo: '',
+        city: '',
+        state: '',
+        pincode: '',
+        landmark: ''
+    });
 
-  useEffect(() => {
-    const loadGooglePay = () => {
-      if (window.google) {
-        const paymentsClient = new window.google.payments.api.PaymentsClient({
-          environment: 'TEST' // Use 'PRODUCTION' for live environment
-        });
+    useEffect(() => {
+        if (buyer?.email) {
+            axios.get(`http://localhost:1000/addresses?email=${buyer.email}`)
+                .then(response => setAddresses(response.data))
+                .catch(error => console.error(error));
+        }
+    }, [buyer]);
 
-        const paymentDataRequest = {
-          apiVersion: 2,
-          apiVersionMinor: 0,
-          allowedPaymentMethods: [
-            {
-              type: 'UPI',
-              parameters: {
-                pa: 'BCR2DN4TSXULPFAQ', // Your VPA
-                pn: 'Raunak', // Your merchant name
-                tn: 'Order payment', // Transaction note
-                am: '1', // Amount
-                cu: 'INR', // Currency code
-                url: `upi://pay?pa=merchant-vpa@bank&pn=Merchant Name&am=1&cu=INR&tid=12345` // UPI link
-              }
-            }
-          ],
-          merchantInfo: {
-            merchantId: 'BCR2DN4TSXULPFAQ', // Replace with your merchant ID
-            merchantName: 'Raunak'
-          },
-          transactionInfo: {
-            totalPriceStatus: 'FINAL',
-            totalPriceLabel: 'Total',
-            totalPrice: '500', // Amount
-            currencyCode: 'INR',
-            countryCode: 'IN'
-          }
-        };
-
-        paymentsClient.isReadyToPay({
-          allowedPaymentMethods: paymentDataRequest.allowedPaymentMethods
-        }).then(response => {
-          setIsReadyToPay(response.result);
-          if (response.result) {
-            const googlePayButton = paymentsClient.createButton({
-              onClick: () => onGooglePayClick(paymentsClient, paymentDataRequest)
-            });
-            document.getElementById('google-pay-button-container').appendChild(googlePayButton);
-          }
-        }).catch(error => {
-          console.error('Error checking readiness to use Google Pay:', error);
-        });
-      }
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setNewAddress(prevState => ({ ...prevState, [name]: value }));
     };
 
-    loadGooglePay();
-  }, []);
+    const handleAddAddress = (e) => {
+        e.preventDefault();
+        axios.post('http://localhost:1000/addresses', {
+            email: buyer.email,
+            address: newAddress
+        })
+        .then(response => {
+            setAddresses(response.data);
+            setNewAddress({
+                houseNo: '',
+                streetNo: '',
+                city: '',
+                state: '',
+                pincode: '',
+                landmark: ''
+            });
+        })
+        .catch(error => console.error(error));
+    };
 
-  const onGooglePayClick = (paymentsClient, paymentDataRequest) => {
-    paymentsClient.loadPaymentData(paymentDataRequest)
-      .then(paymentData => {
-        // Process payment success
-        console.log('Payment successful!', paymentData);
-        alert('Payment successful!');
-        // You can send paymentData to your server here for further processing
-      })
-      .catch(error => {
-        // Process payment failure
-        console.error('Payment failed', error);
-        alert('Payment failed. Please try again.');
-      });
-  };
+    const handleDeleteAddress = (addressId) => {
+        axios.delete('http://localhost:1000/addresses', {
+            params: {
+                email: buyer.email,
+                addressId: addressId
+            }
+        })
+        .then(response => setAddresses(response.data))
+        .catch(error => console.error(error));
+    };
 
-  return (
-    <div>
-      <h1>Google Pay UPI Payment</h1>
-      {isReadyToPay ? (
-        <div id="google-pay-button-container"></div>
-      ) : (
-        <p>Google Pay is not available on this device.</p>
-      )}
-    </div>
-  );
+    return (
+        <div className="max-w-lg mx-auto p-4 sm:p-6 bg-white shadow-md rounded-lg">
+            <h2 className="text-xl sm:text-2xl font-bold mb-6 text-center">Manage Addresses</h2>
+            
+            <form onSubmit={handleAddAddress} className="space-y-4 mb-8">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <input
+                        type="text"
+                        name="houseNo"
+                        value={newAddress.houseNo}
+                        onChange={handleInputChange}
+                        placeholder="House Number"
+                        className="input-field w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#f6931e]"
+                    />
+                    <input
+                        type="text"
+                        name="streetNo"
+                        value={newAddress.streetNo}
+                        onChange={handleInputChange}
+                        placeholder="Street Number"
+                        className="input-field w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#f6931e]"
+                    />
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <input
+                        type="text"
+                        name="city"
+                        value={newAddress.city}
+                        onChange={handleInputChange}
+                        placeholder="City"
+                        className="input-field w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#f6931e]"
+                    />
+                    <input
+                        type="text"
+                        name="state"
+                        value={newAddress.state}
+                        onChange={handleInputChange}
+                        placeholder="State"
+                        className="input-field w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#f6931e]"
+                    />
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <input
+                        type="text"
+                        name="pincode"
+                        value={newAddress.pincode}
+                        onChange={handleInputChange}
+                        placeholder="Pincode"
+                        className="input-field w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#f6931e]"
+                    />
+                    <input
+                        type="text"
+                        name="landmark"
+                        value={newAddress.landmark}
+                        onChange={handleInputChange}
+                        placeholder="Landmark"
+                        className="input-field w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#f6931e]"
+                    />
+                </div>
+                <button
+                    type="submit"
+                    className="w-full py-2 px-4 bg-[#f6931e] text-white font-semibold rounded-md shadow hover:bg-[#d48d35] transition-colors duration-300"
+                >
+                    Add Address
+                </button>
+            </form>
+
+            <h3 className="text-lg sm:text-xl font-semibold mb-4 text-center">Your Addresses</h3>
+            <ul className="space-y-4">
+                {addresses.map((address) => (
+                    <li key={address._id} className="flex justify-between items-center p-4 bg-gray-200 rounded-2xl shadow-sm">
+                        <span className="text-sm sm:text-base">{`${address.houseNo}, ${address.streetNo}, ${address.city}, ${address.state} - ${address.pincode}`}</span>
+                        <button
+                            onClick={() => handleDeleteAddress(address._id)}
+                            className="ml-4 text-red-600 hover:text-red-800 transition-colors duration-300"
+                        >
+                            Delete
+                        </button>
+                    </li>
+                ))}
+            </ul>
+        </div>
+    );
 };
 
 export default Address;
