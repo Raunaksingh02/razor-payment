@@ -20,19 +20,18 @@ function Upi() {
   
   const { state } = location;
   const {
+    buyerEmail,
     customerName,
     customerPhone,
     customerTable,
     grandTotalforpayment,
-    houseNo,
-    city,
-    pincode,
-    landmark,
+    selectedAddress,
     cartforpayment
   } = state || {};
   const navigate = useNavigate();
-  console.log(cartforpayment);
-
+  console.log(selectedAddress);
+  console.log("buyer in upi component", buyerEmail);
+  
   const [validationMessage, setValidationMessage] = useState('');
   const [isModal, setIsModal] = useState(false);
   const [generatedCode, setGeneratedCode] = useState('');
@@ -83,6 +82,7 @@ function Upi() {
       .replace(/[\[\]"]/g, '') // Remove brackets and quotes
       .split(',').join(''); // Remove commas
   };
+  
 
   const generateQRCodeValue = () => {
     const plainCode = extractPlainCode(generatedCode);
@@ -124,14 +124,9 @@ function Upi() {
         name: customerName,
         amount: grandTotalforpayment,
         customerTable,
-        email:buyer.email,
+        email:buyerEmail,
         paymentmode: "online",
-        address: {
-          houseNo,
-          city,
-          pincode,
-          landmark
-        },
+        address: selectedAddress,
         customerPhoneNo: customerPhone,
       });
 

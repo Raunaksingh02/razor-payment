@@ -40,7 +40,7 @@ function Billpart() {
   // Fetch buyer addresses when component mounts or buyerEmail changes
   useEffect(() => {
     if (buyerEmail) {
-      axios.get(`http://localhost:1000/addresses?email=${buyerEmail}`)
+      axios.get(`https://backendcafe-ceaj.onrender.com/addresses?email=${buyerEmail}`)
         .then(response => setBuyerAddress(response.data))
         .catch(error => console.error(error));
     }
@@ -80,7 +80,7 @@ function Billpart() {
   };
 
   const handleValidation = () => {
-    if (!customerName || !customerPhone || !selectedAddress) {
+    if (!customerName || !customerPhone ) {
       setValidationMessage('All input fields are required.');
     } else {
       setValidationMessage('');
@@ -103,7 +103,7 @@ function Billpart() {
   };
 
   const handleCashPayment = () => {
-    if (!customerName || !customerPhone || !selectedAddress) {
+    if (!customerName || !customerPhone ) {
       setValidationMessage('All input fields are required.');
     } else {
       setValidationMessage('');
