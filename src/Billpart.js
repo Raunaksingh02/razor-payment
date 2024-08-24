@@ -32,8 +32,11 @@ function Billpart() {
   const [buyeraddress, setBuyerAddress] = useState([]);
   const { setCustomerName, setCustomerTable, setCustomerPhone, customerPhone, customerName, customerTable } = useContext(CustomerContext);
   const { buyer } = useContext(BuyerContext);
+
   const buyerEmail = buyer?.email || undefined;
     console.log("the buyer email is ",buyerEmail);
+
+  
   // Fetch buyer addresses when component mounts or buyerEmail changes
   useEffect(() => {
     if (buyerEmail) {

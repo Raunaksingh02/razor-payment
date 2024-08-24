@@ -23,7 +23,7 @@ export const BuyerProvider = ({ children }) => {
     const { password, ...buyerData } = customerData; // Exclude the password
     setBuyer(buyerData);
     setIsAuthenticated(true);
-    localStorage.setItem('buyer', JSON.stringify(buyerData));
+   // localStorage.setItem('buyer', JSON.stringify(buyerData));
     localStorage.setItem('buyerauth', 'true'); // Set auth status to true
   };
 
