@@ -43,7 +43,7 @@ const Customerlogin = () => {
             name="email"
             value={formData.email}
             onChange={handleChange}
-            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
+            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-[#f6931e] focus:ring focus:ring-[#f6931e] focus:ring-opacity-50"
             required
           />
         </div>
@@ -54,13 +54,13 @@ const Customerlogin = () => {
             name="password"
             value={formData.password}
             onChange={handleChange}
-            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
+            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-[#f6931e] focus:ring focus:ring-[#f6931e] focus:ring-opacity-50"
             required
           />
         </div>
         <button
           type="submit"
-          className="w-full bg-blue-500 text-white py-2 px-4 rounded-md shadow-sm hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-500 focus:ring-opacity-50"
+          className="w-full bg-[#f6931e] text-white py-2 px-4 rounded-md shadow-sm hover:bg-[#f6931e] focus:outline-none focus:ring focus:ring-blue-500 focus:ring-opacity-50"
         >
           Login
         </button>
@@ -70,7 +70,7 @@ const Customerlogin = () => {
         <span className="text-sm text-gray-700">Don't have an account?</span>
         <Link
           to="/web/signup"
-          className="text-sm text-blue-500 hover:text-blue-700 ml-1"
+          className="text-sm bg-[#f6931e] hover:text-[#f6931e] ml-1"
         >
           Sign Up
         </Link>

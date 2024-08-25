@@ -9,6 +9,7 @@ import QRCode from 'qrcode.react';
 import closebutton from './images/closebutton.png';
 import { CustomerContext } from './CustomerContext';
 import { BuyerContext } from './components/Buyercontext.js';
+import {MinOrderContext} from "./components/MinOrderContext.js"
 import axios from 'axios';
 import { removeToCart } from './redux/cartSlice.js';
 import Calling from './Calling.js';
@@ -22,26 +23,36 @@ function Billpart() {
   const tableQueryParam = queryParams.get('table');
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { minOrderValue, deliveryCharge } = useContext(MinOrderContext);
+
 
   const cartforpayment = useSelector((state) => state.cart.cart);
   const totalforpayment = cartforpayment
     .map((item) => item.price * item.quantity)
     .reduce((prev, curr) => prev + curr, 0);
-  const grandTotalforpayment = totalforpayment + 50;
 
+
+    const grandTotalforpayment = totalforpayment < minOrderValue
+    ? totalforpayment + deliveryCharge
+    : totalforpayment;
+    console.log(grandTotalforpayment );
   const [buyeraddress, setBuyerAddress] = useState([]);
   const { setCustomerName, setCustomerTable, setCustomerPhone, customerPhone, customerName, customerTable } = useContext(CustomerContext);
   const { buyer } = useContext(BuyerContext);
 
   const buyerEmail = buyer?.email || undefined;
-    console.log("the buyer email is ",buyerEmail);
+  console.log("the buyer email is ", buyerEmail);
 
-  
   // Fetch buyer addresses when component mounts or buyerEmail changes
   useEffect(() => {
     if (buyerEmail) {
       axios.get(`https://backendcafe-ceaj.onrender.com/addresses?email=${buyerEmail}`)
-        .then(response => setBuyerAddress(response.data))
+        .then(response => {
+          setBuyerAddress(response.data);
+          if (response.data.length > 0) {
+            setSelectedAddress(response.data[0]); // Set the first address as default
+          }
+        })
         .catch(error => console.error(error));
     }
   }, [buyerEmail]);
@@ -80,7 +91,7 @@ function Billpart() {
   };
 
   const handleValidation = () => {
-    if (!customerName || !customerPhone ) {
+    if (!customerName || !customerPhone) {
       setValidationMessage('All input fields are required.');
     } else {
       setValidationMessage('');
@@ -103,7 +114,7 @@ function Billpart() {
   };
 
   const handleCashPayment = () => {
-    if (!customerName || !customerPhone ) {
+    if (!customerName || !customerPhone) {
       setValidationMessage('All input fields are required.');
     } else {
       setValidationMessage('');
@@ -158,7 +169,7 @@ function Billpart() {
           </div>
           <div className='ml-2 md:ml-4 flex-1 p-2'>
             <p className='font-bold'>{item.name} (Size: {item.size})</p>
-            <p>Price: ${item.price}</p>
+            <p>Price: {item.price}</p>
             <p>Rating: {item.rating}</p>
             <p>Quantity: {item.quantity}</p>
           </div>
@@ -212,7 +223,7 @@ function Billpart() {
                 onChange={(e) => setCustomerPhone(e.target.value)}
               />
             </div>
-            {tableQueryParam === "undefined" && buyeraddress && (
+            {tableQueryParam === "undefined" && buyeraddress.length > 0 && (
               <div>
                 <h1 className="font-bold text-lg mb-2">Select an Address</h1>
                 <select
@@ -235,35 +246,29 @@ function Billpart() {
                 </div>
               </div>
             )}
-
-            <div className="mt-4 text-red-600">{validationMessage}</div>
-            <div className="mt-6 flex justify-center space-x-4">
-              <button onClick={handleValidation} className="h-12 w-32 bg-black text-white text-lg font-bold rounded-2xl">
-                 Pay UPI
+            {validationMessage && (
+              <div className="text-red-500 font-bold mb-2">
+                {validationMessage}
+              </div>
+            )}
+            <div className="flex justify-center space-x-4">
+              <button onClick={handleValidation} className="h-10 w-full bg-blue-500 text-white font-bold rounded-lg">
+                Pay with UPI
               </button>
-              <button onClick={handleCashPayment} className="h-12 w-32 bg-black text-white text-lg font-bold rounded-2xl">
-                Pay Cash
+              <button onClick={handleCashPayment} className="h-10 w-full bg-blue-500 text-white font-bold rounded-lg">
+                Cash Payment
               </button>
             </div>
-            {tableQueryParam === "Takeaway" && (
-        <div className="flex flex-col items-center justify-center mt-6">
-        <div ref={qrCodeRef} className="flex justify-center p-4 border border-gray-300 rounded-lg shadow-lg bg-white">
-      <QRCode value={generateQRCodeValue()} size={180} />
-        </div>
-        <div className="text-center mt-4">
-      <button
-        onClick={handleDownloadQRCode}
-        className="px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-      >
-        Download QR Code
-      </button>
-    </div>
-  </div>
-)}
+          </div>
+          <div ref={qrCodeRef} className="text-center mt-6">
+            <QRCode value={generateQRCodeValue()} size={256} />
+            <button onClick={handleDownloadQRCode} className="mt-4 bg-green-500 text-white p-2 rounded-lg">
+              Download QR Code
+            </button>
           </div>
         </div>
       </Modal>
-      <Footer />
+      <Footer/>
     </div>
   );
 }

@@ -5,6 +5,7 @@ import backarrowlogo from "./images/backarrowlogo.png";
 import { IoFastFoodSharp } from "react-icons/io5";
 import { FaMoneyCheckDollar, FaUserTie, FaChartLine } from "react-icons/fa6";
 import { TbReport, TbTruckDelivery } from "react-icons/tb";
+import { BiSolidUserDetail } from "react-icons/bi";
 import { IoFastFoodOutline } from "react-icons/io5";
 import { FaShopLock } from "react-icons/fa6";
 import { GiCook } from "react-icons/gi";
@@ -13,6 +14,7 @@ import { IoIosLogOut } from "react-icons/io";
 import axios from "axios";
 import { AuthContext } from './AuthContext';
 import Calling from "./Calling";
+import { MdElectricMoped } from "react-icons/md";
 import OrderPopup from "./OrderPopup";
 import Heartbeat from "./Heartbeat";
 
@@ -155,6 +157,18 @@ function Owner() {
             <div className="p-3 h-56 rounded-3xl transition duration-150 ease-in-out bg-[#18196c] flex flex-col items-center justify-center">
               <h1 className="text-lg font-mono font-extrabold text-white">Total Report</h1>
               <TbReport fill="white" className="h-12 w-12 mt-4 shadow-2xl shadow-white" />
+            </div>
+          </Link>
+          <Link to="/Web/user">
+            <div className="p-3 h-56 rounded-3xl transition duration-150 ease-in-out bg-[#18196c] flex flex-col items-center justify-center">
+              <h1 className="text-lg font-mono font-extrabold text-white">Web User</h1>
+              <BiSolidUserDetail fill="white" className="h-12 w-12 mt-4 shadow-2xl shadow-white" />
+            </div>
+          </Link>
+          <Link to="/delivery">
+            <div className="p-3 h-56 rounded-3xl transition duration-150 ease-in-out bg-[#18196c] flex flex-col items-center justify-center">
+              <h1 className="text-lg font-mono font-extrabold text-white">Delivery Charge</h1>
+              <MdElectricMoped fill="white" className="h-12 w-12 mt-4 shadow-2xl shadow-white" />
             </div>
           </Link>
         </div>

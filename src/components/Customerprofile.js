@@ -61,7 +61,7 @@ function Customerprofile() {
               <label className="block text-sm font-medium text-gray-700">Name</label>
               <input
                 type="text"
-                className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-[#f6931e] focus:border-[#f6931e] sm:text-sm"
                 value={updatedName}
                 onChange={(e) => setUpdatedName(e.target.value)}
               />
@@ -70,7 +70,7 @@ function Customerprofile() {
               <label className="block text-sm font-medium text-gray-700">Phone</label>
               <input
                 type="text"
-                className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-[#f6931e] focus:border-[#f6931e] sm:text-sm"
                 value={updatedPhone}
                 onChange={(e) => setUpdatedPhone(e.target.value)}
               />
@@ -78,7 +78,7 @@ function Customerprofile() {
             <div className="flex justify-between items-center">
               <button
                 onClick={handleUpdate}
-                className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+                className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-[#f6931e]"
               >
                 Save
               </button>
@@ -97,7 +97,7 @@ function Customerprofile() {
             <p className="mb-2"><strong>Phone:</strong> {buyerDetails.phoneNo}</p>
             <button
               onClick={() => setEditMode(true)}
-              className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 w-full"
+              className="mt-4 px-4 py-2 bg-[#f6931e] text-white rounded-md hover:bg-[#e0912f] w-full"
             >
               Edit Profile
             </button>

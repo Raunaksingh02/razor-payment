@@ -6,6 +6,7 @@ import ProtectedRoute from './ProtectedRoute';
 import Customerlogin from "./components/Customerlogin.js";
 import Customerotp from './components/Customerotp.js';
 import Customersign from './components/Customersign.js';
+
 import Billpart from './Billpart'; 
 import Admin from './Admin.js';
 import Owner from './Owner.js'
@@ -40,6 +41,8 @@ import Login from "./Login.js";
 import SignupPage from "./SignupPage.js";
 import { UserProtectedRoute } from './components/UserProtectedRoute.js';
 import {BuyerContext} from "./components/Buyercontext.js";
+import Webuser from "./components/Webuser.js";
+import Deliverydetail from "./components/Deliverydetail";
 
 const PaymentComponent = () => {
  
@@ -75,6 +78,10 @@ const PaymentComponent = () => {
         <Route path="/docs/Shippingdetail" element={<Shipping/>} />
         <Route path="/docs/About" element={<Aboutus/>} />
         <Route path="/docs/Privacy" element={<Privacy/>} />
+        <Route path="/web/user" element={<Webuser/>} />
+        <Route path="/delivery" element={<Deliverydetail/>} />
+      
+
         <Route path="/docs/Cancel" element={<Cancellation/>} />
         <Route path="/Invoice/:_id" element={<Invoicecompo/>} />
         <Route path="/Order" element={
