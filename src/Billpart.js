@@ -40,7 +40,7 @@ function Billpart() {
   const { setCustomerName, setCustomerTable, setCustomerPhone, customerPhone, customerName, customerTable } = useContext(CustomerContext);
   const { buyer } = useContext(BuyerContext);
 
-  const buyerEmail = buyer?.email || undefined;
+  const buyerEmail = buyer?.email || "";
   console.log("the buyer email is ", buyerEmail);
 
   // Fetch buyer addresses when component mounts or buyerEmail changes
@@ -63,6 +63,13 @@ function Billpart() {
 
   // Set customer table when tableQueryParam changes
   useEffect(() => {
+    if (buyer) {
+      setCustomerName(buyer.name || '');
+      setCustomerPhone(buyer.phoneNo  || '');
+    }
+  }, [buyer, setCustomerName, setCustomerPhone]);
+
+  useEffect(() => {
     if (tableQueryParam) {
       setCustomerTable(tableQueryParam);
     }
@@ -73,16 +80,17 @@ function Billpart() {
 
   const savePaymentDetails2 = async () => {
     try {
-      const response = await axios.post('https://backendcafe-ceaj.onrender.com/api/payments', {
+      const response = await axios.post('http://localhost:1000/api/payments', {
         cartforpayment,
         name: customerName,
         amount: grandTotalforpayment,
-        email: buyerEmail,
+        email: buyerEmail || "",
         customerTable,
         paymentmode: "Cash-Not Received",
-        address: selectedAddress,
+        address: selectedAddress || "",
         customerPhoneNo: customerPhone,
       });
+      console.log(response.data);
       const paymentId = response.data._id;
       navigate(`/Invoice/${paymentId}`);
     } catch (error) {
@@ -260,12 +268,17 @@ function Billpart() {
               </button>
             </div>
           </div>
-          <div ref={qrCodeRef} className="text-center mt-6">
-            <QRCode value={generateQRCodeValue()} size={256} />
-            <button onClick={handleDownloadQRCode} className="mt-4 bg-green-500 text-white p-2 rounded-lg">
-              Download QR Code
-            </button>
-          </div>
+          {tableQueryParam==="Takeaway" && (
+          
+                <div ref={qrCodeRef} className="text-center mt-6">
+                <QRCode value={generateQRCodeValue()} size={256} />
+                <button onClick={handleDownloadQRCode} className="mt-4 bg-green-500 text-white p-2 rounded-lg">
+                  Download QR Code
+                </button>
+              </div>
+          )
+          }
+        
         </div>
       </Modal>
       <Footer/>

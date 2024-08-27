@@ -7,120 +7,293 @@ password = uljt vkgm wdtj cask
 
 
 
-watercalling ui component
 
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import waiter from "./images/waiter.png";
-import waiterphoto from "./images/waiterphoto.jpg";
-import backarrowlogo from "./images/backarrowlogo.png";
-import { io } from 'socket.io-client';
+import React, { useState, useContext, useEffect, useRef } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import backarrowlogo from './images/backarrowlogo.png';
+import deletelogo from './images/deletelogo.png';
+import Modal from 'react-modal';
+import { toPng } from 'html-to-image';
+import QRCode from 'qrcode.react';
+import closebutton from './images/closebutton.png';
+import { CustomerContext } from './CustomerContext';
+import { BuyerContext } from './components/Buyercontext.js';
+import { MinOrderContext } from "./components/MinOrderContext.js";
+import axios from 'axios';
+import { removeToCart } from './redux/cartSlice.js';
+import Calling from './Calling.js';
+import Footer from './Footer.js';
 
-const socket = io("https://backendcafe-ceaj.onrender.com");
+Modal.setAppElement('#root');
 
-export default function Callwaiter() {
-  const [table, setTable] = useState('');
-  const [query, setQuery] = useState('');
+
+function Billpart() {
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const tableQueryParam = queryParams.get('table');
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { minOrderValue, deliveryCharge } = useContext(MinOrderContext);
+
+  const cartforpayment = useSelector((state) => state.cart.cart);
+  const totalforpayment = cartforpayment
+    .map((item) => item.price * item.quantity)
+    .reduce((prev, curr) => prev + curr, 0);
+
+  const grandTotalforpayment = totalforpayment < minOrderValue
+    ? totalforpayment + deliveryCharge
+    : totalforpayment;
+  console.log(grandTotalforpayment);
+
+  const [buyeraddress, setBuyerAddress] = useState([]);
+  const { setCustomerName, setCustomerTable, setCustomerPhone, customerPhone, customerName, customerTable } = useContext(CustomerContext);
+  const { buyer } = useContext(BuyerContext);
+  
+  const buyerEmail = buyer?.email || ""; // Default to empty string if buyer or email is undefined
+console.log("The buyer email is ", buyerEmail);
 
   useEffect(() => {
-    socket.on("connect", () => {
-      console.log("connected", socket.id);
-    });
+    if (buyer) {
+      setCustomerName(buyer.name || '');
+      setCustomerPhone(buyer.phoneNo  || '');
+    }
+  }, [buyer, setCustomerName, setCustomerPhone]);
 
-    socket.on("welcome", (data) => {
-      console.log(data);
-    });
+  useEffect(() => {
+    if (buyerEmail) {
+      axios.get(`https://backendcafe-ceaj.onrender.com/addresses?email=${buyerEmail}`)
+        .then(response => {
+          setBuyerAddress(response.data);
+          if (response.data.length > 0) {
+            setSelectedAddress(response.data[0]);
+          }
+        })
+        .catch(error => console.error(error));
+    }
+  }, [buyerEmail]);
 
-    return () => {
-      socket.disconnect();
-    };
-  }, []);
+  const [selectedAddress, setSelectedAddress] = useState(null);
+  const [validationMessage, setValidationMessage] = useState('');
+  const [modalIsOpen, setModalIsOpen] = useState(false);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (table && query) {
-      socket.emit('waiterRequest', { table, query });
-      setTable('');
-      setQuery('');
+  useEffect(() => {
+    if (tableQueryParam) {
+      setCustomerTable(tableQueryParam);
+    }
+  }, [tableQueryParam, setCustomerTable]);
+
+  const openModal = () => setModalIsOpen(true);
+  const closeModal = () => setModalIsOpen(false);
+
+  const savePaymentDetails2 = async () => {
+    try {
+      const response = await axios.post('http://localhost:1000/api/payments', {
+        cartforpayment,
+        name: customerName,
+        amount: grandTotalforpayment,
+        email: buyerEmail || "",
+        customerTable: tableQueryParam ,
+        paymentmode: "Cash-Not Received",
+        address: selectedAddress,
+        customerPhoneNo: customerPhone,
+      });
+
+      console.log(response.data);
+      const paymentId = response.data._id;
+      navigate(`/Invoice/${paymentId}`);
+    } catch (error) {
+      console.error('Error saving payment details:', error);
+    }
+
+  };
+
+  const handleValidation = () => {
+    if (!customerName || !customerPhone ) {
+      setValidationMessage('All input fields are required.');
+    } else {
+      setValidationMessage('');
+      navigate('/Upi', {
+        state: {
+          buyerEmail,
+          customerName,
+          customerPhone,
+          customerTable,
+          grandTotalforpayment,
+          selectedAddress,
+          cartforpayment,
+        },
+      });
+    }
+  };
+
+  const generateQRCodeValue = () => {
+    return `upi://pay?pa=9971299049@ibl&pn=${customerName}&am=${grandTotalforpayment}&cu=INR`;
+  };
+
+  const handleCashPayment = () => {
+    if (!customerName || !customerPhone ) {
+      setValidationMessage('All input fields are required.');
+    } else {
+      setValidationMessage('');
+      savePaymentDetails2();
+    }
+  };
+
+  const qrCodeRef = useRef();
+
+  const handleDownloadQRCode = () => {
+    if (qrCodeRef.current) {
+      toPng(qrCodeRef.current)
+        .then((dataUrl) => {
+          const link = document.createElement('a');
+          link.href = dataUrl;
+          link.download = 'QRCode.png';
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        })
+        .catch((error) => {
+          console.error('Failed to generate image:', error);
+        });
     }
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-100">
-      <div className="flex items-center p-4">
-        <Link to="/table">
-          <img src={backarrowlogo} alt="Back" className="h-8 w-8" />
-        </Link>
-      </div>
-      <div className="flex flex-col items-center justify-center flex-1">
-        <div className="bg-white p-6 rounded-lg shadow-md w-full max-w-md">
-          <div className="flex justify-center mb-4">
-            <img src={waiterphoto} alt="Waiter" className="h-44 w-40 animate-slideInFromBottom  rounded-full object-cover" />
-          </div>
-          <h1 className="text-center text-2xl font-extrabold mb-6">Call Service</h1>
-          <form onSubmit={handleSubmit}>
-            <div className="mb-4">
-              <label htmlFor="table" className="block text-gray-700 font-bold mb-2">Select Table</label>
-              <select
-                id="table"
-                value={table}
-                onChange={(e) => setTable(e.target.value)}
-                className="block appearance-none w-full bg-white border border-gray-300 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
-                required
-              >
-                <option value="" disabled>Select your table</option>
-                <option value="Table 1">Table 1</option>
-                <option value="Table 2">Table 2</option>
-                <option value="Table 3">Table 3</option>
-                <option value="Table 4">Table 4</option>
-                <option value="Table 5">Table 5</option>
-                <option value="Table 6">Table 6</option>
-                <option value="Table 7">Table 7</option>
-                <option value="Table 8">Table 8</option>
-                <option value="Table 9">Table 9</option>
-                <option value="Table 10">Table 10</option>
-              </select>
-            </div>
-            <div className="mb-4">
-              <label htmlFor="query" className="block text-gray-700 font-bold mb-2">Select Request</label>
-              <select
-                id="query"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                className="block appearance-none w-full bg-white border border-gray-300 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
-                required
-              >
-                <option value="" disabled>Select your request</option>
-                <option value="Call the waiter">Call the waiter</option>
-                <option value="Clean the table">Clean the table</option>
-                <option value="Give me water">Give me water</option>
-                <option value="Bring the menu">Bring the menu</option>
-                <option value="Bring the bill">Bring the bill</option>
-              </select>
-            </div>
-            <div className="flex items-center justify-center">
-              <button
-                type="submit"
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-              >
-                Send Request
-              </button>
-            </div>
-          </form>
+    <div className='container mx-auto p-4'>
+      {tableQueryParam === "Takeaway" && (
+        <div>
+          <h2 className='font-bold text-red-700 text-center'>In Billing mode, Select items for customer</h2>
+          <Calling />
+        </div>
+      )}
+      <div className='flex items-center mb-4'>
+        <div className='mr-4'>
+          {tableQueryParam && (
+            <Link to={tableQueryParam === "table" ? "/table" : "/"}>
+              <img src={backarrowlogo} className='h-10 w-10' alt="Back" />
+            </Link>
+          )}
+        </div>
+        <div className='flex-1 text-center'>
+          <h1 className='font-bold text-2xl mb-2'>Bill Generated</h1>
         </div>
       </div>
+
+      {cartforpayment.map((item, index) => (
+        <div className='flex flex-row md:flex-row items-center bg-gray-200 shadow-xl shadow-gray-500 animate-slideInFromBottom rounded-2xl mb-4 p-4' key={index}>
+          <div>
+            <img src={item.image} alt={`Product ${index}`} className='h-20 w-20 rounded-2xl mb-4 md:mb-0' />
+          </div>
+          <div className='ml-2 md:ml-4 flex-1 p-2'>
+            <p className='font-bold'>{item.name} (Size: {item.size})</p>
+            <p>Price: {item.price}</p>
+            <p>Rating: {item.rating}</p>
+            <p>Quantity: {item.quantity}</p>
+          </div>
+          <div className="mb-12">
+            <button onClick={() => dispatch(removeToCart(item))} className='ml-auto'>
+              <img src={deletelogo} alt="Remove from Cart" className='h-10 w-10' />
+            </button>
+          </div>
+        </div>
+      ))}
+      <div className='mt-4 text-center'>
+        <h1 className='font-bold text-2xl'>Total Amount = {totalforpayment}</h1>
+        <h1 className='font-bold text-2xl'>Grand Total = {grandTotalforpayment}</h1>
+      </div>
+      <div className='text-center mt-4'>
+        <button onClick={openModal} className='h-12 w-60 bg-black text-white text-lg font-bold rounded-2xl'>
+          Pay Now
+        </button>
+      </div>
+
+      <Modal
+        isOpen={modalIsOpen}
+        onRequestClose={closeModal}
+        className="fixed inset-0 flex items-center justify-center p-4 z-50"
+        overlayClassName="fixed inset-0 bg-black bg-opacity-50"
+      >
+        <div className="bg-white w-full max-w-md md:max-w-lg lg:max-w-xl mx-auto p-6 rounded-lg shadow-lg relative max-h-full overflow-y-auto">
+          <div className="flex justify-end items-start mb-4">
+            <button onClick={closeModal}>
+              <img src={closebutton} className="h-8 w-8 rounded-2xl" alt="Close" />
+            </button>
+          </div>
+          <div className="space-y-6">
+            <div>
+              <h1 className="font-bold text-2xl text-center">Customer Details</h1>
+              <label className="block text-sm font-bold mb-2">Customer Name:</label>
+              <input
+                type="text"
+                value={customerName}
+                onChange={(e) => setCustomerName(e.target.value)}
+                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500"
+                placeholder="Enter Customer Name"
+              />
+              <label className="block text-sm font-bold mb-2">Customer Phone Number:</label>
+              <input
+                type="text"
+                value={customerPhone}
+                onChange={(e) => setCustomerPhone(e.target.value)}
+                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500"
+                placeholder="Enter Customer Phone"
+              />
+              {tableQueryParam==="undefined" && (
+                <>
+                  <label className="block text-sm font-bold mb-2">Select Address:</label>
+                  <select
+                    value={selectedAddress ? selectedAddress._id : ''}
+                    onChange={(e) => {
+                      const selected = buyeraddress.find((address) => address._id === e.target.value);
+                      setSelectedAddress(selected);
+                    }}
+                    className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500"
+                  >
+                    {buyeraddress.map((address) => (
+                      <option key={address._id} value={address._id}>
+                        {address.houseNo}, {address.city}, {address.landmark}
+                      </option>
+                    ))}
+                  </select>
+                  <div className='mt-4'>
+                    <button onClick={() => navigate("/Address")} className="w-full px-4 py-2 bg-blue-500 text-white font-bold rounded-lg">
+                      Add New Address
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
+            <div>
+              <button
+                onClick={handleValidation}
+                className="w-full px-4 py-2 bg-blue-500 text-white font-bold rounded-lg"
+              >
+                Pay with UPI
+              </button>
+            </div>
+            <div>
+              <button
+                onClick={handleCashPayment}
+                className="w-full px-4 py-2 bg-green-500 text-white font-bold rounded-lg"
+              >
+                Pay with Cash
+              </button>
+            </div>
+            <div className="text-center mt-4">
+              <div ref={qrCodeRef}>
+                <QRCode value={generateQRCodeValue()} size={200} />
+              </div>
+              <button onClick={handleDownloadQRCode} className="mt-4 px-4 py-2 bg-purple-500 text-white font-bold rounded-lg">
+                Download QR Code
+              </button>
+            </div>
+          </div>
+          {validationMessage && <div className="text-red-500 text-center mt-4">{validationMessage}</div>}
+        </div>
+      </Modal>
     </div>
   );
 }
 
-
-
-
-
-
-
-
-
-
-
-
+export default Billpart;

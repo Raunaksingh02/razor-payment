@@ -70,7 +70,7 @@ const Customerlogin = () => {
         <span className="text-sm text-gray-700">Don't have an account?</span>
         <Link
           to="/web/signup"
-          className="text-sm bg-[#f6931e] hover:text-[#f6931e] ml-1"
+          className="text-sm text-[#f6931e] hover:text-[#f6931e] ml-1"
         >
           Sign Up
         </Link>
