@@ -31,11 +31,32 @@ function Billpart() {
     .map((item) => item.price * item.quantity)
     .reduce((prev, curr) => prev + curr, 0);
 
+    
+     // Check if tableQueryParam is null or explicitly set to "undefined"
+  const isTableParamMissing = tableQueryParam === null || tableQueryParam === 'undefined';
 
-    const grandTotalforpayment = totalforpayment < minOrderValue
-    ? totalforpayment + deliveryCharge
-    : totalforpayment;
-    console.log(grandTotalforpayment );
+  // Calculate grand total
+  const grandTotalforpayment =
+    isTableParamMissing && totalforpayment < minOrderValue
+      ? totalforpayment + deliveryCharge
+      : totalforpayment;
+
+  // Debugging logs
+  console.log(`Table Query Param: ${tableQueryParam}`); 
+  console.log(`Total for Payment: ${totalforpayment}`); 
+  console.log(`Min Order Value: ${minOrderValue}`);
+  console.log(`Delivery Charge: ${deliveryCharge}`);
+  console.log(`Grand Total for Payment: ${grandTotalforpayment}`);
+
+
+  // Debugging logs to verify conditions and calculations
+  console.log(`Table Query Param: ${tableQueryParam}`); 
+  console.log(`Total for Payment: ${totalforpayment}`); 
+  console.log(`Min Order Value: ${minOrderValue}`);
+  console.log(`Delivery Charge: ${deliveryCharge}`);
+  console.log(`Grand Total for Payment: ${grandTotalforpayment}`);
+
+  
   const [buyeraddress, setBuyerAddress] = useState([]);
   const { setCustomerName, setCustomerTable, setCustomerPhone, customerPhone, customerName, customerTable } = useContext(CustomerContext);
   const { buyer } = useContext(BuyerContext);
@@ -80,7 +101,7 @@ function Billpart() {
 
   const savePaymentDetails2 = async () => {
     try {
-      const response = await axios.post('http://localhost:1000/api/payments', {
+      const response = await axios.post('https://backendcafe-ceaj.onrender.com/api/payments', {
         cartforpayment,
         name: customerName,
         amount: grandTotalforpayment,
@@ -148,6 +169,9 @@ function Billpart() {
         });
     }
   };
+  const backLinkUrl = tableQueryParam && tableQueryParam !== 'undefined' && tableQueryParam.trim() !== ''
+    ? `/${tableQueryParam}`
+    : '/'; // Default to '/' if tableQueryParam is not valid
 
   return (
     <div className='container mx-auto p-4'>
@@ -160,13 +184,13 @@ function Billpart() {
       <div className='flex items-center mb-4'>
         <div className='mr-4'>
           {tableQueryParam && (
-            <Link to={tableQueryParam === "table" ? "/table" : "/"}>
+            <Link to= {backLinkUrl}>
               <img src={backarrowlogo} className='h-10 w-10' alt="Back" />
             </Link>
           )}
         </div>
         <div className='flex-1 text-center'>
-          <h1 className='font-bold text-2xl mb-2'>Bill Generated</h1>
+          <h1 className='font-bold text-2xl mb-2'>Bill  Generated</h1>
         </div>
       </div>
 
