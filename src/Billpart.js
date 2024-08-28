@@ -171,7 +171,7 @@ function Billpart() {
   };
   const backLinkUrl = tableQueryParam && tableQueryParam !== 'undefined' && tableQueryParam.trim() !== ''
     ? `/${tableQueryParam}`
-    : '/'; // Default to '/' if tableQueryParam is not valid
+    : '/'; 
 
   return (
     <div className='container mx-auto p-4'>

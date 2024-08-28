@@ -80,8 +80,6 @@ const PaymentComponent = () => {
         <Route path="/docs/Privacy" element={<Privacy/>} />
         <Route path="/web/user" element={<Webuser/>} />
         <Route path="/delivery" element={<Deliverydetail/>} />
-      
-
         <Route path="/docs/Cancel" element={<Cancellation/>} />
         <Route path="/Invoice/:_id" element={<Invoicecompo/>} />
         <Route path="/Order" element={
