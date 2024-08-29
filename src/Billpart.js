@@ -91,10 +91,13 @@ function Billpart() {
   }, [buyer, setCustomerName, setCustomerPhone]);
 
   useEffect(() => {
-    if (tableQueryParam) {
+    // Check if tableQueryParam is defined and not an empty string
+    if (tableQueryParam && tableQueryParam !== "undefined") {
       setCustomerTable(tableQueryParam);
+    } else {
+      setCustomerTable("Website");
     }
-  }, [tableQueryParam, setCustomerTable]);
+  }, [tableQueryParam]);
 
   const openModal = () => setModalIsOpen(true);
   const closeModal = () => setModalIsOpen(false);

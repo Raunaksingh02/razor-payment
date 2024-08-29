@@ -117,7 +117,7 @@ const CustomerSign = () => {
         <button
           type="button"
           onClick={sendOtp}
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          className="bg-[#f6931e] hover:bg-[#db9035] text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
           disabled={submitDisabled}
         >
           Send OTP
@@ -139,7 +139,7 @@ const CustomerSign = () => {
             <button
               type="button"
               onClick={verifyOtp}
-              className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-2"
+              className="bg-[#f6931e] hover:bg-[#d3872b] text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-2"
             >
               Submit
             </button>

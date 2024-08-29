@@ -134,7 +134,7 @@ const PaymentDetails = () => {
                     {filterPayments().map(payment => (
                         <div key={payment._id} className=' rounded-3xl  shadow-xl shadow-gray-400   mt-4 mb-3 p-2'>
                             {payment.paymentmode === "online" && (
-                                <h1 className="text-xl font-semibold">PaymentId: {payment.paymentId}</h1>
+                                <h1 className="text-xl font-semibold">Payment:Upi Papyment</h1>
                             )}
                             <h1 className="text-xl font-bold">Name: {payment.name}</h1>
                             <h1 className="text-xl font-bold">Email: {payment.email}</h1>

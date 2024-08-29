@@ -69,19 +69,11 @@ const OrderPopup = () => {
           <div className="mb-4">
             <p>Name: {orderDetails.name}</p>
             <p>Amount: {orderDetails.amount}</p>
-            {isWebsiteOrder ? (
-              <>
-                <p>From: Website</p>
-                <p>Payment Mode: {orderDetails.paymentmode}</p>
-              </>
-            ) : (
-              <>
-                <p>From: Restaurant</p>
-                <p>Location: {orderDetails.customerTable}</p>
-                <p>Payment Mode: {orderDetails.paymentmode}</p>
-              </>
-            )}
-          </div>
+            <p>Location: {orderDetails.customerTable}</p>
+            <p>Payment Mode: {orderDetails.paymentmode}</p>
+            <p>PhoneNo: {orderDetails.customerPhoneNo}</p>
+         
+           </div>
         )}
         <button
           onClick={handleClosePopup}
