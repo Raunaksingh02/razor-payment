@@ -8,6 +8,8 @@ const CustomerOrder = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [expandedOrderId, setExpandedOrderId] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1); // State to manage the current page
+  const ordersPerPage = 6; // Number of orders per page
 
   useEffect(() => {
     if (buyer?.email) {
@@ -27,6 +29,19 @@ const CustomerOrder = () => {
     setExpandedOrderId(expandedOrderId === orderId ? null : orderId);
   };
 
+  // Calculate the orders to display based on the current page
+  const indexOfLastOrder = currentPage * ordersPerPage;
+  const indexOfFirstOrder = indexOfLastOrder - ordersPerPage;
+  const currentOrders = orders.slice(indexOfFirstOrder, indexOfLastOrder);
+
+  // Handle page change
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  // Calculate total pages
+  const totalPages = Math.ceil(orders.length / ordersPerPage);
+
   if (loading) return <div className="text-center p-4">Loading...</div>;
   if (error) return <div className="text-center p-4 text-red-600">{error}</div>;
 
@@ -36,37 +51,52 @@ const CustomerOrder = () => {
       {orders.length === 0 ? (
         <p className="text-center text-gray-500">No orders found</p>
       ) : (
-        <ul className="space-y-4">
-          {orders.map(order => (
-            <li key={order._id} className="p-4 rounded-2xl shadow-2xl shadow-[#f6931e]">
-              <div className="flex justify-between items-center mb-2 cursor-pointer" onClick={() => handleToggleOrder(order._id)}>
-                <h3 className="text-lg font-semibold">Order ID: {order.orderId}</h3>
-                <button className="text-blue-500">
-                  {expandedOrderId === order._id ? 'Close' : 'See Items'}
-                </button>
-              </div>
-              <p className="text-gray-700 font-bold mb-1">Date: {new Date(order.date).toLocaleDateString()}</p>
-              <p className="text-gray-700 font-bold mb-1">Total Amount: {order.amount}</p>
-              <p className="text-gray-700 font-bold mb-1">Payment Mode: {order.paymentmode}</p>
-              <p className="text-gray-700 font-bold mb-1">Status: {order.status}</p>
-              <p className="text-gray-700 font-bold mb-1">Customer Table: {order.customerTable}</p>
-              <p className="text-gray-700 font-bold mb-1">Phone Number: {order.customerPhoneNo}</p>
-              <p className="text-gray-700 font-bold mb-1">Address: {`${order.address.houseNo}, ${order.address.city}, ${order.address.pincode}, ${order.address.landmark}`}</p>
+        <>
+          <ul className="space-y-4">
+            {currentOrders.map(order => (
+              <li key={order._id} className="p-4 rounded-2xl shadow-2xl shadow-[#f6931e]">
+                <div className="flex justify-between items-center mb-2 cursor-pointer" onClick={() => handleToggleOrder(order._id)}>
+                  <h3 className="text-lg font-semibold">Order ID: {order.orderId}</h3>
+                  <button className="text-blue-500">
+                    {expandedOrderId === order._id ? 'Close' : 'See Items'}
+                  </button>
+                </div>
+                <p className="text-gray-700 font-bold mb-1">Date: {new Date(order.date).toLocaleDateString()}</p>
+                <p className="text-gray-700 font-bold mb-1">Total Amount: {order.amount}</p>
+                <p className="text-gray-700 font-bold mb-1">Payment Mode: {order.paymentmode}</p>
+                <p className="text-gray-700 font-bold mb-1">Status: {order.status}</p>
+                <p className="text-gray-700 font-bold mb-1">Customer Table: {order.customerTable}</p>
+                <p className="text-gray-700 font-bold mb-1">Phone Number: {order.customerPhoneNo}</p>
+                <p className="text-gray-700 font-bold mb-1">Address: {`${order.address.houseNo}, ${order.address.city}, ${order.address.pincode}, ${order.address.landmark}`}</p>
 
-              {/* Dropdown for cart items */}
-              {expandedOrderId === order._id && (
-                <ul className="mt-2 space-y-2 border-t border-gray-300 pt-2">
-                  {order.cartforpayment.map(item => (
-                    <li key={item.id} className="flex justify-between bg-gray-50 p-2 rounded-md">
-                      <span>{item.name} (x{item.quantity})</span>
-                      <span>{item.price}</span>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </li>
-          ))}
-        </ul>
+                {/* Dropdown for cart items */}
+                {expandedOrderId === order._id && (
+                  <ul className="mt-2 space-y-2 border-t border-gray-300 pt-2">
+                    {order.cartforpayment.map(item => (
+                      <li key={item.id} className="flex justify-between bg-gray-50 p-2 rounded-md">
+                        <span>{item.name} (x{item.quantity})</span>
+                        <span>{item.price}</span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </li>
+            ))}
+          </ul>
+
+          {/* Pagination Controls */}
+          <div className="flex justify-center items-center mt-4 space-x-2">
+            {Array.from({ length: totalPages }, (_, index) => (
+              <button
+                key={index + 1}
+                onClick={() => handlePageChange(index + 1)}
+                className={`px-3 py-1 rounded-lg ${currentPage === index + 1 ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'}`}
+              >
+                {index + 1}
+              </button>
+            ))}
+          </div>
+        </>
       )}
     </div>
   );

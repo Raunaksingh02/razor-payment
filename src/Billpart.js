@@ -10,6 +10,7 @@ import closebutton from './images/closebutton.png';
 import { CustomerContext } from './CustomerContext';
 import { BuyerContext } from './components/Buyercontext.js';
 import {MinOrderContext} from "./components/MinOrderContext.js"
+import {UPIDetailsContext} from "./components/UPIDetailsContext.js";
 import axios from 'axios';
 import { removeToCart } from './redux/cartSlice.js';
 import Calling from './Calling.js';
@@ -24,7 +25,9 @@ function Billpart() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { minOrderValue, deliveryCharge } = useContext(MinOrderContext);
-
+   const { upinumber , upiname } = useContext(UPIDetailsContext);
+   console.log(upinumber);
+   console.log(upiname);
 
   const cartforpayment = useSelector((state) => state.cart.cart);
   const totalforpayment = cartforpayment
@@ -41,20 +44,7 @@ function Billpart() {
       ? totalforpayment + deliveryCharge
       : totalforpayment;
 
-  // Debugging logs
-  console.log(`Table Query Param: ${tableQueryParam}`); 
-  console.log(`Total for Payment: ${totalforpayment}`); 
-  console.log(`Min Order Value: ${minOrderValue}`);
-  console.log(`Delivery Charge: ${deliveryCharge}`);
-  console.log(`Grand Total for Payment: ${grandTotalforpayment}`);
-
-
-  // Debugging logs to verify conditions and calculations
-  console.log(`Table Query Param: ${tableQueryParam}`); 
-  console.log(`Total for Payment: ${totalforpayment}`); 
-  console.log(`Min Order Value: ${minOrderValue}`);
-  console.log(`Delivery Charge: ${deliveryCharge}`);
-  console.log(`Grand Total for Payment: ${grandTotalforpayment}`);
+  
 
   
   const [buyeraddress, setBuyerAddress] = useState([]);
@@ -107,7 +97,7 @@ function Billpart() {
       const response = await axios.post('https://backendcafe-ceaj.onrender.com/api/payments', {
         cartforpayment,
         name: customerName,
-        amount: grandTotalforpayment,
+        amount:grandTotalforpayment,
         email: buyerEmail || "",
         customerTable,
         paymentmode: "Cash-Not Received",
@@ -142,7 +132,12 @@ function Billpart() {
   };
 
   const generateQRCodeValue = () => {
-    return `upi://pay?pa=9971299049@ibl&pn=${customerName}&am=${grandTotalforpayment}&cu=INR`;
+    // Default values as fallback in case UPI details are missing
+    const payAddress = upinumber || '9971299049@ibl'; // Example fallback UPI address
+    const payName = upiname || 'Default Name';        // Example fallback UPI name
+    
+    // Constructing the UPI payment string using the context values
+    return `upi://pay?pa=${payAddress}&pn=${payName}&am=${grandTotalforpayment}&cu=INR`;
   };
 
   const handleCashPayment = () => {

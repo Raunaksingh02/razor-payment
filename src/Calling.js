@@ -52,7 +52,7 @@ function Calling() {
           className="bg-white border border-red-400 text-red-700 px-6 py-4 rounded shadow-lg shadow-red-400 relative mb-4 pointer-events-auto animate-bounce-in-down max-w-sm mx-auto"
           role="alert"
         >
-          <div className="flex justify-between items-start ">
+          <div className="flex  justify-between items-start ">
             <div>
               <strong className="font-extrabold text-lg">Incoming Call from {request.table}!</strong>
               <span className="block font-bold  sm:inline"> {request.query} at {request.time}</span>

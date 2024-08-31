@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import backarrowlogo from '../images/backarrowlogo.png';
+import { useLocation, useNavigate, Link } from 'react-router-dom';
+
 
 const Deliverydetail = () => {
   const [minOrderValue, setMinOrderValue] = useState(0);
@@ -32,8 +35,18 @@ const Deliverydetail = () => {
   };
 
   return (
-    <div className="container mx-auto mt-8">
-      <h2 className="text-2xl font-semibold text-center mb-4">Order Settings</h2>
+
+    <div className="container mx-auto ">
+      <div className="flex items-center shadow-lg shadow-gray-300 mb-6">
+    <div>
+      <Link to="/owner">
+        <img src={backarrowlogo} className="h-10 w-10 m-2" />
+      </Link>
+    </div>
+    <div>
+      <h1 className="text-3xl font-bold ml-12">Delivery Detail</h1>
+    </div>
+  </div>
       <div className="max-w-md mx-auto bg-white p-4 rounded-lg shadow-md">
         <div className="mb-4">
           <label className="block text-gray-700">Minimum Order Value</label>

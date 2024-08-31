@@ -9,12 +9,14 @@ import { BiSolidUserDetail } from "react-icons/bi";
 import { IoFastFoodOutline } from "react-icons/io5";
 import { FaShopLock } from "react-icons/fa6";
 import { GiCook } from "react-icons/gi";
+import { BsBank } from "react-icons/bs";
 import { FaFileInvoiceDollar } from "react-icons/fa";
 import { IoIosLogOut } from "react-icons/io";
 import axios from "axios";
 import { AuthContext } from './AuthContext';
 import Calling from "./Calling";
 import { MdElectricMoped } from "react-icons/md";
+import { FaHistory } from "react-icons/fa";
 import OrderPopup from "./OrderPopup";
 import Heartbeat from "./Heartbeat";
 
@@ -169,6 +171,18 @@ function Owner() {
             <div className="p-3 h-56 rounded-3xl transition duration-150 ease-in-out bg-[#18196c] flex flex-col items-center justify-center">
               <h1 className="text-lg font-mono font-extrabold text-white">Delivery Charge</h1>
               <MdElectricMoped fill="white" className="h-12 w-12 mt-4 shadow-2xl shadow-white" />
+            </div>
+          </Link>
+          <Link to="/pay">
+            <div className="p-3 h-56 rounded-3xl transition duration-150 ease-in-out bg-[#18196c] flex flex-col items-center justify-center">
+              <h1 className="text-lg font-mono font-extrabold text-white">Add UPI-Details</h1>
+              <BsBank fill="white" className="h-12 w-12 mt-4 shadow-2xl shadow-white" />
+            </div>
+          </Link>
+          <Link to="/unique">
+            <div className="p-3 h-56 rounded-3xl transition duration-150 ease-in-out bg-[#18196c] flex flex-col items-center justify-center">
+              <h1 className="text-lg font-mono font-extrabold text-white">User History</h1>
+              <FaHistory fill="white" className="h-12 w-12 mt-4 shadow-2xl shadow-white" />
             </div>
           </Link>
         </div>

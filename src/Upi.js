@@ -11,13 +11,14 @@ import paytmlogo from "./images/paytmlogo.png";
 import phonepelogo from "./images/phonepelogo.png";
 import Stepmodal from "./images/Stepmodal.js";
 import { BuyerContext } from './components/Buyercontext.js';
+import {UPIDetailsContext} from "./components/UPIDetailsContext.js";
 
 function Upi() {
   const location = useLocation();
 
   const { buyer } = useContext(BuyerContext);
   console.log(buyer.email);
-  
+  const { upinumber , upiname } = useContext(UPIDetailsContext);
   const { state } = location;
   const {
     buyerEmail,
@@ -88,9 +89,14 @@ function Upi() {
     const plainCode = extractPlainCode(generatedCode);
     const obfuscatedVerificationCode = `VerificationCode:-${generatedCode}`;
     const encodedVerificationCode = encodeData(obfuscatedVerificationCode);
-    return `upi://pay?pa=9971299049@ibl&pn=Cafe-House&am=${grandTotalforpayment}&cu=INR&tn=${encodedVerificationCode}`;
+
+    const payAddress = upinumber || '9971299049@ibl'; // Example fallback UPI address
+    const payName = upiname || 'Default Name';        // Example fallback UPI name
+    
+    return `upi://pay?pa=${payAddress}&pn=${payName}&am=${grandTotalforpayment}&cu=INR&tn=${encodedVerificationCode}`;
   };
 
+ 
   const handleCloseModal = () => {
     setIsModal(false);
   };
@@ -119,7 +125,7 @@ function Upi() {
   const savePaymentDetails = async () => {
     try {
       const res = await axios.post('https://backendcafe-ceaj.onrender.com/api/payments', {
-        paymentId: generatedCode,
+        paymentId:enteredCode,
         cartforpayment,
         name: customerName,
         amount: grandTotalforpayment,

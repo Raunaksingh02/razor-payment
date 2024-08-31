@@ -6,7 +6,7 @@ import html2canvas from "html2canvas";
 import { FaWhatsapp } from "react-icons/fa";
 import jsPDF from 'jspdf';
 import { FaFilePdf } from "react-icons/fa";
-import { CustomerContext } from './CustomerContext.js';
+
 
 function Billingpage() {
     const { _id } = useParams();

@@ -43,6 +43,7 @@ import { UserProtectedRoute } from './components/UserProtectedRoute.js';
 import {BuyerContext} from "./components/Buyercontext.js";
 import Webuser from "./components/Webuser.js";
 import Deliverydetail from "./components/Deliverydetail";
+import Uniqueuser from "./components/Uniqueuser.js";
 
 const PaymentComponent = () => {
  
@@ -90,6 +91,7 @@ const PaymentComponent = () => {
         <Route path="/Billdata/:_id" element={<Billingpage/>} />
         <Route path="/Website" element={<Webisteorder/>} />
         <Route path="/Call" element={<Callwaiter/>} />
+        <Route path="/Unique" element={<Uniqueuser/>} />
         <Route path="/Upi" element={<Upi/>} />
         <Route path="/Address" element={<Address/>} />
         <Route path="/Pay" element={<Googlepay/>} />

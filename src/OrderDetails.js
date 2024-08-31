@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
 import backarrowlogo from './images/backarrowlogo.png';
@@ -8,10 +8,9 @@ import OrderPopup from "./OrderPopup.js";
 const PaymentDetails = () => {
     const [payments, setPayments] = useState([]);
     const [loading, setLoading] = useState(true);
-    
     const [selectedTab, setSelectedTab] = useState('today');
     const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
-   
+    const [expandedPaymentId, setExpandedPaymentId] = useState(null); // New state for expanding cart items
     
     const move = useNavigate();
 
@@ -31,7 +30,6 @@ const PaymentDetails = () => {
 
     const handleDelete = async (paymentId) => {
         try {
-            console.log(paymentId);
             const response = await axios.delete(`https://backendcafe-ceaj.onrender.com/${paymentId}`);
             console.log('Delete response:', response);
             setPayments(payments.filter(payment => payment._id !== paymentId));
@@ -51,13 +49,11 @@ const PaymentDetails = () => {
 
     const getStatusColor = (status, condition) => {
         return status === condition ? 'text-green-600' : 'text-red-600';
-      };
-
-    const handleMove = (_id) => {
-        console.log(_id);
-        move(`/update/${_id}`);
     };
 
+    const handleMove = (_id) => {
+        move(`/update/${_id}`);
+    };
 
     const filterPayments = () => {
         const today = new Date().toISOString().split('T')[0];
@@ -80,13 +76,17 @@ const PaymentDetails = () => {
         return new Intl.DateTimeFormat('en-US', options).format(new Date(dateString));
     };
 
+    const toggleCartDetails = (paymentId) => {
+        setExpandedPaymentId(expandedPaymentId === paymentId ? null : paymentId);
+    };
+
     if (loading) {
         return <div className="font-bold text-center">Loading the data..... please wait</div>;
     }
 
     return (
         <div>
-            <Calling/>
+            <Calling />
             <OrderPopup />
             <div className="flex items-center">
                 <div>
@@ -132,31 +132,36 @@ const PaymentDetails = () => {
                 </div>
                 <div>
                     {filterPayments().map(payment => (
-                        <div key={payment._id} className=' rounded-3xl  shadow-xl shadow-gray-400   mt-4 mb-3 p-2'>
+                        <div key={payment._id} className='rounded-3xl shadow-xl shadow-gray-400 mt-4 mb-3 p-2'>
                             {payment.paymentmode === "online" && (
-                                <h1 className="text-xl font-semibold">Payment:Upi Papyment</h1>
+                                <h1 className="text-xl font-semibold">Payment Code:{payment.paymentId}</h1>
                             )}
                             <h1 className="text-xl font-bold">Name: {payment.name}</h1>
                             <h1 className="text-xl font-bold">Email: {payment.email}</h1>
-                            <h1 className="text-lg font-bold">Customer Table:  {payment.customerTable}</h1>
-                            <h1 className="text-lg font-bold" >Amount: {payment.amount}</h1>
+                            <h1 className="text-lg font-bold">Customer Table: {payment.customerTable}</h1>
+                            <h1 className="text-lg font-bold">Amount: {payment.amount}</h1>
                             <h1 className="text-lg font-bold">Contact No: {payment.customerPhoneNo}</h1>
-                            
                             <p className={`text-lg font-semibold ${getStatusColor(payment.status, 'delivered')}`}>Customer Status: {payment.status}</p>
                             <p className={`text-lg font-semibold ${getStatusColor(payment.paymentmode, 'Received')}`}>Payment Status: {payment.paymentmode}</p>
-            
                             <h1 className="text-lg font-bold">Date: {formatDate(payment.date)}</h1>
-                            <div className="mt-4">
-                                {payment.cartforpayment.map(item => (
-                                    <div key={item.id} className='border-2 border-gray-200 rounded-md shadow-md m-3 p-3'>
-                                        <h2 className="text-md font-medium">Item Name: {item.name}</h2>
-                                        <h3 className="text-sm">Category: {item.category}</h3>
-                                        <h3 className="text-sm">Quantity: {item.quantity}</h3>
-                                        <h4 className="text-sm font-semibold">Price: {item.price}</h4>
-                                        <h4 className="text-sm font-semibold">Size: {item.size}</h4>
-                                    </div>
-                                ))}
-                            </div>
+                            
+                       
+                            
+                            {/* Conditionally render cart items */}
+                            {expandedPaymentId === payment._id && (
+                                <div className="mt-4">
+                                    {payment.cartforpayment.map(item => (
+                                        <div key={item.id} className='border-2 border-gray-200 rounded-md shadow-md m-3 p-3'>
+                                            <h2 className="text-md font-medium">Item Name: {item.name}</h2>
+                                            <h3 className="text-sm">Category: {item.category}</h3>
+                                            <h3 className="text-sm">Quantity: {item.quantity}</h3>
+                                            <h4 className="text-sm font-semibold">Price: {item.price}</h4>
+                                            <h4 className="text-sm font-semibold">Size: {item.size}</h4>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+
                             <div className="flex justify-around mt-4">
                                 <button
                                     onClick={() => handleDelete(payment._id)}
@@ -164,6 +169,12 @@ const PaymentDetails = () => {
                                 >
                                     Delete
                                 </button>
+                                     <button
+                                onClick={() => toggleCartDetails(payment._id)}
+                                className="bg-green-400 text-white px-4 py-2 rounded hover:bg-red-700 transition duration-300"
+                            >
+                                {expandedPaymentId === payment._id ? 'Hide Cart ' : 'Show Cart '}
+                            </button>
                                 <button
                                     onClick={() => handleMove(payment._id)}
                                     className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 transition duration-300"
