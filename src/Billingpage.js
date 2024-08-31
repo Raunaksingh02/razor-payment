@@ -12,7 +12,9 @@ function Billingpage() {
     const { _id } = useParams();
     const pdfRef = useRef();
     const [customerdata, setcustomerdata] = useState("");
-    
+    const [minOrderValue, setMinOrderValue] = useState("");
+    const [deliveryCharge,  setDeliveryCharge] = useState("");
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -23,8 +25,20 @@ function Billingpage() {
                 console.error('Error fetching payment details:', error.message);
             }
         };
-
-        fetchData();
+        const fetchMinOrderDetails = async () => {
+            try {
+              const response = await axios.get('https://backendcafe-ceaj.onrender.com/min-order-delivery');
+              setMinOrderValue(response.data.minOrderValue);
+              setDeliveryCharge(response.data.deliveryCharge);
+              console.log("the min order value -",response.data.minOrderValue);
+              console.log("the delivery charge is -",response.data.deliveryCharge);
+            } catch (error) {
+              console.error('Error fetching minimum order details', error);
+            }
+          };
+      
+        fetchMinOrderDetails();
+         fetchData();
     }, [_id]);
 
     const downloadPDF = () => {
@@ -62,7 +76,7 @@ function Billingpage() {
     }
 
     const totalforbill = customerdata.cartforpayment.map((item) => item.price * item.quantity).reduce((prev, curr) => prev + curr, 0);
-    const grandTotalforbill = totalforbill + 50; // Assuming 50 is some additional charge (like tax or delivery fee)
+    const grandTotalforbill = totalforbill + deliveryCharge; // Assuming 50 is some additional charge (like tax or delivery fee)
 
     const invoiceLink = `https://cafehouse.vercel.app/billdata/${_id}`;
     const message = `Dear ${customerdata.name} , Here is your bill: ${invoiceLink}`;
@@ -125,7 +139,7 @@ function Billingpage() {
                         </tr>
                         <tr>
                             <td colSpan="3" className="border px-4 py-2 text-right">Additional Charges:</td>
-                            <td className="border px-4 py-2">50.00</td>
+                            <td className="border px-4 py-2">{deliveryCharge}</td>
                         </tr>
                         <tr>
                             <td colSpan="3" className="border px-4 py-2 text-right font-bold">Grand Total:</td>
