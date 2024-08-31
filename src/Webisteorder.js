@@ -10,18 +10,19 @@ const WebsiteOrder = () => {
   const [payments, setPayments] = useState([]);
   const [filteredPayments, setFilteredPayments] = useState([]);
   const [selectedDate, setSelectedDate] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentCartItems, setCurrentCartItems] = useState([]);
 
   useEffect(() => {
     fetch('https://backendcafe-ceaj.onrender.com/api/payments')
       .then((response) => response.json())
       .then((data) => {
-        // Filter out payments that have a non-empty address
-        console.log(data);
+        // Filter out payments that have a non-empty address and customerTable as 'website'
         const paymentsWithAddress = data.filter(payment => {
-          const address = payment.address;
-          return address && Object.keys(address).some(key => address[key]);
+          return payment.customerTable === 'Website';
         });
         setPayments(paymentsWithAddress);
+        console.log(paymentsWithAddress);
       });
   }, []);
 
@@ -47,7 +48,7 @@ const WebsiteOrder = () => {
 
   const handleDelete = async (paymentId) => {
     try {
-      const response = await axios.delete(`https://backendcafe-ceaj.onrender.com/${paymentId}`);
+      await axios.delete(`https://backendcafe-ceaj.onrender.com/${paymentId}`);
       setPayments(payments.filter(payment => payment._id !== paymentId));
     } catch (error) {
       console.error('There was an error deleting the payment!', error);
@@ -71,6 +72,16 @@ const WebsiteOrder = () => {
 
   const getStatusColor = (status, condition) => {
     return status === condition ? 'text-green-600' : 'text-red-600';
+  };
+
+  const handleViewCart = (cartItems) => {
+    setCurrentCartItems(cartItems);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setCurrentCartItems([]);
   };
 
   return (
@@ -103,15 +114,14 @@ const WebsiteOrder = () => {
           type="date"
           value={selectedDate}
           onChange={(e) => setSelectedDate(e.target.value)}
-          className="mb-4 p-2 border"
+          className="mb-4 p-2 border rounded"
         />
       )}
       <div className="grid grid-cols-1 gap-4">
         {filteredPayments.map((payment) => (
-          <div key={payment._id} className="p-4 border rounded shadow-lg">
+          <div key={payment._id} className="p-4 border rounded shadow-lg hover:shadow-xl transition duration-200">
             <p className="text-lg font-bold">Customer Name: {payment.name}</p>
             <p className="text-lg font-bold">Contact No: {payment.customerPhoneNo}</p>
-           
             <p className={`text-lg font-semibold ${getStatusColor(payment.status, 'delivered')}`}>Customer Status: {payment.status}</p>
             <p className={`text-lg font-semibold ${getStatusColor(payment.paymentmode, 'Received')}`}>Payment Status: {payment.paymentmode}</p>
             <p className="mt-2 text-gray-700"><strong>Address:</strong></p>
@@ -123,21 +133,6 @@ const WebsiteOrder = () => {
             </ul>
             <p className="mt-2 text-gray-700"><strong>Date:</strong> {formatDate(payment.date)}</p>
             <p className="mt-2 text-gray-700"><strong>Amount:</strong> {payment.amount}</p>
-            {payment.cartforpayment && payment.cartforpayment.length > 0 ? (
-               <div className="mt-4">
-               {payment.cartforpayment.map(item => (
-                   <div key={item.id} className='border-2 border-gray-200 rounded-md shadow-md m-3 p-3'>
-                       <h2 className="text-md font-medium">Item Name: {item.name}</h2>
-                       <h3 className="text-sm">Category: {item.category}</h3>
-                       <h3 className="text-sm">Quantity: {item.quantity}</h3>
-                       <h4 className="text-sm font-semibold">Price: {item.price}</h4>
-                       <h4 className="text-sm font-semibold">Size: {item.size}</h4>
-                   </div>
-               ))}
-           </div>
-            ) : (
-              <p className="mt-2 text-gray-700"><strong>Cart:</strong> No items</p>
-            )}
             <div className="flex justify-around mt-4">
               <button
                 onClick={() => handleDelete(payment._id)}
@@ -146,15 +141,51 @@ const WebsiteOrder = () => {
                 Delete
               </button>
               <button
+                onClick={() => handleViewCart(payment.cartforpayment)}
+                className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-700 transition duration-300"
+              >
+                View Cart
+              </button>
+              <button
                 onClick={() => handleMove(payment._id)}
                 className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 transition duration-300"
               >
                 Update
               </button>
+            
             </div>
           </div>
         ))}
       </div>
+
+      {/* Modal for Cart Items */}
+      {isModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white rounded-lg shadow-lg p-6 w-11/12 md:w-2/3 lg:w-1/2">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-bold">Cart Items</h2>
+              <button onClick={handleCloseModal} className="text-red-500 hover:text-red-700">
+                Close
+              </button>
+            </div>
+            {currentCartItems.length > 0 ? (
+              <div className="space-y-4">
+                {currentCartItems.map(item => (
+                  <div key={item.id} className='border-2 border-gray-200 rounded-md shadow-md p-3'>
+                    <h2 className="text-md font-medium">Item Name: {item.name}</h2>
+                    <h3 className="text-sm">Category: {item.category}</h3>
+                    <h3 className="text-sm">Quantity: {item.quantity}</h3>
+                    <h4 className="text-sm font-semibold">Price: {item.price}</h4>
+                    <h4 className="text-sm font-semibold">Size: {item.size}</h4>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-gray-700">No items in the cart.</p>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

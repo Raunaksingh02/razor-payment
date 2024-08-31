@@ -1,19 +1,16 @@
 import React, { useContext, useRef, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { useSelector } from 'react-redux';
 import axios from 'axios';
 import html2canvas from "html2canvas";
-import { FaWhatsapp } from "react-icons/fa";
+import { FaWhatsapp, FaFilePdf } from "react-icons/fa";
 import jsPDF from 'jspdf';
-import { FaFilePdf } from "react-icons/fa";
-
 
 function Billingpage() {
     const { _id } = useParams();
     const pdfRef = useRef();
     const [customerdata, setcustomerdata] = useState("");
     const [minOrderValue, setMinOrderValue] = useState("");
-    const [deliveryCharge,  setDeliveryCharge] = useState("");
+    const [deliveryCharge, setDeliveryCharge] = useState("");
 
     useEffect(() => {
         const fetchData = async () => {
@@ -27,18 +24,18 @@ function Billingpage() {
         };
         const fetchMinOrderDetails = async () => {
             try {
-              const response = await axios.get('https://backendcafe-ceaj.onrender.com/min-order-delivery');
-              setMinOrderValue(response.data.minOrderValue);
-              setDeliveryCharge(response.data.deliveryCharge);
-              console.log("the min order value -",response.data.minOrderValue);
-              console.log("the delivery charge is -",response.data.deliveryCharge);
+                const response = await axios.get('https://backendcafe-ceaj.onrender.com/min-order-delivery');
+                setMinOrderValue(response.data.minOrderValue);
+                setDeliveryCharge(response.data.deliveryCharge);
+                console.log("the min order value -", response.data.minOrderValue);
+                console.log("the delivery charge is -", response.data.deliveryCharge);
             } catch (error) {
-              console.error('Error fetching minimum order details', error);
+                console.error('Error fetching minimum order details', error);
             }
-          };
-      
+        };
+
         fetchMinOrderDetails();
-         fetchData();
+        fetchData();
     }, [_id]);
 
     const downloadPDF = () => {
@@ -76,10 +73,14 @@ function Billingpage() {
     }
 
     const totalforbill = customerdata.cartforpayment.map((item) => item.price * item.quantity).reduce((prev, curr) => prev + curr, 0);
-    const grandTotalforbill = totalforbill + deliveryCharge; // Assuming 50 is some additional charge (like tax or delivery fee)
+
+    // Calculate grand total considering customerTable and minimum order value
+    const isWebsiteOrder = customerdata.customerTable === "website";
+    const applicableDeliveryCharge = isWebsiteOrder && totalforbill < minOrderValue ? deliveryCharge : 0;
+    const grandTotalforbill = totalforbill + applicableDeliveryCharge;
 
     const invoiceLink = `https://cafehouse.vercel.app/billdata/${_id}`;
-    const message = `Dear ${customerdata.name} , Here is your bill: ${invoiceLink}`;
+    const message = `Dear ${customerdata.name}, Here is your bill: ${invoiceLink}`;
     const whatsappLink = `https://api.whatsapp.com/send?phone=91${customerdata.customerPhoneNo}&text=${encodeURIComponent(message)}`;
 
     return (
@@ -98,8 +99,6 @@ function Billingpage() {
                     <div className="text-right">
                         <h2 className="text-2xl font-extrabold">Bill Details</h2>
                         <p className="text-gray-600">Date: {new Date().toLocaleDateString()}</p>
-                        {/* Assuming invoice number or unique identifier for the bill */}
-                       
                     </div>
                 </div>
 
@@ -107,9 +106,9 @@ function Billingpage() {
                 <div className="mb-4">
                     <h3 className="text-lg font-bold mb-2">Bill To:</h3>
                     <p><strong>Name:</strong> {customerdata.name}</p>
-                    <p><strong>Venue:</strong> {customerdata.customerTable? customerdata.customerTable : 'Table 1'}</p>
+                    <p><strong>Venue:</strong> {customerdata.customerTable ? customerdata.customerTable : 'Table 1'}</p>
                     <p><strong>Phone:</strong> {customerdata.customerPhoneNo}</p>
-                    <p><strong>Phone:</strong> {customerdata.email? customerdata.email: 'undefined'}</p>
+                    <p><strong>Email:</strong> {customerdata.email ? customerdata.email : 'undefined'}</p>
                 </div>
 
                 {/* Items Table */}
@@ -137,10 +136,12 @@ function Billingpage() {
                             <td colSpan="3" className="border px-4 py-2 text-right">Subtotal:</td>
                             <td className="border px-4 py-2">{totalforbill.toFixed(2)}</td>
                         </tr>
-                        <tr>
-                            <td colSpan="3" className="border px-4 py-2 text-right">Additional Charges:</td>
-                            <td className="border px-4 py-2">{deliveryCharge}</td>
-                        </tr>
+                        {applicableDeliveryCharge > 0 && (
+                            <tr>
+                                <td colSpan="3" className="border px-4 py-2 text-right">Delivery Charge:</td>
+                                <td className="border px-4 py-2">{applicableDeliveryCharge.toFixed(2)}</td>
+                            </tr>
+                        )}
                         <tr>
                             <td colSpan="3" className="border px-4 py-2 text-right font-bold">Grand Total:</td>
                             <td className="border px-4 py-2 font-bold">{grandTotalforbill.toFixed(2)}</td>
@@ -178,25 +179,4 @@ function Billingpage() {
     );
 }
 
-export default Billingpage ;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+export default Billingpage;

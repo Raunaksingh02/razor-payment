@@ -1,17 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import axios from 'axios';
 import { format } from 'date-fns';
-import { useMemo } from 'react';
 
 const Month = () => {
   const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
   const [dailyData, setDailyData] = useState([]);
   const [monthlyData, setMonthlyData] = useState([]);
   const [loading, setLoading] = useState(false);
-  
 
   const fetchDailyData = async () => {
     setLoading(true);
@@ -55,7 +52,7 @@ const Month = () => {
         <td className="border px-4 py-2">{item.day || item.month}</td>
         <td className="border px-4 py-2">{item.revenue || item.totalRevenue}</td>
         <td className="border px-4 py-2">{item.cost || item.totalCost}</td>
-        <td className="border px-4 font-bold text-green-500 py-2">{item.profit || item.totalProfit}</td>
+        <td className="border px-4 py-2 font-bold text-green-500">{item.profit || item.totalProfit}</td>
       </tr>
     ));
   }, []);
@@ -65,7 +62,7 @@ const Month = () => {
       <h1 className="text-3xl font-bold mb-6">Revenue and Profit Dashboard</h1>
       <div className="mb-6 flex space-x-4">
         <div className="flex justify-center items-center">
-          <label className="block text-gray-700 mb-2">Select Date</label>
+          <label className="block text-gray-700 mb-2">Select Month</label>
           <DatePicker
             selected={startDate}
             onChange={(date) => setStartDate(date)}
@@ -74,7 +71,7 @@ const Month = () => {
             className="w-full p-2 border rounded"
           />
         </div>
-        <div >
+        <div>
           <button
             onClick={() => {
               fetchDailyData();
@@ -82,7 +79,7 @@ const Month = () => {
             }}
             className="mt-1 bg-blue-500 text-white rounded-2xl hover:bg-blue-800"
           >
-            Fetch 
+            Fetch
           </button>
         </div>
       </div>

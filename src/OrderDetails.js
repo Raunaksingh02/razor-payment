@@ -60,14 +60,16 @@ const PaymentDetails = () => {
         const weekAgo = new Date();
         weekAgo.setDate(weekAgo.getDate() - 7);
 
+        let filteredPayments = payments.filter(payment => payment.customerTable !== "Website"); // Exclude "website" payments
+
         if (selectedTab === 'today') {
-            return payments.filter(payment => new Date(payment.date).toISOString().split('T')[0] === today);
+            return filteredPayments.filter(payment => new Date(payment.date).toISOString().split('T')[0] === today);
         } else if (selectedTab === 'week') {
-            return payments.filter(payment => new Date(payment.date) >= weekAgo);
+            return filteredPayments.filter(payment => new Date(payment.date) >= weekAgo);
         } else if (selectedTab === 'select') {
-            return payments.filter(payment => new Date(payment.date).toISOString().split('T')[0] === selectedDate);
+            return filteredPayments.filter(payment => new Date(payment.date).toISOString().split('T')[0] === selectedDate);
         } else {
-            return payments;
+            return filteredPayments;
         }
     };
 
@@ -145,8 +147,6 @@ const PaymentDetails = () => {
                             <p className={`text-lg font-semibold ${getStatusColor(payment.paymentmode, 'Received')}`}>Payment Status: {payment.paymentmode}</p>
                             <h1 className="text-lg font-bold">Date: {formatDate(payment.date)}</h1>
                             
-                       
-                            
                             {/* Conditionally render cart items */}
                             {expandedPaymentId === payment._id && (
                                 <div className="mt-4">
@@ -169,12 +169,12 @@ const PaymentDetails = () => {
                                 >
                                     Delete
                                 </button>
-                                     <button
-                                onClick={() => toggleCartDetails(payment._id)}
-                                className="bg-green-400 text-white px-4 py-2 rounded hover:bg-red-700 transition duration-300"
-                            >
-                                {expandedPaymentId === payment._id ? 'Hide Cart ' : 'Show Cart '}
-                            </button>
+                                <button
+                                    onClick={() => toggleCartDetails(payment._id)}
+                                    className="bg-green-400 text-white px-4 py-2 rounded hover:bg-red-700 transition duration-300"
+                                >
+                                    {expandedPaymentId === payment._id ? 'Hide Cart ' : 'Show Cart '}
+                                </button>
                                 <button
                                     onClick={() => handleMove(payment._id)}
                                     className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 transition duration-300"
