@@ -32,6 +32,7 @@ function Owner() {
     try {
       const response = await axios.get('https://backendcafe-ceaj.onrender.com/todays-stats');
       setStats(response.data);
+      console.log(response.data);
     } catch (error) {
       console.error('Error fetching stats', error);
       // Optionally set an error state to display an error message
