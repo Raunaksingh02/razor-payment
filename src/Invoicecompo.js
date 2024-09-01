@@ -13,9 +13,26 @@ function Invoicecompo() {
     const pdfRef = useRef();
     const customerDetails = useContext(CustomerContext); // Assuming CustomerContext provides customer details
     const paymentDetails = useSelector((state) => state.cart.cart); // Assuming paymentDetails is fetched using Redux
+    const [minOrderValue, setMinOrderValue] = useState("");
+    const [deliveryCharge, setDeliveryCharge] = useState("");
+  console.log("the location of the customer",customerDetails.customerTable);
+    useEffect(() => {
+        const fetchMinOrderDetails = async () => {
+            try {
+                const response = await axios.get('https://backendcafe-ceaj.onrender.com/min-order-delivery');
+                setMinOrderValue(response.data.minOrderValue);
+                setDeliveryCharge(response.data.deliveryCharge);
+                console.log("the min order value -", response.data.minOrderValue);
+                console.log("the delivery charge is -", response.data.deliveryCharge);
+            } catch (error) {
+                console.error('Error fetching minimum order details', error);
+            }
+        };
 
-  
-       const downloadPDF = () => {
+        fetchMinOrderDetails();
+    }, []);
+
+    const downloadPDF = () => {
         const input = pdfRef.current;
         html2canvas(input).then((canvas) => {
             const imgData = canvas.toDataURL('image/png');
@@ -40,15 +57,26 @@ function Invoicecompo() {
 
             pdf.addImage(imgData, 'PNG', imgX, imgY, imgWidth, imgHeight);
             pdf.save('Invoice.pdf');
-        })
-    }
+        });
+    };
 
     if (!paymentDetails) {
-        return <div className="text-center font-lg font-extrabold">Loading the invoice..</div>;
+        return <div className="text-center font-lg font-extrabold">Loading the invoice...</div>;
     }
 
-    const totalforinvoice = paymentDetails.map((item) => item.price * item.quantity).reduce((prev, curr) => prev + curr, 0);
-    const grandTotalforinvoice = totalforinvoice + 50; // Assuming 50 is some additional charge (like tax or delivery fee)
+    const totalforbill = paymentDetails.map((item) => item.price * item.quantity).reduce((prev, curr) => prev + curr, 0);
+    console.log(totalforbill);
+    
+    // Calculate grand total considering customerTable and minimum order value
+    let applicableDeliveryCharge = 0;
+    let grandTotalforbill = totalforbill;
+
+    if (customerDetails.customerTable === "Website") {
+        if (totalforbill < minOrderValue) {
+            applicableDeliveryCharge = deliveryCharge;
+            grandTotalforbill += deliveryCharge;
+        }
+    }
 
     const invoiceLink = `https://cafehouse.vercel.app/billdata/${_id}`;
     const message = `Dear Customer, Here is your invoice: ${invoiceLink}`;
@@ -80,7 +108,6 @@ function Invoicecompo() {
                     <p><strong>Name:</strong> {customerDetails.customerName}</p>
                     <p><strong>Venue:</strong> {customerDetails.customerTable ? customerDetails.customerTable : 'Table 1'}</p>
                     <p><strong>Phone:</strong> {customerDetails.customerPhone}</p>
-                  
                 </div>
 
                 {/* Items Table */}
@@ -106,15 +133,17 @@ function Invoicecompo() {
                     <tfoot>
                         <tr>
                             <td colSpan="3" className="border px-4 py-2 text-right">Subtotal:</td>
-                            <td className="border px-4 py-2">{totalforinvoice.toFixed(2)}</td>
+                            <td className="border px-4 py-2">{totalforbill.toFixed(2)}</td>
                         </tr>
-                        <tr>
-                            <td colSpan="3" className="border px-4 py-2 text-right">Additional Charges:</td>
-                            <td className="border px-4 py-2">50.00</td>
-                        </tr>
+                        {applicableDeliveryCharge > 0 && (
+                            <tr>
+                                <td colSpan="3" className="border px-4 py-2 text-right">Delivery Charge:</td>
+                                <td className="border px-4 py-2">{applicableDeliveryCharge.toFixed(2)}</td>
+                            </tr>
+                        )}
                         <tr>
                             <td colSpan="3" className="border px-4 py-2 text-right font-bold">Grand Total:</td>
-                            <td className="border px-4 py-2 font-bold">{grandTotalforinvoice.toFixed(2)}</td>
+                            <td className="border px-4 py-2 font-bold">{grandTotalforbill.toFixed(2)}</td>
                         </tr>
                     </tfoot>
                 </table>
@@ -131,31 +160,25 @@ function Invoicecompo() {
                 <button
                     onClick={downloadPDF}
                     className="h-16 w-32 p-3 m-3 border-2 border-black bg-black text-white rounded-xl font-bold">
-                   <div className="flex items-center "> 
-                  <div >
-                    Download
-                   </div>
-                 <div>
-               <FaFilePdf  fill="white"  className='h-4 w-4 m-2 ' />
-              
-                </div>
-                  </div>
-                 
-              
+                    <div className="flex items-center ">
+                        <div>
+                            Download
+                        </div>
+                        <div>
+                            <FaFilePdf fill="white" className='h-4 w-4 m-2 ' />
+                        </div>
+                    </div>
                 </button>
                 <button onClick={() => window.open(whatsappLink, '_blank')} className="h-16 w-32 p-4 m-3 border-2 border-black bg-black text-white rounded-xl font-bold">
-                  
-                <div className="flex items-center "> 
-                  <div >
-                    Whatsapp
-                   </div>
-                 <div>
-               <FaWhatsapp fill="white"  className='h-4 w-4 m-2 ' />
-                </div>
-                  </div>
-                 
-              
-             </button>
+                    <div className="flex items-center ">
+                        <div>
+                            Whatsapp
+                        </div>
+                        <div>
+                            <FaWhatsapp fill="white" className='h-4 w-4 m-2 ' />
+                        </div>
+                    </div>
+                </button>
             </div>
         </div>
     );

@@ -1,94 +1,89 @@
-import React, { useContext, useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import html2canvas from "html2canvas";
 import { FaWhatsapp, FaFilePdf } from "react-icons/fa";
 import jsPDF from 'jspdf';
 
-function Billingpage() {
+function BillingPage() {
     const { _id } = useParams();
     const pdfRef = useRef();
-    const [customerdata, setcustomerdata] = useState("");
-    const [minOrderValue, setMinOrderValue] = useState("");
-    const [deliveryCharge, setDeliveryCharge] = useState("");
+    const [customerData, setCustomerData] = useState(null);
+    const [minOrderValue, setMinOrderValue] = useState(0);
+    const [deliveryCharge, setDeliveryCharge] = useState(0);
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await axios.get(`https://backendcafe-ceaj.onrender.com/api/payments/${_id}`);
-                setcustomerdata(response.data);
-                console.log(response.data);
-            } catch (error) {
-                console.error('Error fetching payment details:', error.message);
-            }
-        };
-        const fetchMinOrderDetails = async () => {
-            try {
-                const response = await axios.get('https://backendcafe-ceaj.onrender.com/min-order-delivery');
-                setMinOrderValue(response.data.minOrderValue);
-                setDeliveryCharge(response.data.deliveryCharge);
-                console.log("the min order value -", response.data.minOrderValue);
-                console.log("the delivery charge is -", response.data.deliveryCharge);
-            } catch (error) {
-                console.error('Error fetching minimum order details', error);
-            }
-        };
-
-        fetchMinOrderDetails();
         fetchData();
+        fetchMinOrderDetails();
     }, [_id]);
+
+    const fetchData = async () => {
+        try {
+            const response = await axios.get(`https://backendcafe-ceaj.onrender.com/api/payments/${_id}`);
+            setCustomerData(response.data);
+        } catch (error) {
+            console.error('Error fetching payment details:', error.message);
+        }
+    };
+
+    const fetchMinOrderDetails = async () => {
+        try {
+            const response = await axios.get('https://backendcafe-ceaj.onrender.com/min-order-delivery');
+            setMinOrderValue(response.data.minOrderValue);
+            setDeliveryCharge(response.data.deliveryCharge);
+        } catch (error) {
+            console.error('Error fetching minimum order details:', error.message);
+        }
+    };
+
+    const calculateSubtotal = () => {
+        if (!customerData) return 0;
+        return customerData.cartforpayment
+            .map((item) => item.price * item.quantity)
+            .reduce((prev, curr) => prev + curr, 0);
+    };
+
+    const calculateAdditionalCharge = () => {
+        const subtotal = calculateSubtotal();
+        const isWebsiteOrder = customerData.customerTable === "Website";
+        return isWebsiteOrder && subtotal < minOrderValue ? deliveryCharge : 0;
+    };
+
+    const calculateGrandTotal = () => {
+        return calculateSubtotal() + calculateAdditionalCharge();
+    };
 
     const downloadPDF = () => {
         const input = pdfRef.current;
         html2canvas(input).then((canvas) => {
             const imgData = canvas.toDataURL('image/png');
-            const pdf = new jsPDF('p', 'mm', 'a4', true);
+            const pdf = new jsPDF('p', 'mm', 'a4');
+            const imgProps = pdf.getImageProperties(imgData);
             const pdfWidth = pdf.internal.pageSize.getWidth();
-            const pdfHeight = pdf.internal.pageSize.getHeight();
-            let imgWidth = canvas.width;
-            let imgHeight = canvas.height;
-
-            let imgX = 0;
-            let imgY = 0;
-            let imgRatio = 1;
-
-            if (imgWidth > pdfWidth || imgHeight > pdfHeight) {
-                imgRatio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
-                imgWidth = imgWidth * imgRatio;
-                imgHeight = imgHeight * imgRatio;
-            }
-
-            imgX = (pdfWidth - imgWidth) / 2;
-            imgY = (pdfHeight - imgHeight) / 2;
-
-            pdf.addImage(imgData, 'PNG', imgX, imgY, imgWidth, imgHeight);
+            const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+            pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
             pdf.save('invoice.pdf');
         });
+    };
+
+    const whatsappInvoice = () => {
+        const invoiceLink = `https://cafehouse.vercel.app/billdata/${_id}`;
+        const message = `Dear ${customerData.name}, Here is your bill: ${invoiceLink}`;
+        const whatsappLink = `https://api.whatsapp.com/send?phone=91${customerData.customerPhoneNo}&text=${encodeURIComponent(message)}`;
+        window.open(whatsappLink, '_blank');
+    };
+
+    if (!customerData) {
+        return (
+            <div className="flex justify-center items-center h-screen text-center font-lg font-extrabold">
+                <h1 className='text-2xl text-gray-500 font-bold'>Loading the bill details...</h1>
+            </div>
+        );
     }
-
-    if (!customerdata) {
-        return <div className="flex justify-center items-center h-screen text-center font-lg font-extrabold">
-            <h1 className='text-2xl text-gray-500 font-bold'>Loading the bill details..</h1>
-        </div>;
-    }
-
-    const totalforbill = customerdata.cartforpayment.map((item) => item.price * item.quantity).reduce((prev, curr) => prev + curr, 0);
-
-    // Calculate grand total considering customerTable and minimum order value
-    const isWebsiteOrder = customerdata.customerTable === "website";
-    const applicableDeliveryCharge = isWebsiteOrder && totalforbill < minOrderValue ? deliveryCharge : 0;
-    const grandTotalforbill = totalforbill + applicableDeliveryCharge;
-
-    const invoiceLink = `https://cafehouse.vercel.app/billdata/${_id}`;
-    const message = `Dear ${customerdata.name}, Here is your bill: ${invoiceLink}`;
-    const whatsappLink = `https://api.whatsapp.com/send?phone=91${customerdata.customerPhoneNo}&text=${encodeURIComponent(message)}`;
 
     return (
         <div>
-            <div
-                ref={pdfRef}
-                className="max-w-md mx-auto bg-white shadow-lg rounded-lg p-6 mb-4">
-
+            <div ref={pdfRef} className="max-w-md mx-auto bg-white shadow-lg rounded-lg p-6 mb-4">
                 {/* Header */}
                 <div className="flex justify-between items-center mb-4 border-b pb-4">
                     <div>
@@ -105,10 +100,10 @@ function Billingpage() {
                 {/* Customer Info */}
                 <div className="mb-4">
                     <h3 className="text-lg font-bold mb-2">Bill To:</h3>
-                    <p><strong>Name:</strong> {customerdata.name}</p>
-                    <p><strong>Venue:</strong> {customerdata.customerTable ? customerdata.customerTable : 'Table 1'}</p>
-                    <p><strong>Phone:</strong> {customerdata.customerPhoneNo}</p>
-                    <p><strong>Email:</strong> {customerdata.email ? customerdata.email : 'undefined'}</p>
+                    <p><strong>Name:</strong> {customerData.name}</p>
+                    <p><strong>Venue:</strong> {customerData.customerTable || 'Table 1'}</p>
+                    <p><strong>Phone:</strong> {customerData.customerPhoneNo}</p>
+                    <p><strong>Email:</strong> {customerData.email || 'undefined'}</p>
                 </div>
 
                 {/* Items Table */}
@@ -122,10 +117,10 @@ function Billingpage() {
                         </tr>
                     </thead>
                     <tbody>
-                        {customerdata.cartforpayment.map((item, index) => (
+                        {customerData.cartforpayment.map((item, index) => (
                             <tr key={index}>
                                 <td className="border px-4 py-2">{item.name}</td>
-                                <td className="border px-4 py-2">{item.price}</td>
+                                <td className="border px-4 py-2">{item.price.toFixed(2)}</td>
                                 <td className="border px-4 py-2">{item.quantity}</td>
                                 <td className="border px-4 py-2">{(item.price * item.quantity).toFixed(2)}</td>
                             </tr>
@@ -134,17 +129,17 @@ function Billingpage() {
                     <tfoot>
                         <tr>
                             <td colSpan="3" className="border px-4 py-2 text-right">Subtotal:</td>
-                            <td className="border px-4 py-2">{totalforbill.toFixed(2)}</td>
+                            <td className="border px-4 py-2">{calculateSubtotal().toFixed(2)}</td>
                         </tr>
-                        {applicableDeliveryCharge > 0 && (
+                        { calculateAdditionalCharge() > 0 && (
                             <tr>
                                 <td colSpan="3" className="border px-4 py-2 text-right">Delivery Charge:</td>
-                                <td className="border px-4 py-2">{applicableDeliveryCharge.toFixed(2)}</td>
+                                <td className="border px-4 py-2">{deliveryCharge.toFixed(2)}</td>
                             </tr>
                         )}
                         <tr>
                             <td colSpan="3" className="border px-4 py-2 text-right font-bold">Grand Total:</td>
-                            <td className="border px-4 py-2 font-bold">{grandTotalforbill.toFixed(2)}</td>
+                            <td className="border px-4 py-2 font-bold">{calculateGrandTotal().toFixed(2)}</td>
                         </tr>
                     </tfoot>
                 </table>
@@ -158,20 +153,16 @@ function Billingpage() {
 
             {/* Download and WhatsApp Buttons */}
             <div className="flex justify-center mt-4">
-                <button
-                    onClick={downloadPDF}
-                    className="flex items-center justify-center h-16 w-32 p-3 m-3 border-2 border-black bg-black text-white rounded-xl font-bold">
+                <button onClick={downloadPDF} className="flex items-center justify-center h-16 w-32 p-3 m-3 border-2 border-black bg-black text-white rounded-xl font-bold">
                     <div className="flex items-center">
                         <div>Download</div>
-                        <div><FaFilePdf className="ml-2" /></div>
+                        <FaFilePdf className="ml-2" />
                     </div>
                 </button>
-                <button
-                    onClick={() => window.open(whatsappLink, '_blank')}
-                    className="flex items-center justify-center h-16 w-32 p-4 m-3 border-2 border-black bg-black text-white rounded-xl font-bold">
+                <button onClick={whatsappInvoice} className="flex items-center justify-center h-16 w-32 p-4 m-3 border-2 border-black bg-black text-white rounded-xl font-bold">
                     <div className="flex items-center">
                         <div>WhatsApp</div>
-                        <div><FaWhatsapp className="ml-2" /></div>
+                        <FaWhatsapp className="ml-2" />
                     </div>
                 </button>
             </div>
@@ -179,4 +170,4 @@ function Billingpage() {
     );
 }
 
-export default Billingpage;
+export default BillingPage;
