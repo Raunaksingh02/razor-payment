@@ -150,6 +150,10 @@ function Homepage() {
         }
     };
 
+    const handleClickOnDial = () => {
+        navigate(`/Call?table=${table}`);
+    };
+    
     return (
         <div className="container mx-auto p-3 ">
             {
@@ -165,24 +169,23 @@ function Homepage() {
             }
             <div className='flex items-center justify-between bg-[#f6931e] rounded-t-3xl p-3 '>
                 <h1 className="text-3xl font-extrabold text-white text-center m-2 mr-3">Cafe Coffee </h1>
-                <div className='flex items-center'>
-                    {table && (
-                       <button    onClick={() => navigate(`/Call?table=${table}`)}   >
-                       <div className='flex items-center py-1 p-2 bg-gray-100 shadow-lg shadow-gray-400 hover:bg-gray-400 rounded-2xl mr-2'>
-                                <img
-                                    src={dialicon}
-                                    className='h-4 w-4 animate-ring'
-                                />
-                                <p className='font-bold m-1'>Waiter</p>
-                            </div>
-                            </button>
-
-                       
-                    )}
+                <div className='flex items-center m-2 p-2'>
+                {table && (
+          <button onClick={handleClickOnDial} className="flex items-center p-2 bg-gray-100 rounded-xl shadow-lg hover:bg-gray-300 hover:shadow-xl transition-all duration-200">
+         <div className='flex items-center'>
+        <img
+          src={dialicon}
+          className='h-4 w-3 animate-ring mr-1 ' // Consistent sizing and margin
+          alt="Dial Icon" // Add alt text for accessibility
+        />
+        <p className='font-bold text-gray-800 text-sm '>Waiter</p> {/* Font color for better visibility */}
+         </div>
+        </button>
+          )}
 
                     {!table && (
                         <>
-                            <button onClick={handlemodalClick} className="ml-4">
+                            <button onClick={handlemodalClick} className="ml-5">
                                 <FaUser fill="white" className='h-8 w-8 ' />
                             </button>
                             <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
