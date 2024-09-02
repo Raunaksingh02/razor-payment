@@ -133,17 +133,17 @@ function Invoicecompo() {
                     <tfoot>
                         <tr>
                             <td colSpan="3" className="border px-4 py-2 text-right">Subtotal:</td>
-                            <td className="border px-4 py-2">{totalforbill.toFixed(2)}</td>
+                            <td className="border px-4 py-2">{totalforbill}</td>
                         </tr>
                         {applicableDeliveryCharge > 0 && (
                             <tr>
                                 <td colSpan="3" className="border px-4 py-2 text-right">Delivery Charge:</td>
-                                <td className="border px-4 py-2">{applicableDeliveryCharge.toFixed(2)}</td>
+                                <td className="border px-4 py-2">{applicableDeliveryCharge}</td>
                             </tr>
                         )}
                         <tr>
                             <td colSpan="3" className="border px-4 py-2 text-right font-bold">Grand Total:</td>
-                            <td className="border px-4 py-2 font-bold">{grandTotalforbill.toFixed(2)}</td>
+                            <td className="border px-4 py-2 font-bold">{grandTotalforbill}</td>
                         </tr>
                     </tfoot>
                 </table>
