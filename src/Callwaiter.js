@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import waiter from "./images/waiter.png";
+import { useLocation, Link ,useNavigate} from 'react-router-dom';
 import waiterphoto from "./images/waiterphoto.jpg";
 import backarrowlogo from "./images/backarrowlogo.png";
 import { io } from 'socket.io-client';
@@ -11,7 +10,20 @@ export default function Callwaiter() {
   const [table, setTable] = useState('');
   const [query, setQuery] = useState('');
 
+  // Use the useLocation hook to get the URL query string
+  const location = useLocation();
+  const navigate = useNavigate();
   useEffect(() => {
+    // Extract the table number from the query string
+    const queryParams = new URLSearchParams(location.search);
+    const tableFromUrl = queryParams.get('table');
+
+    if (tableFromUrl) {
+      setTable(tableFromUrl); // Set the table state from the URL parameter
+      console.log("the number of table is ",tableFromUrl);
+    }
+
+
     socket.on("connect", () => {
       console.log("connected", socket.id);
     });
@@ -23,54 +35,43 @@ export default function Callwaiter() {
     return () => {
       socket.disconnect();
     };
-  }, []);
+  }, [location]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (table && query) {
       socket.emit('waiterRequest', { table, query });
-      setTable('');
       setQuery('');
     }
-  };
-
-  const handleTableSelect = (selectedTable) => {
-    setTable(selectedTable);
   };
 
   const handleQuerySelect = (selectedQuery) => {
     setQuery(selectedQuery);
   };
 
+  
+  const handleBackButtonClick = () => {
+    navigate(`/${table}`);
+  };
+ 
+ 
+ 
+
+  
   return (
     <div className="flex flex-col min-h-screen bg-gray-100 p-4">
       <div className="flex items-center mb-4">
-        <Link to="/table">
+        <button onClick={handleBackButtonClick}>
           <img src={backarrowlogo} alt="Back" className="h-8 w-8" />
-        </Link>
+          </button>
       </div>
       <div className="flex flex-col items-center justify-center flex-1">
         <div className="bg-white p-6 rounded-lg shadow-md w-full max-w-md">
           <div className="flex justify-center mb-4">
             <img src={waiterphoto} alt="Waiter" className="h-44 w-40 animate-slideInFromBottom rounded-full object-cover" />
           </div>
-          <h1 className="text-center text-2xl font-extrabold mb-6">Call Service</h1>
+          <h1 className="text-center text-2xl font-extrabold mb-6">Call Service for {table}</h1> {/* Display selected table */}
           <form onSubmit={handleSubmit}>
-            <div className="mb-6">
-              <label className="block text-gray-700 font-bold mb-2 text-center">Select Your Table</label>
-              <div className="flex flex-wrap justify-center gap-2">
-                {['Table 1', 'Table 2', 'Table 3', 'Table 4', 'Table 5', 'Table 6', 'Table 7', 'Table 8', 'Table 9', 'Table 10'].map((tableOption) => (
-                  <button
-                    key={tableOption}
-                    type="button"
-                    onClick={() => handleTableSelect(tableOption)}
-                    className={`px-4 py-2 rounded-full text-white font-semibold focus:outline-none ${table === tableOption ? 'bg-blue-700' : 'bg-blue-500 hover:bg-blue-600'}`}
-                  >
-                    {tableOption}
-                  </button>
-                ))}
-              </div>
-            </div>
             <div className="mb-6">
               <label className="block text-gray-700 font-bold mb-2 text-center">Select Your Request</label>
               <div className="flex flex-wrap justify-center gap-2">
@@ -100,4 +101,3 @@ export default function Callwaiter() {
     </div>
   );
 }
-

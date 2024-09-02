@@ -167,15 +167,17 @@ function Homepage() {
                 <h1 className="text-3xl font-extrabold text-white text-center m-2 mr-3">Cafe Coffee </h1>
                 <div className='flex items-center'>
                     {table && (
-                        <Link to="/Call">
-                            <div className='flex items-center py-1 p-2 bg-gray-100 shadow-lg shadow-gray-400 hover:bg-gray-400 rounded-2xl mr-2'>
+                       <button    onClick={() => navigate(`/Call?table=${table}`)}   >
+                       <div className='flex items-center py-1 p-2 bg-gray-100 shadow-lg shadow-gray-400 hover:bg-gray-400 rounded-2xl mr-2'>
                                 <img
                                     src={dialicon}
                                     className='h-4 w-4 animate-ring'
                                 />
                                 <p className='font-bold m-1'>Waiter</p>
                             </div>
-                        </Link>
+                            </button>
+
+                       
                     )}
 
                     {!table && (
