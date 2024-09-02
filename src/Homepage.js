@@ -175,10 +175,10 @@ function Homepage() {
          <div className='flex items-center'>
         <img
           src={dialicon}
-          className='h-4 w-3 animate-ring mr-1 ' // Consistent sizing and margin
+          className='h-4 w-4 animate-ring mr-1  ' // Consistent sizing and margin
           alt="Dial Icon" // Add alt text for accessibility
         />
-        <p className='font-bold text-gray-800 text-sm '>Waiter</p> {/* Font color for better visibility */}
+        <p className='font-bold text-gray-800 text-sm px-2 mr-1'>Waiter</p> {/* Font color for better visibility */}
          </div>
         </button>
           )}
