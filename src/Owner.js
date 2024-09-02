@@ -170,19 +170,19 @@ function Owner() {
           </Link>
           <Link to="/delivery">
             <div className="p-3 h-56 rounded-3xl transition duration-150 ease-in-out bg-[#18196c] flex flex-col items-center justify-center">
-              <h1 className="text-lg font-mono font-extrabold text-white">Delivery Charge</h1>
+              <h1 className="text-lg font-mono font-extrabold text-white">Delivery</h1>
               <MdElectricMoped fill="white" className="h-12 w-12 mt-4 shadow-2xl shadow-white" />
             </div>
           </Link>
           <Link to="/pay">
             <div className="p-3 h-56 rounded-3xl transition duration-150 ease-in-out bg-[#18196c] flex flex-col items-center justify-center">
-              <h1 className="text-lg font-mono font-extrabold text-white">Add UPI-Details</h1>
+              <h1 className="text-lg font-mono font-extrabold text-white">Add UPI</h1>
               <BsBank fill="white" className="h-12 w-12 mt-4 shadow-2xl shadow-white" />
             </div>
           </Link>
           <Link to="/unique">
             <div className="p-3 h-56 rounded-3xl transition duration-150 ease-in-out bg-[#18196c] flex flex-col items-center justify-center">
-              <h1 className="text-lg font-mono font-extrabold text-white">User History</h1>
+              <h1 className="text-lg font-mono font-extrabold text-white"> History</h1>
               <FaHistory fill="white" className="h-12 w-12 mt-4 shadow-2xl shadow-white" />
             </div>
           </Link>
