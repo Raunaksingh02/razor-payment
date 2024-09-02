@@ -105,9 +105,12 @@ function Upi() {
     if (qrCodeRef.current) {
       toPng(qrCodeRef.current)
         .then((dataUrl) => {
+          // Generate a random name with a 6-digit number
+          const randomName = `QR_${Math.random().toString(36).substring(2, 8)}_${Math.floor(100000 + Math.random() * 900000)}`;
+  
           const link = document.createElement('a');
           link.href = dataUrl;
-          link.download = 'QRCode.png';
+          link.download = `${randomName}.png`;
           document.body.appendChild(link);
           link.click();
           document.body.removeChild(link);
@@ -117,6 +120,7 @@ function Upi() {
         });
     }
   };
+  
 
   const handleCodeChange = (e) => {
     setEnteredCode(e.target.value);
