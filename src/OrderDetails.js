@@ -47,6 +47,13 @@ const PaymentDetails = () => {
         }
     };
 
+    const whatsappInvoice = (payment) => {
+        const invoiceLink = `https://cafehouse.vercel.app/billdata/${payment._id}`;
+        const message = `Dear ${payment.name}, Here is your bill: ${invoiceLink}`;
+        const whatsappLink = `https://api.whatsapp.com/send?phone=91${payment.customerPhoneNo}&text=${encodeURIComponent(message)}`;
+        window.open(whatsappLink, '_blank');
+    };
+
     const getStatusColor = (status, condition) => {
         return status === condition ? 'text-green-600' : 'text-red-600';
     };
@@ -165,19 +172,29 @@ const PaymentDetails = () => {
                             <div className="flex justify-around mt-4">
                                 <button
                                     onClick={() => handleDelete(payment._id)}
-                                    className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-700 transition duration-300"
-                                >
+                                    className="bg-red-500 text-white px-4 py-2 mr-1  rounded-xl hover:bg-green-700 transition duration-300"
+          
+                                 >
                                     Delete
                                 </button>
                                 <button
-                                    onClick={() => toggleCartDetails(payment._id)}
-                                    className="bg-green-400 text-white px-4 py-2 rounded hover:bg-red-700 transition duration-300"
+                                    onClick={() => whatsappInvoice(payment)}
+                                    className="bg-yellow-500 text-white px-4 py-2 mr-1  rounded-xl hover:bg-green-700 transition duration-300"
+          
                                 >
-                                    {expandedPaymentId === payment._id ? 'Hide Cart ' : 'Show Cart '}
+                                     Bill
+                                </button>
+                                <button
+                                    onClick={() => toggleCartDetails(payment._id)}
+                                    className="bg-green-500 text-white px-4 py-2 mr-1  rounded-xl hover:bg-green-700 transition duration-300"
+          
+                                >
+                                    {expandedPaymentId === payment._id ? 'Hide ' : ' Cart '}
                                 </button>
                                 <button
                                     onClick={() => handleMove(payment._id)}
-                                    className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 transition duration-300"
+                                    className="bg-blue-500 text-white px-4 py-2 mr-1  rounded-xl hover:bg-green-700 transition duration-300"
+          
                                 >
                                     Update
                                 </button>

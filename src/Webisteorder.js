@@ -12,6 +12,7 @@ const WebsiteOrder = () => {
   const [selectedDate, setSelectedDate] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentCartItems, setCurrentCartItems] = useState([]);
+  const [selectedPayment, setSelectedPayment] = useState(null);
 
   useEffect(() => {
     fetch('https://backendcafe-ceaj.onrender.com/api/payments')
@@ -84,11 +85,18 @@ const WebsiteOrder = () => {
     setCurrentCartItems([]);
   };
 
+  const whatsappInvoice = (payment) => {
+    const invoiceLink = `https://cafehouse.vercel.app/billdata/${payment._id}`;
+    const message = `Dear ${payment.name}, Here is your bill: ${invoiceLink}`;
+    const whatsappLink = `https://api.whatsapp.com/send?phone=91${payment.customerPhoneNo}&text=${encodeURIComponent(message)}`;
+    window.open(whatsappLink, '_blank');
+  };
+
   return (
     <div className="my-4">
       <div className='flex items-center mb-4'>
         <Calling />
-        <OrderPopup/>
+        <OrderPopup />
         <div className='mr-4'>
           <Link to="/owner">
             <img src={backarrowlogo} className='h-10 w-10' alt="Back" />
@@ -133,26 +141,31 @@ const WebsiteOrder = () => {
             </ul>
             <p className="mt-2 text-gray-700"><strong>Date:</strong> {formatDate(payment.date)}</p>
             <p className="mt-2 text-gray-700"><strong>Amount:</strong> {payment.amount}</p>
-            <div className="flex justify-around mt-4">
+            <div className="flex justify-around mt-4 ">
               <button
                 onClick={() => handleDelete(payment._id)}
-                className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-700 transition duration-300"
+                className="bg-red-500 text-white px-4 py-2 mr-1 rounded-xl hover:bg-red-700 transition duration-300"
               >
                 Delete
               </button>
               <button
-                onClick={() => handleViewCart(payment.cartforpayment)}
-                className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-700 transition duration-300"
+                onClick={() => whatsappInvoice(payment)}
+                className="bg-yellow-500 text-white px-4 py-2  rounded-xl hover:bg-yellow-700 transition duration-300"
               >
-                View Cart
+                Send 
+              </button>
+              <button
+                onClick={() => handleViewCart(payment.cartforpayment)}
+                className="bg-green-500 text-white px-4 py-2 mr-1  rounded-xl hover:bg-green-700 transition duration-300"
+              >
+                 Cart
               </button>
               <button
                 onClick={() => handleMove(payment._id)}
-                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 transition duration-300"
-              >
+                className="bg-blue-500 text-white px-4 py-2 mr-1  rounded-xl hover:bg-blue-700 transition duration-300"
+              > 
                 Update
               </button>
-            
             </div>
           </div>
         ))}
