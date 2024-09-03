@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import backarrowlogo from '../images/backarrowlogo.png';
-import { useLocation, useNavigate, Link } from 'react-router-dom';
+import {  Link } from 'react-router-dom';
 
 
 const Deliverydetail = () => {
@@ -39,7 +39,7 @@ const Deliverydetail = () => {
     <div className="container mx-auto ">
       <div className="flex items-center shadow-lg shadow-gray-300 mb-6">
     <div>
-      <Link to="/owner">
+      <Link to="/">
         <img src={backarrowlogo} className="h-10 w-10 m-2" />
       </Link>
     </div>

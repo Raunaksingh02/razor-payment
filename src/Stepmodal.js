@@ -12,11 +12,12 @@ const Stepmodal = ({ isOpen, onClose }) => {
         <ol className="list-decimal list-inside font-bold">
               <li>Download the QR code or take screenshot on your phone.</li>
               <li>Scan it through any UPI app like Paytm, Google Pay, or PhonePe, etc.</li>
-              <li>Enter the verification code after the payment completion.</li>
+              <li>Enter the verification code after the payment completion from transcation history of UPI app.</li>
               <li>It is 100% safe and secure gateway through SSL and bank partners.</li>
             </ol>
         <button
           onClick={onClose} 
+          
           className="bg-[#f6931e] hover:bg-[rgb(246,147,30)] text-white font-bold py-2 mt-2 px-4 rounded"
         >
           Cancel

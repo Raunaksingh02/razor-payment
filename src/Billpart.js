@@ -26,8 +26,7 @@ function Billpart() {
   const dispatch = useDispatch();
   const { minOrderValue, deliveryCharge } = useContext(MinOrderContext);
    const { upinumber , upiname } = useContext(UPIDetailsContext);
-   console.log(upinumber);
-   console.log(upiname);
+  
 
   const cartforpayment = useSelector((state) => state.cart.cart);
   const totalforpayment = cartforpayment
@@ -43,18 +42,14 @@ function Billpart() {
     isTableParamMissing && totalforpayment < minOrderValue
       ? totalforpayment + deliveryCharge
       : totalforpayment;
-
-  
-
-  
+ 
   const [buyeraddress, setBuyerAddress] = useState([]);
-  const { setCustomerName, setCustomerTable, setCustomerPhone, customerPhone, customerName, customerTable } = useContext(CustomerContext);
+  const { setCustomerName, setCustomerTable, setCustomerPhone, customerPhone, customerName, customerTable ,paymentmode1,setpaymentmode1} = useContext(CustomerContext);
   const { buyer } = useContext(BuyerContext);
 
   const buyerEmail = buyer?.email || "";
   console.log("the buyer email is ", buyerEmail);
 
-  // Fetch buyer addresses when component mounts or buyerEmail changes
   useEffect(() => {
     if (buyerEmail) {
       axios.get(`https://backendcafe-ceaj.onrender.com/addresses?email=${buyerEmail}`)
@@ -71,6 +66,7 @@ function Billpart() {
   const [selectedAddress, setSelectedAddress] = useState(null);
   const [validationMessage, setValidationMessage] = useState('');
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  
 
   // Set customer table when tableQueryParam changes
   useEffect(() => {
@@ -100,21 +96,25 @@ function Billpart() {
         amount:grandTotalforpayment,
         email: buyerEmail || "",
         customerTable,
-        paymentmode: "Cash-Not Received",
+        paymentmode: paymentmode1,
         address: selectedAddress || "",
         customerPhoneNo: customerPhone,
       });
-      console.log(response.data);
+     
       const paymentId = response.data._id;
-      navigate(`/Invoice/${paymentId}`);
+      navigate(`/Invoice/${paymentId}?paymentmode=${paymentmode1}`);
     } catch (error) {
       console.error('Error saving payment details:', error);
     }
   };
 
   const handleValidation = () => {
+    const phoneRegex = /^\d{10}$/; // Regular expression to check for exactly 10 digits
+  
     if (!customerName || !customerPhone) {
       setValidationMessage('All input fields are required.');
+    } else if (!phoneRegex.test(customerPhone)) {
+      setValidationMessage('Customer Phone Number must be exactly 10 digits.');
     } else {
       setValidationMessage('');
       navigate('/Upi', {
@@ -130,6 +130,7 @@ function Billpart() {
       });
     }
   };
+  
 
   const generateQRCodeValue = () => {
     // Default values as fallback in case UPI details are missing
@@ -141,14 +142,19 @@ function Billpart() {
   };
 
   const handleCashPayment = () => {
+    const phoneRegex = /^\d{10}$/; // Regular expression to check for exactly 10 digits
+  
     if (!customerName || !customerPhone) {
       setValidationMessage('All input fields are required.');
+    } else if (!phoneRegex.test(customerPhone)) {
+      setValidationMessage('Customer Phone Number must be exactly 10 digits.');
     } else {
       setValidationMessage('');
       savePaymentDetails2();
     }
   };
-
+  
+  
   const qrCodeRef = useRef();
 
   const handleDownloadQRCode = () => {
@@ -290,16 +296,26 @@ function Billpart() {
               </button>
             </div>
           </div>
-          {tableQueryParam==="Takeaway" && (
-          
-                <div ref={qrCodeRef} className="text-center mt-6">
-                <QRCode value={generateQRCodeValue()} size={256} />
-                <button onClick={handleDownloadQRCode} className="mt-4 bg-green-500 text-white p-2 rounded-lg">
-                  Download QR Code
-                </button>
-              </div>
-          )
-          }
+          {tableQueryParam === "Takeaway" && (
+       
+       <div 
+       ref={qrCodeRef} 
+      className="flex flex-col items-center justify-center mt-6 mx-auto p-4 max-w-xs"
+      >
+      <QRCode 
+      value={generateQRCodeValue()} 
+      size={256} 
+      className="mb-4 w-full max-w-[256px] h-auto"
+     />
+       <button 
+      onClick={handleDownloadQRCode} 
+      className="mt-4 bg-green-500 hover:bg-green-600 text-white p-2 rounded-lg w-full max-w-xs"
+       >
+      Download QR Code
+        </button>
+       </div>
+            )}
+
         
         </div>
       </Modal>

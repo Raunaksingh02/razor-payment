@@ -104,6 +104,7 @@ function BillingPage() {
                     <p><strong>Venue:</strong> {customerData.customerTable || 'Table 1'}</p>
                     <p><strong>Phone:</strong> {customerData.customerPhoneNo}</p>
                     <p><strong>Email:</strong> {customerData.email || 'undefined'}</p>
+                    <p><strong>Payment:</strong> {customerData.paymentmode || 'undefined'}</p>
                 </div>
 
                 {/* Items Table */}

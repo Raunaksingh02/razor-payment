@@ -9,19 +9,28 @@ import gpaylogo from "./images/gpaylogo.png";
 import { IoMdDownload } from "react-icons/io";
 import paytmlogo from "./images/paytmlogo.png";
 import phonepelogo from "./images/phonepelogo.png";
-import Stepmodal from "./images/Stepmodal.js";
+import Stepmodal from "./Stepmodal.js";
 import { BuyerContext } from './components/Buyercontext.js';
 import {UPIDetailsContext} from "./components/UPIDetailsContext.js";
+import { CustomerContext } from './CustomerContext';
+
 
 function Upi() {
   const location = useLocation();
 
+ 
+  const navigate = useNavigate();
+
+  const {  paymentmode2,setpaymentmode2} = useContext(CustomerContext);
+  console.log(paymentmode2);
+
+
   const { buyer } = useContext(BuyerContext);
-  console.log(buyer.email);
+
   const { upinumber , upiname } = useContext(UPIDetailsContext);
   const { state } = location;
   const {
-    buyerEmail,
+    buyerEmail ,
     customerName,
     customerPhone,
     customerTable,
@@ -29,9 +38,9 @@ function Upi() {
     selectedAddress,
     cartforpayment
   } = state || {};
-  const navigate = useNavigate();
-  console.log(selectedAddress);
-  console.log("buyer in upi component", buyerEmail);
+  console.log("the location of customer =",customerTable);
+  console.log("the address of customer =",selectedAddress);
+  console.log("the customer emial is ",buyerEmail);
   
   const [validationMessage, setValidationMessage] = useState('');
   const [isModal, setIsModal] = useState(false);
@@ -42,11 +51,12 @@ function Upi() {
 
   useEffect(() => {
     generateRandomCode();
+    setIsModal(true);
   }, []);
 
   const generateRandomCode = () => {
     const hexDigits = '0123456789ABCDEF';
-    const numDigits = 5; // Total number of digits to generate
+    const numDigits = 5;
     let codeArray = [];
 
     // Generate random hex digits and wrap them in quotes
@@ -55,7 +65,7 @@ function Upi() {
       codeArray.push(`"${randomChar}"`); // Enclose each character in quotes
     }
 
-    // Insert two '%' symbols at random positions
+  
     const positions = [];
     while (positions.length < 2) {
       const randomPosition = Math.floor(Math.random() * (codeArray.length + 1));
@@ -64,7 +74,7 @@ function Upi() {
       }
     }
 
-    // Insert the '%' symbols
+    // Insert the '%' symbolsc
     positions.forEach((pos) => {
       codeArray.splice(pos, 0, `"%""`); // Add "%" enclosed in quotes
     });
@@ -128,41 +138,63 @@ function Upi() {
 
   const savePaymentDetails = async () => {
     try {
-      const res = await axios.post('https://backendcafe-ceaj.onrender.com/api/payments', {
-        paymentId:enteredCode,
+      console.log('Saving payment details with the following data:', {
+        paymentId: enteredCode,
         cartforpayment,
         name: customerName,
         amount: grandTotalforpayment,
         customerTable,
-        email:buyerEmail,
-        paymentmode: "online",
-        address: selectedAddress,
+        email: buyerEmail,
+        paymentmode: paymentmode2,
+        address: selectedAddress || "",
         customerPhoneNo: customerPhone,
       });
-
+  
+      const res = await axios.post('https://backendcafe-ceaj.onrender.com/api/payments', {
+        paymentId: enteredCode,
+        cartforpayment,
+        name: customerName,
+        amount: grandTotalforpayment,
+        customerTable,
+        email: buyerEmail,
+        paymentmode: paymentmode2,
+        address: selectedAddress || "",
+        customerPhoneNo: customerPhone,
+      });
+  
+      console.log('Payment details saved successfully:', res.data);
       const paymentId = res.data._id;
-      console.log('Payment details saved:', paymentId);
-      navigate(`/Invoice/${paymentId}`);
+      navigate(`/Invoice/${paymentId}?paymentmode=${paymentmode2}`);
     } catch (error) {
-      console.error('Error saving payment details:', error);
+      console.error('Error saving payment details:', error.message || error);
+      if (error.response) {
+        console.error('Response data:', error.response.data);
+        console.error('Response status:', error.response.status);
+        console.error('Response headers:', error.response.headers);
+      } else if (error.request) {
+        console.error('Request data:', error.request);
+      } else {
+        console.error('Error message:', error.message);
+      }
     }
   };
-
+  
   const handleSubmit = () => {
     const plainEnteredCode = extractPlainCode(enteredCode);
     if (plainEnteredCode !== extractPlainCode(generatedCode)) {
       setValidationMessage('Invalid verification code.');
     } else {
       setValidationMessage('');
-      setIsModal(true);
+      handleConfirm();
     }
   };
 
   const handleConfirm = () => {
-    setIsModal(false);
-    savePaymentDetails();
-    alert("The order is placed");
+    setIsModal(false); // Close the modal
+    savePaymentDetails(); // Save payment detail
+   
   };
+  
 
   function Modal({ title, message, onConfirm, onClose }) {
     return (
@@ -189,13 +221,22 @@ function Upi() {
     );
   }
 
+  const handleBackNavigation = () => {
+    if (customerTable === "Website") {
+      navigate("/bill?table=undefined"); // Navigate to empty table
+    } else {
+      navigate(`/bill?table=${customerTable}`); // Navigate with query parameter
+    }
+  };
+
   return (
     <div>
       <div className="flex items-center shadow-lg shadow-gray-300">
         <div>
-          <Link to="/bill">
-            <img src={backarrowlogo} className="h-10 w-10 m-2" />
-          </Link>
+         <button onClick={handleBackNavigation} >
+ 
+              <img src={backarrowlogo} className="h-10 w-10 m-2" />
+         </button>
         </div>
         <div>
           <h1 className="text-3xl font-bold ml-12">UPI Payment</h1>
@@ -253,14 +294,16 @@ function Upi() {
           </div>
         </div>
         <Stepmodal isOpen={isModal} onClose={handleCloseModal} />
-        {isModal && (
-          <Modal
-            title="Confirm Transaction"
-            message="Are you sure the payment is done?"
-            onConfirm={handleConfirm}
-            onClose={handleCloseModal}
-          />
-        )}
+     
+      </div>
+      <div className="bg-white p-5 rounded-lg shadow-lg max-w-md w-full">
+        <h2 className="text-xl mb-4 font-semibold">Upi Payment Steps :</h2>
+        <ol className="list-decimal list-inside font-bold">
+              <li>Download the QR code or take screenshot on your phone.</li>
+              <li>Scan it through any UPI app like Paytm, Google Pay, or PhonePe, etc.</li>
+             <li>Enter the verification code after the payment completion from transcation history of UPI app.</li>
+              <li>It is 100% safe and secure gateway through SSL and bank partners.</li>
+            </ol>
       </div>
       <Footer />
     </div>

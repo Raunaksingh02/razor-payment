@@ -1,6 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { BuyerContext } from './Buyercontext';
+import backarrowlogo from '../images/backarrowlogo.png';
+import {  Link } from 'react-router-dom';
+
 
 const CustomerOrder = () => {
   const { buyer } = useContext(BuyerContext);
@@ -9,13 +12,14 @@ const CustomerOrder = () => {
   const [error, setError] = useState('');
   const [expandedOrderId, setExpandedOrderId] = useState(null);
   const [currentPage, setCurrentPage] = useState(1); // State to manage the current page
-  const ordersPerPage = 6; // Number of orders per page
+  const ordersPerPage = 10; // Number of orders per page
 
   useEffect(() => {
     if (buyer?.email) {
       axios.get('https://backendcafe-ceaj.onrender.com/orders', { params: { email: buyer.email } })
         .then(response => {
           setOrders(response.data);
+          console.log(response.data);
           setLoading(false);
         })
         .catch(err => {
@@ -29,10 +33,13 @@ const CustomerOrder = () => {
     setExpandedOrderId(expandedOrderId === orderId ? null : orderId);
   };
 
+  // Reverse the order array to show the latest order first
+  const reversedOrders = [...orders].reverse();
+
   // Calculate the orders to display based on the current page
   const indexOfLastOrder = currentPage * ordersPerPage;
   const indexOfFirstOrder = indexOfLastOrder - ordersPerPage;
-  const currentOrders = orders.slice(indexOfFirstOrder, indexOfLastOrder);
+  const currentOrders = reversedOrders.slice(indexOfFirstOrder, indexOfLastOrder);
 
   // Handle page change
   const handlePageChange = (pageNumber) => {
@@ -40,14 +47,23 @@ const CustomerOrder = () => {
   };
 
   // Calculate total pages
-  const totalPages = Math.ceil(orders.length / ordersPerPage);
+  const totalPages = Math.ceil(reversedOrders.length / ordersPerPage);
 
   if (loading) return <div className="text-center p-4">Loading...</div>;
   if (error) return <div className="text-center p-4 text-red-600">{error}</div>;
 
   return (
     <div className="max-w-md mx-auto p-4 bg-white shadow-2xl rounded-2xl shadow-gray-100">
-      <h2 className="text-2xl font-bold mb-4 text-center">Your Orders</h2>
+        <div className="flex items-center shadow-lg shadow-gray-300 mb-6">
+    <div>
+      <Link to="/">
+        <img src={backarrowlogo} className="h-10 w-10 m-2" />
+      </Link>
+    </div>
+    <div>
+      <h1 className="text-3xl font-bold ml-12">Order Detail</h1>
+    </div>
+  </div>
       {orders.length === 0 ? (
         <p className="text-center text-gray-500">No orders found</p>
       ) : (
@@ -74,8 +90,9 @@ const CustomerOrder = () => {
                   <ul className="mt-2 space-y-2 border-t border-gray-300 pt-2">
                     {order.cartforpayment.map(item => (
                       <li key={item.id} className="flex justify-between bg-gray-50 p-2 rounded-md">
-                        <span>{item.name} (x{item.quantity})</span>
-                        <span>{item.price}</span>
+                        <span className="font-semibold">{item.name}</span>
+                        <span className="text-gray-600">Qty: {item.quantity}</span>
+                        <span className="text-gray-600">Price: {item.price}</span>
                       </li>
                     ))}
                   </ul>

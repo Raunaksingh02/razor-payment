@@ -1,5 +1,5 @@
 import React, { useContext, useRef, useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams,useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
 import html2canvas from "html2canvas";
@@ -11,11 +11,18 @@ import { CustomerContext } from './CustomerContext.js';
 function Invoicecompo() {
     const { _id } = useParams();
     const pdfRef = useRef();
+
+    const location = useLocation(); 
     const customerDetails = useContext(CustomerContext); // Assuming CustomerContext provides customer details
     const paymentDetails = useSelector((state) => state.cart.cart); // Assuming paymentDetails is fetched using Redux
     const [minOrderValue, setMinOrderValue] = useState("");
     const [deliveryCharge, setDeliveryCharge] = useState("");
-  console.log("the location of the customer",customerDetails.customerTable);
+    console.log("the location of the customer",customerDetails.customerTable);
+
+
+    const queryParams = new URLSearchParams(location.search);
+    const paymentmode = queryParams.get('paymentmode'); 
+
     useEffect(() => {
         const fetchMinOrderDetails = async () => {
             try {
@@ -108,6 +115,7 @@ function Invoicecompo() {
                     <p><strong>Name:</strong> {customerDetails.customerName}</p>
                     <p><strong>Venue:</strong> {customerDetails.customerTable ? customerDetails.customerTable : 'Table 1'}</p>
                     <p><strong>Phone:</strong> {customerDetails.customerPhone}</p>
+                    <p><strong>Payment:</strong> {paymentmode}</p>
                 </div>
 
                 {/* Items Table */}

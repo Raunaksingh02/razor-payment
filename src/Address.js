@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { BuyerContext } from './components/Buyercontext';
+import backarrowlogo from './images/backarrowlogo.png';
+import { Link } from 'react-router-dom';
 
 const Address = () => {
     const { buyer } = useContext(BuyerContext);
@@ -60,10 +62,21 @@ const Address = () => {
 
     return (
         <div className="max-w-lg mx-auto p-4 sm:p-6 bg-white shadow-md rounded-lg">
-            <h2 className="text-xl sm:text-2xl font-bold mb-6 text-center">Manage Addresses</h2>
-            
+             <div className="flex items-center">
+                <div>
+                    <Link to="/">
+                        <img
+                            src={backarrowlogo}
+                            className='h-10 w-10 m-2'
+                        />
+                    </Link>
+                </div>
+                <div>
+                    <h1 className="text-3xl font-bold ml-12 ">Manage Address</h1>
+                </div>
+            </div>
             <form onSubmit={handleAddAddress} className="space-y-4 mb-8">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
                     <input
                         type="text"
                         name="houseNo"
