@@ -134,7 +134,7 @@ function Owner() {
           </Link>
           <Link to="/Dishmanage">
             <div className="p-3 h-56 rounded-3xl transition duration-150 ease-in-out bg-[#18196c] flex flex-col items-center justify-center">
-              <h1 className="text-lg font-mono font-extrabold text-white">Dish Management</h1>
+              <h1 className="text-lg font-mono font-extrabold text-white">Menu-Items</h1>
               <IoFastFoodSharp className="h-12 w-12 mt-4 shadow-2xl shadow-white" fill="white" />
             </div>
           </Link>
