@@ -20,7 +20,7 @@ const Heartbeat = memo(() => {
 
     // Send heartbeat immediately and then every 30 seconds
     sendHeartbeat();
-    const intervalId = setInterval(sendHeartbeat, 20000);
+    const intervalId = setInterval(sendHeartbeat, 30000);
 
     // Clean up the interval on component unmount
     return () => clearInterval(intervalId);

@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect,useContext } from 'react';
+import React, { useState, useRef, useEffect, useContext } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { toPng } from 'html-to-image';
 import QRCode from 'qrcode.react';
@@ -11,26 +11,20 @@ import paytmlogo from "./images/paytmlogo.png";
 import phonepelogo from "./images/phonepelogo.png";
 import Stepmodal from "./Stepmodal.js";
 import { BuyerContext } from './components/Buyercontext.js';
-import {UPIDetailsContext} from "./components/UPIDetailsContext.js";
+import { UPIDetailsContext } from "./components/UPIDetailsContext.js";
 import { CustomerContext } from './CustomerContext';
-
 
 function Upi() {
   const location = useLocation();
-
- 
   const navigate = useNavigate();
-
-  const {  paymentmode2,setpaymentmode2} = useContext(CustomerContext);
+  const { paymentmode2, setpaymentmode2 } = useContext(CustomerContext);
   console.log(paymentmode2);
 
-
   const { buyer } = useContext(BuyerContext);
-
-  const { upinumber , upiname } = useContext(UPIDetailsContext);
+  const { upinumber, upiname } = useContext(UPIDetailsContext);
   const { state } = location;
   const {
-    buyerEmail ,
+    buyerEmail,
     customerName,
     customerPhone,
     customerTable,
@@ -38,10 +32,10 @@ function Upi() {
     selectedAddress,
     cartforpayment
   } = state || {};
-  console.log("the location of customer =",customerTable);
-  console.log("the address of customer =",selectedAddress);
-  console.log("the customer emial is ",buyerEmail);
-  
+  console.log("the location of customer =", customerTable);
+  console.log("the address of customer =", selectedAddress);
+  console.log("the customer email is ", buyerEmail);
+
   const [validationMessage, setValidationMessage] = useState('');
   const [isModal, setIsModal] = useState(false);
   const [generatedCode, setGeneratedCode] = useState('');
@@ -59,13 +53,12 @@ function Upi() {
     const numDigits = 5;
     let codeArray = [];
 
-    // Generate random hex digits and wrap them in quotes
+    // Generate random hex digits without quotes
     while (codeArray.length < numDigits) {
       const randomChar = hexDigits[Math.floor(Math.random() * hexDigits.length)];
-      codeArray.push(`"${randomChar}"`); // Enclose each character in quotes
+      codeArray.push(randomChar);
     }
 
-  
     const positions = [];
     while (positions.length < 2) {
       const randomPosition = Math.floor(Math.random() * (codeArray.length + 1));
@@ -74,12 +67,12 @@ function Upi() {
       }
     }
 
-    // Insert the '%' symbolsc
+    // Insert the '%' symbols without quotes
     positions.forEach((pos) => {
-      codeArray.splice(pos, 0, `"%""`); // Add "%" enclosed in quotes
+      codeArray.splice(pos, 0, "%");
     });
 
-    const finalCode = `["${codeArray.join('","')}"]`; // Format with brackets and commas
+    const finalCode = `[${codeArray.join(',')}]`; // Format with brackets and commas without quotes
     setGeneratedCode(finalCode);
     console.log(finalCode);
   };
@@ -90,14 +83,18 @@ function Upi() {
 
   const extractPlainCode = (obfuscatedCode) => {
     return obfuscatedCode
-      .replace(/[\[\]"]/g, '') // Remove brackets and quotes
-      .split(',').join(''); // Remove commas
+      .replace(/[\[\],]/g, ''); // Remove brackets, commas
   };
-  
+
+  const extractVerificationCode = (obfuscatedCode) => {
+    return obfuscatedCode
+      .match(/[^,\[\]]+/g) // Match content without commas, brackets
+      .join(''); // Combine the parts
+  };
 
   const generateQRCodeValue = () => {
     const plainCode = extractPlainCode(generatedCode);
-    const obfuscatedVerificationCode = `VerificationCode:-${generatedCode}`;
+    const obfuscatedVerificationCode = `Bill No:-${generatedCode}`;
     const encodedVerificationCode = encodeData(obfuscatedVerificationCode);
 
     const payAddress = upinumber || '9971299049@ibl'; // Example fallback UPI address
@@ -106,7 +103,6 @@ function Upi() {
     return `upi://pay?pa=${payAddress}&pn=${payName}&am=${grandTotalforpayment}&cu=INR&tn=${encodedVerificationCode}`;
   };
 
- 
   const handleCloseModal = () => {
     setIsModal(false);
   };
@@ -115,9 +111,8 @@ function Upi() {
     if (qrCodeRef.current) {
       toPng(qrCodeRef.current)
         .then((dataUrl) => {
-          // Generate a random name with a 6-digit number
           const randomName = `QR_${Math.random().toString(36).substring(2, 8)}_${Math.floor(100000 + Math.random() * 900000)}`;
-  
+
           const link = document.createElement('a');
           link.href = dataUrl;
           link.download = `${randomName}.png`;
@@ -130,7 +125,6 @@ function Upi() {
         });
     }
   };
-  
 
   const handleCodeChange = (e) => {
     setEnteredCode(e.target.value);
@@ -149,7 +143,7 @@ function Upi() {
         address: selectedAddress || "",
         customerPhoneNo: customerPhone,
       });
-  
+
       const res = await axios.post('https://backendcafe-ceaj.onrender.com/api/payments', {
         paymentId: enteredCode,
         cartforpayment,
@@ -161,7 +155,7 @@ function Upi() {
         address: selectedAddress || "",
         customerPhoneNo: customerPhone,
       });
-  
+
       console.log('Payment details saved successfully:', res.data);
       const paymentId = res.data._id;
       navigate(`/Invoice/${paymentId}?paymentmode=${paymentmode2}`);
@@ -178,10 +172,12 @@ function Upi() {
       }
     }
   };
-  
+
   const handleSubmit = () => {
     const plainEnteredCode = extractPlainCode(enteredCode);
-    if (plainEnteredCode !== extractPlainCode(generatedCode)) {
+    const plainGeneratedCode = extractVerificationCode(generatedCode);
+
+    if (plainEnteredCode !== plainGeneratedCode) {
       setValidationMessage('Invalid verification code.');
     } else {
       setValidationMessage('');
@@ -192,9 +188,7 @@ function Upi() {
   const handleConfirm = () => {
     setIsModal(false); // Close the modal
     savePaymentDetails(); // Save payment detail
-   
   };
-  
 
   function Modal({ title, message, onConfirm, onClose }) {
     return (
@@ -231,95 +225,83 @@ function Upi() {
 
   return (
     <div>
-      <div className="flex items-center shadow-lg shadow-gray-300">
-        <div>
-         <button onClick={handleBackNavigation} >
- 
-              <img src={backarrowlogo} className="h-10 w-10 m-2" />
-         </button>
-        </div>
-        <div>
-          <h1 className="text-3xl font-bold ml-12">UPI Payment</h1>
-        </div>
-      </div>
-      <div className="container mx-auto p-2">
-        <div className="flex flex-col items-center">
-          <div className="flex flex-row gap-3 m-1 p-1 items-center">
-            <div>
-              <img src={phonepelogo} className="h-12 w-12" />
-            </div>
-            <div>
-              <img src={gpaylogo} className="h-12 w-12" />
-            </div>
-            <div>
-              <img src={paytmlogo} className="h-12 w-12" />
-            </div>
-          </div>
-          <div className="mb-4 flex flex-col items-center justify-center">
-            <h2 className="text-lg font-bold text-center mb-2">Download QR Code to Pay</h2>
-            <div className="relative p-4 bg-white shadow-lg shadow-[#f6931e] mb-4 animate-slideInFromBottom" ref={qrCodeRef}>
-              <QRCode value={generateQRCodeValue()} />
-            </div>
-            <div className="flex flex-row justify-evenly">
-              <div>
-                <h3>Name-{customerName}</h3>
-              </div>
-              <div className="ml-2">
-                <h3>Amount-{grandTotalforpayment}</h3>
-              </div>
-            </div>
-            <button onClick={handleDownloadQRCode} className="mt-2 px-4 py-2 bg-black animate-slideInFromBottom text-white rounded-lg">
-              <div className="flex flex-row">
-                <div>
-                  Download QR
-                </div>
-                <div>
-                  <IoMdDownload fill="white" className="h-6 w-6 ml-2" />
-                </div>
-              </div>
-            </button>
-          </div>
-          <div className="mb-4 w-full max-w-md">
-            <label className="block text-lg font-bold mb-2 text-center">Enter Verification Code</label>
-            <input type="text" value={enteredCode} onChange={handleCodeChange} className="w-full h-10 border border-gray-500 rounded-lg p-2 focus:outline-[#f6931e] focus:outline-none" />
-          </div>
-          {
-            validationMessage && (
-              <p className="text-red-500 font-bold mb-2">{validationMessage}</p>
-            )
-          }
-          <button onClick={handleSubmit} className="h-12 w-40 bg-[#f6931e] animate-slideInFromBottom hover:bg-green-700 font-bold text-xl text-white rounded-lg transition duration-300">Submit</button>
+    <div className="flex items-center shadow-lg shadow-gray-300">
+      <div>
+       <button onClick={handleBackNavigation} >
 
-          <div className="mt-4 animate-slideInFromBottom">
+            <img src={backarrowlogo} className="h-10 w-10 m-2" />
+       </button>
+      </div>
+      <div>
+        <h1 className="text-3xl font-bold ml-12">UPI Payment</h1>
+      </div>
+    </div>
+    <div className="container mx-auto p-2">
+      <div className="flex flex-col items-center">
+        <div className="flex flex-row gap-3 m-1 p-1 items-center">
+          <div>
+            <img src={phonepelogo} className="h-12 w-12" />
+          </div>
+          <div>
+            <img src={gpaylogo} className="h-12 w-12" />
+          </div>
+          <div>
+            <img src={paytmlogo} className="h-12 w-12" />
           </div>
         </div>
-        <Stepmodal isOpen={isModal} onClose={handleCloseModal} />
-     
+        <div className="mb-4 flex flex-col items-center justify-center">
+          <h2 className="text-lg font-bold text-center mb-2">Download QR Code to Pay</h2>
+          <div className="relative p-4 bg-white shadow-lg shadow-[#f6931e] mb-4 animate-slideInFromBottom" ref={qrCodeRef}>
+            <QRCode value={generateQRCodeValue()} />
+          </div>
+          <div className="flex flex-row justify-evenly">
+            <div>
+              <h3>Name-{customerName}</h3>
+            </div>
+            <div className="ml-2">
+              <h3>Amount-{grandTotalforpayment}</h3>
+            </div>
+          </div>
+          <button onClick={handleDownloadQRCode} className="mt-2 px-4 py-2 bg-black animate-slideInFromBottom text-white rounded-lg">
+            <div className="flex flex-row">
+              <div>
+                Download QR
+              </div>
+              <div>
+                <IoMdDownload fill="white" className="h-6 w-6 ml-2" />
+              </div>
+            </div>
+          </button>
+        </div>
+        <div className="mb-4 w-full max-w-md">
+          <label className="block text-lg font-bold mb-2 text-center">Enter Verification Code</label>
+          <input type="text" value={enteredCode} onChange={handleCodeChange} className="w-full h-10 border border-gray-500 rounded-lg p-2 focus:outline-[#f6931e] focus:outline-none" />
+        </div>
+        {
+          validationMessage && (
+            <p className="text-red-500 font-bold mb-2">{validationMessage}</p>
+          )
+        }
+        <button onClick={handleSubmit} className="h-12 w-40 bg-[#f6931e] animate-slideInFromBottom hover:bg-green-700 font-bold text-xl text-white rounded-lg transition duration-300">Submit</button>
+
+        <div className="mt-4 animate-slideInFromBottom">
+        </div>
       </div>
-      <div className="bg-white p-5 rounded-lg shadow-lg max-w-md w-full">
-        <h2 className="text-xl mb-4 font-semibold">Upi Payment Steps :</h2>
-        <ol className="list-decimal list-inside font-bold">
-              <li>Download the QR code or take screenshot on your phone.</li>
-              <li>Scan it through any UPI app like Paytm, Google Pay, or PhonePe, etc.</li>
-             <li>Enter the verification code after the payment completion from transcation history of UPI app.</li>
-              <li>It is 100% safe and secure gateway through SSL and bank partners.</li>
-            </ol>
-      </div>
-      <Footer />
+      <Stepmodal isOpen={isModal} onClose={handleCloseModal} />
+   
     </div>
+    <div className="bg-white p-5 rounded-lg shadow-lg max-w-md w-full">
+      <h2 className="text-xl mb-4 font-semibold">Upi Payment Steps :</h2>
+      <ol className="list-decimal list-inside font-bold">
+            <li>Download the QR code or take screenshot on your phone.</li>
+            <li>Scan it through any UPI app like Paytm, Google Pay, or PhonePe, etc.</li>
+           <li>Enter the verification code after the payment completion from transcation history of UPI app.</li>
+            <li>It is 100% safe and secure gateway through SSL and bank partners.</li>
+          </ol>
+    </div>
+    <Footer />
+  </div>
   );
 }
 
 export default Upi;
-
-
-
-
-
-
-
-
-
-
-
-
