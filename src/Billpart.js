@@ -259,7 +259,7 @@ function Billpart() {
               />
             </div>
             <div>
-              <h1 className="font-bold text-lg mb-2">Enter Contact No </h1>
+              <h1 className="font-bold text-lg mb-2">Enter Whatsapp No for Invoice</h1>
               <input
                 type="number"
                 value={customerPhone}

@@ -160,6 +160,8 @@ function Invoicecompo() {
                 <div className="text-center pt-4 border-t mt-4">
                     <p className="text-gray-600">Thank you for dining with us!</p>
                     <p className="text-gray-600">Please visit us again.</p>
+                    <p className="text-gray-600 text-sm mt-2">Note: The status of the payment will change to "Received" after the payment has been received by the merchant.</p>
+              
                 </div>
             </div>
 

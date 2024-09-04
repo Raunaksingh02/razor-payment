@@ -149,6 +149,8 @@ function BillingPage() {
                 <div className="text-center pt-4 border-t mt-4">
                     <p className="text-gray-600">Thank you for your business!</p>
                     <p className="text-gray-600">We appreciate your patronage.</p>
+                    <p className="text-gray-600 text-sm mt-2">Note: The status of the payment will change to "Received" after the payment has been received by the merchant.</p>
+              
                 </div>
             </div>
 
