@@ -5,6 +5,7 @@ import backarrowlogo from './images/backarrowlogo.png';
 import deletelogo from './images/deletelogo.png';
 import Modal from 'react-modal';
 import { toPng } from 'html-to-image';
+import { IoLogoWhatsapp } from "react-icons/io";
 import QRCode from 'qrcode.react';
 import closebutton from './images/closebutton.png';
 import { CustomerContext } from './CustomerContext';
@@ -46,6 +47,8 @@ function Billpart() {
   const [buyeraddress, setBuyerAddress] = useState([]);
   const { setCustomerName, setCustomerTable, setCustomerPhone, customerPhone, customerName, customerTable ,paymentmode1,setpaymentmode1} = useContext(CustomerContext);
   const { buyer } = useContext(BuyerContext);
+  const [confirmModalIsOpen, setConfirmModalIsOpen] = useState(false); // State for confirmation modal
+
 
   const buyerEmail = buyer?.email || "";
   console.log("the buyer email is ", buyerEmail);
@@ -87,6 +90,11 @@ function Billpart() {
 
   const openModal = () => setModalIsOpen(true);
   const closeModal = () => setModalIsOpen(false);
+
+
+  const openConfirmModal = () => setConfirmModalIsOpen(true); // Open confirmation modal
+  const closeConfirmModal = () => setConfirmModalIsOpen(false); // Close confirmation modal
+
 
   const savePaymentDetails2 = async () => {
     try {
@@ -150,7 +158,7 @@ function Billpart() {
       setValidationMessage('Customer Phone Number must be exactly 10 digits.');
     } else {
       setValidationMessage('');
-      savePaymentDetails2();
+      openConfirmModal(); 
     }
   };
   
@@ -239,6 +247,7 @@ function Billpart() {
             </button>
           </div>
           <div className="space-y-6">
+          
             <div>
               <h1 className="font-bold text-lg mb-2">Enter name</h1>
               <input
@@ -250,7 +259,7 @@ function Billpart() {
               />
             </div>
             <div>
-              <h1 className="font-bold text-lg mb-2">Enter Mobile No.</h1>
+              <h1 className="font-bold text-lg mb-2">Enter Contact No </h1>
               <input
                 type="number"
                 value={customerPhone}
@@ -288,10 +297,10 @@ function Billpart() {
               </div>
             )}
             <div className="flex justify-center space-x-4">
-              <button onClick={handleValidation} className="h-10 w-full bg-blue-500 text-white font-bold rounded-lg">
+              <button onClick={handleValidation} className="h-10 w-full bg-[#f6931e] text-white font-bold rounded-lg">
                 Pay with UPI
               </button>
-              <button onClick={handleCashPayment} className="h-10 w-full bg-blue-500 text-white font-bold rounded-lg">
+              <button onClick={handleCashPayment} className="h-10 w-full bg-[#f6931e] text-white font-bold rounded-lg">
                 Cash Payment
               </button>
             </div>
@@ -319,6 +328,38 @@ function Billpart() {
         
         </div>
       </Modal>
+      <Modal
+  isOpen={confirmModalIsOpen}
+  onRequestClose={closeConfirmModal}
+  className="fixed inset-0 flex items-center justify-center px-4"
+>
+  <div className="bg-white w-full max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl p-8 md:p-10 lg:p-12 rounded shadow-lg text-center">
+    <h2 className="text-2xl md:text-3xl font-extrabold mb-6">Confirm Order?</h2>
+    <div className="flex justify-center m-2">
+     <div className='ml-2' >
+          <button
+        className="bg-red-500 text-white p-3 md:px-8 md:py-4 rounded-2xl  font-bold hover:bg-red-700"
+        onClick={closeConfirmModal}
+
+      >
+        Cancel
+      </button>
+      </div>
+ <div className='ml-3'>
+        <button
+        className="bg-[#f6931e] text-white p-3 md:px-8 md:py-4 rounded-2xl font-bold hover:bg-green-700 mr-4"
+        onClick={savePaymentDetails2}
+      >
+      Submit
+      </button>
+      </div>
+
+      
+    </div>
+  </div>
+</Modal>
+
+      
       <Footer/>
     </div>
   );

@@ -64,11 +64,11 @@ function Owner() {
     <div className="flex flex-col min-h-screen bg-gray-100">
       <Calling />
       <OrderPopup />
-      <Heartbeat />
+      
       <div className="flex-1 shadow-2xl shadow-gray-800">
         <div className="flex justify-between items-center p-4">
           <Link to="/table">
-            <FaShopLock className="h-10 w-10" />
+          <Heartbeat />
           </Link>
           <h1 className="font-extrabold text-3xl text-center text-[#18196c] ml-6">Admin Panel</h1>
           <button onClick={() => setShowModal(true)}>
