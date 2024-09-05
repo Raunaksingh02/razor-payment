@@ -199,35 +199,45 @@ function Homepage() {
                  </div>
                  </div>
                   <div className="flex justify-center bg-[#f6931e]  rounded-b-3xl shadow-inner shadow-orange-200  mb-2 p-4 ">
-                   <div className="flex w-full max-w-md border-2 mb-3 border-gray-300 rounded-full shadow-lg">
-                    <input
-                        type="text"
-                        placeholder="Enter dish name..."
-                        className="w-full h-12 px-4 text-gray-700  placeholder-gray-400 rounded-l-full focus:outline-none"
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                    />
-                    <button onClick={() => setCurrentPage(1)} className="flex items-center justify-center w-12 h-12 bg-gray-800 rounded-r-full hover:bg-gray-700 focus:outline-none">
-                        <CiSearch fill="white" className="w-8 h-8" />
-                    </button>
-                </div>
+                  <div className="flex w-full max-w-md md:max-w-lg lg:max-w-xl border-2 mb-3 border-gray-300 rounded-full shadow-lg">
+                <input
+                 type="text"
+                 placeholder="Enter dish name..."
+                 className="w-full h-12 px-4 text-gray-700 placeholder-gray-400 rounded-l-full focus:outline-none sm:text-sm md:text-base lg:text-lg"
+                value={searchTerm}
+                 onChange={(e) => setSearchTerm(e.target.value)}
+                />
+           <button
+               onClick={() => setCurrentPage(1)}
+                className="flex items-center justify-center w-12 h-12 bg-gray-800 rounded-r-full hover:bg-gray-700 focus:outline-none"
+          >
+            <CiSearch fill="white" className="w-8 h-8" />
+          </button>
+           </div>
+
             </div>
 
-            <div className="flex justify-between font-bold text-xl items-center p-3 mr-2  ">
-                <label htmlFor="category-select" className="block mr-7"> Select Category</label>
-                <select
-                    id="category-select"
-                    className="mt-1 block pl-3 pr-10 py-2 bg-gray-100 text-base border--300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
-                    value={selectedCategory}
-                    onChange={(e) => setSelectedCategory(e.target.value)}
-                >
-                    {categories.map((category, index) => (
-                        <option key={index} value={category}>
-                            {category}
-                        </option>
-                    ))}
-                </select>
-            </div>
+         
+            <div className="flex flex-col md:flex-row items-start md:items-center justify-start font-bold text-xl p-3">
+  {/* Tab Container with Centering for Desktop */}
+  <div className="flex flex-nowrap overflow-x-auto space-x-4 w-full md:w-auto pb-3 md:pb-0 md:justify-center mx-auto">
+    {categories.map((category, index) => (
+      <button
+        key={index}
+        className={`shrink-0 px-4 py-2 text-sm  font-bold rounded-md transition duration-300 whitespace-nowrap ${
+          selectedCategory === category
+            ? 'bg-[#f6931e] text-white'
+            : 'bg-gray-100 text-gray-800 hover:bg-indigo-200'
+        }`}
+        onClick={() => setSelectedCategory(category)}
+      >
+        {category}
+      </button>
+    ))}
+  </div>
+</div>
+
+
 
             <div className="grid grid-cols-1 mt-3 sm:grid sm:grid-cols-3 sm:gap-4">
   {currentCafes.map((item, index) => (
@@ -236,11 +246,11 @@ function Homepage() {
       key={index}
     >
       <img
-        className="w-40 h-40 object-cover mt-4 p-2 rounded-3xl shadow-lg shadow-gray-300"
+        className="w-40 h-40 object-cover mt-4 p-2 rounded-3xl shadow-lg shadow-orange-200"
         src={item.image}
         alt={item.name}
       />
-      <div className="p-2">
+      <div className="p-2 ml-2">
         <h2 className="font-bold text-xl">{item.name}</h2>
         <p>Category: {item.category}</p>
         <p>Rating: {item.rating} stars</p>

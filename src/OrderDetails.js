@@ -182,7 +182,7 @@ const PaymentDetails = () => {
                                     className="bg-yellow-500 text-white px-4 py-2 mr-1  rounded-xl hover:bg-green-700 transition duration-300"
           
                                 >
-                                     Bill
+                                     Send
                                 </button>
                                 <button
                                     onClick={() => toggleCartDetails(payment._id)}
