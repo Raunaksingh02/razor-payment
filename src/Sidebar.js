@@ -21,10 +21,10 @@ const Sidebar = ({ isOpen, onClose }) => {
     <>
       {/* Sidebar for Laptop (Horizontal) */}
       <div className="hidden lg:flex items-center justify-evenly w-full ml-4 px-4 py-2 z-20 ">
-        <Link to="/profile" className="hover:bg-black bg-white px-2 py-1 font-bold text-black hover:text-white rounded-lg ml-3 ">Profile</Link>
-        <Link to="/orders" className="hover:bg-black bg-white px-2 py-1 font-bold text-black hover:text-white rounded-lg ml-3" >Orders</Link>
-        <Link to="/address" className="hover:bg-black bg-white px-2 py-1 font-bold text-black hover:text-white  rounded-lg ml-3">Address</Link>
-        <button onClick={handleLogoutClick} className="hover:bg-black bg-white px-2 py-1 font-bold text-black hover:text-white rounded-lg ml-3">Logout</button>
+        <Link to="/profile" className="hover:bg-black bg-white px-2 py-1 font-bold text-black hover:text-white shadow-lg shadow-gray-200 rounded-lg ml-3 ">Profile</Link>
+        <Link to="/orders" className="hover:bg-black bg-white px-2 py-1 font-bold text-black hover:text-white shadow-lg shadow-gray-200 rounded-lg ml-3" >Orders</Link>
+        <Link to="/address" className="hover:bg-black bg-white px-2 py-1 font-bold text-black hover:text-white  shadow-lg shadow-gray-200 rounded-lg ml-3">Address</Link>
+        <button onClick={handleLogoutClick} className="hover:bg-black bg-white px-2 py-1 font-bold text-black hover:text-white shadow-lg shadow-gray-200 rounded-lg ml-3">Logout</button>
       </div>
 
       {/* Sidebar for Mobile (Vertical) */}
