@@ -5,7 +5,8 @@ import { BuyerContext } from "./components/Buyercontext";
 const Sidebar = ({ isOpen, onClose }) => {
   const { logout } = useContext(BuyerContext);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { buyer} = useContext(BuyerContext);
+  const { buyer } = useContext(BuyerContext);
+  
   const handleLogoutClick = () => {
     setIsModalOpen(true);
   };
@@ -18,7 +19,16 @@ const Sidebar = ({ isOpen, onClose }) => {
 
   return (
     <>
-      <div className={`fixed inset-0 z-30 transition-transform transform ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+      {/* Sidebar for Laptop (Horizontal) */}
+      <div className="hidden lg:flex items-center justify-evenly w-full ml-4 px-4 py-2 z-20 ">
+        <Link to="/profile" className="hover:bg-black bg-white px-2 py-1 font-bold text-black hover:text-white rounded-lg ml-3 ">Profile</Link>
+        <Link to="/orders" className="hover:bg-black bg-white px-2 py-1 font-bold text-black hover:text-white rounded-lg ml-3" >Orders</Link>
+        <Link to="/address" className="hover:bg-black bg-white px-2 py-1 font-bold text-black hover:text-white  rounded-lg ml-3">Address</Link>
+        <button onClick={handleLogoutClick} className="hover:bg-black bg-white px-2 py-1 font-bold text-black hover:text-white rounded-lg ml-3">Logout</button>
+      </div>
+
+      {/* Sidebar for Mobile (Vertical) */}
+      <div className={`fixed inset-0 z-30 transition-transform transform lg:hidden ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
         <div className="absolute inset-0 bg-black opacity-50" onClick={onClose}></div>
         <div className="relative bg-white w-64 h-full shadow-lg">
           <div className="flex items-center justify-between p-4 border-b">
@@ -28,22 +38,22 @@ const Sidebar = ({ isOpen, onClose }) => {
           <nav className="p-4">
             <ul>
               <li className="mb-4">
-                <Link to="/profile" className="block hover:bg-gray-200 px-3 py-2 rounded-md">
+                <Link to="/profile" className="block hover:bg-gray-200 px-3 py-2 font-bold rounded-md">
                   Profile
                 </Link>
               </li>
               <li className="mb-4">
-                <Link to="/orders" className="block hover:bg-gray-200 px-3 py-2 rounded-md">
+                <Link to="/orders" className="block hover:bg-gray-200 px-3 py-2 font-bold rounded-md">
                   Orders
                 </Link>
               </li>
               <li className="mb-4">
-                <Link to="/address" className="block hover:bg-gray-200 px-3 py-2 rounded-md">
+                <Link to="/address" className="block hover:bg-gray-200 px-3 py-2 font-bold rounded-md">
                   Address
                 </Link>
               </li>
               <li className="mb-4">
-                <button onClick={handleLogoutClick} className="w-full text-left hover:bg-gray-200 px-3 py-2 rounded-md">
+                <button onClick={handleLogoutClick} className="w-full text-left hover:bg-gray-200 px-3 py-2  font-bold  rounded-md">
                   Logout
                 </button>
               </li>

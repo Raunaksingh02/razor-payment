@@ -186,7 +186,7 @@ function Homepage() {
                     {!table && (
                         <>
                             <button onClick={handlemodalClick} className="ml-5">
-                                <FaUser fill="white" className='h-8 w-8 ' />
+                                <FaUser fill="white" className='h-8 w-8 lg:hidden' />
                             </button>
                             <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
                         </>
@@ -214,7 +214,6 @@ function Homepage() {
             <CiSearch fill="white" className="w-8 h-8" />
           </button>
            </div>
-
             </div>
 
          
