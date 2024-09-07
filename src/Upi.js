@@ -60,11 +60,10 @@ function Upi() {
     const payAddress = upinumber || '9971299049@ibl'; // Example fallback UPI address
     const payName = upiname || 'Default Name'; // Example fallback UPI name
     
-    return `upi://pay?pa=${payAddress}&pn=300&am=${grandTotalforpayment}&cu=INR&tn=Bill%No:${verificationCode}`;
+    return `upi://pay?pa=${payAddress}&pn=${payName}&am=300&cu=INR&tn=Bill%No:${verificationCode}`;
   };
 
-  const handleOpenUPIApp = () => {
-    const upiLink = generateQRCodeValue();
+  const handleOpenUPIApp = (upiLink) => {
     window.location.href = upiLink;  // Redirect to the UPI link to open the UPI app
   };
   
@@ -240,32 +239,41 @@ function Upi() {
           </button>
           <div className="mt-6">
             <button
-              onClick={handleOpenUPIApp}
-              className="mt-2 px-4 py-2 bg-blue-600 text-white rounded-lg"
+              onClick={() => handleOpenUPIApp(generateQRCodeValue())}
+              className="px-6 py-3 bg-[#f6931e] hover:bg-orange-500 text-white rounded-lg shadow-lg mr-4"
             >
-              Pay Now
+              Pay with Google Pay
+            </button>
+            <button
+              onClick={() => handleOpenUPIApp(generateQRCodeValue())}
+              className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow-lg"
+            >
+              Pay with PhonePe
             </button>
           </div>
         </div>
-        <div>
-          {isModal && (
-            <Modal
-              title="Verification"
-              message="Please enter the code provided to verify the payment."
-              onConfirm={handleConfirm}
-              onClose={handleCloseModal}
-            />
-          )}
-        </div>
-        <Stepmodal
-          isModalOpen={isModal}
-          handleCloseModal={handleCloseModal}
-          handleSubmit={handleSubmit}
-          handleCodeChange={handleCodeChange}
-          validationMessage={validationMessage}
-          enteredCode={enteredCode}
-          generatedCode={generatedCode}
-        />
+        {isModal && (
+          <Modal
+            title="Confirm Payment"
+            message={
+              <div>
+                <p>Please enter the verification code sent to your registered mobile number.</p>
+                <input
+                  type="text"
+                  value={enteredCode}
+                  onChange={handleCodeChange}
+                  placeholder="Enter verification code"
+                  className="mt-2 px-4 py-2 border rounded"
+                />
+                {validationMessage && (
+                  <p className="text-red-500 mt-1">{validationMessage}</p>
+                )}
+              </div>
+            }
+            onConfirm={handleSubmit}
+            onClose={handleCloseModal}
+          />
+        )}
       </div>
     </div>
       <Footer />
