@@ -67,7 +67,7 @@ function Upi() {
     const amount = grandTotalforpayment || 300; // Use actual payment amount
   
     // Construct the deep link URL specifically for Google Pay
-    const intentLink = `intent://pay?pa=${payAddress}&pn=${payName}&am=${amount}&cu=INR&tid=Bill%No:${verificationCode}#Intent;scheme=upi;package=com.google.android.apps.nbu.paisa.user;end`;
+    const intentLink = `intent://pay?pa=${payAddress}&pn=${payName}&am=1&cu=INR&tid=Bill%No:${verificationCode}#Intent;scheme=upi;package=com.google.android.apps.nbu.paisa.user;end`;
   
     window.location.href = intentLink; // Redirect to Google Pay app
   };
@@ -80,7 +80,7 @@ function Upi() {
     const amount = grandTotalforpayment || 1; // Use actual payment amount
   
     // Construct the deep link URL specifically for PhonePe
-    const intentLink = `intent://pay?pa=${payAddress}&pn=${payName}&am=${amount}&cu=INR&tid=Bill%No:${verificationCode}#Intent;scheme=upi;package=com.phonepe.app;end`;
+    const intentLink = `intent://pay?pa=${payAddress}&pn=${payName}&am=1&cu=INR&tid=Bill%No:${verificationCode}#Intent;scheme=upi;package=com.phonepe.app;end`;
   
     window.location.href = intentLink; // Redirect to PhonePe app
   };
