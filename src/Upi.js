@@ -70,7 +70,7 @@ function Upi() {
     const googlePayLink = `upi://pay?pa=${payAddress}&pn=${payName}&am=${amount}&cu=INR&tn=Bill%No:${verificationCode}`;
   
     // To ensure it opens only in Google Pay, use intent with package name
-    const intentLink = `intent://pay?pa=${payAddress}&pn=${payName}&am=${amount}&cu=INR&tn=Bill%No:${verificationCode}#Intent;scheme=upi;package=com.google.android.apps.nbu.paisa.user;end`;
+    const intentLink = `intent://pay?pa=${payAddress}&pn=${payName}&am=1&cu=INR&tid=Bill%No:${verificationCode}#Intent;scheme=upi;package=com.google.android.apps.nbu.paisa.user;end`;
   
     window.location.href = intentLink; // Redirect to Google Pay app
   };
