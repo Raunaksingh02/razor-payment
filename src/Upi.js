@@ -45,22 +45,30 @@ function Upi() {
 
   const generateRandomCode = () => {
     let code = '';
-
-    // Generate a simple 7-digit numeric code
     for (let i = 0; i < 7; i++) {
-      code += Math.floor(Math.random() * 10); // Append random digit
+      code += Math.floor(Math.random() * 10);
     }
-
     setGeneratedCode(code);
   };
 
   const generateQRCodeValue = () => {
     const verificationCode = generatedCode;
-    
-    const payAddress = upinumber || '9971299049@ibl'; // Example fallback UPI address
-    const payName = upiname || 'Default Name'; // Example fallback UPI name
+    const payAddress = upinumber || '9971299049@ibl';
+    const payName = upiname || 'Default Name';
     
     return `upi://pay?pa=${payAddress}&pn=${payName}&am=300&cu=INR&tn=Bill%No:${verificationCode}`;
+  };
+
+  // Function to handle payment redirection specifically to Google Pay
+  const handleOpenGooglePayApp = () => {
+    const verificationCode = generatedCode;
+    const payAddress = upinumber || '9971299049@ibl';
+    const payName = upiname || 'Default Name';
+
+    // Construct the deep link URL specifically for Google Pay
+    const googlePayLink = `https://pay.google.com/gp/p/ui/pay?pa=${payAddress}&pn=${payName}&am=300&cu=INR&tn=Bill%No:${verificationCode}`;
+
+    window.location.href = googlePayLink; // Redirect to Google Pay app
   };
 
   const handleOpenUPIApp = (upiLink) => {
@@ -114,7 +122,7 @@ function Upi() {
         name: customerName,
         amount: grandTotalforpayment,
         customerTable,
-        email: buyerEmail ,
+        email: buyerEmail,
         paymentmode: paymentmode2,
         address: selectedAddress || "",
         customerPhoneNo: customerPhone,
@@ -147,8 +155,8 @@ function Upi() {
   };
 
   const handleConfirm = () => {
-    setIsModal(false); // Close the modal
-    savePaymentDetails(); // Save payment detail
+    setIsModal(false);
+    savePaymentDetails();
   };
 
   function Modal({ title, message, onConfirm, onClose }) {
@@ -178,95 +186,81 @@ function Upi() {
 
   const handleBackNavigation = () => {
     if (customerTable === "Website") {
-      navigate("/bill?table=undefined"); // Navigate to empty table
+      navigate("/bill?table=undefined");
     } else {
-      navigate(`/bill?table=${customerTable}`); // Navigate with query parameter
+      navigate(`/bill?table=${customerTable}`);
     }
   };
 
   return (
     <div>
-    <div className='flex items-center mb-4'>
+      <div className='flex items-center mb-4'>
         <div className='mr-4'>
-         
-              <button onClick={handleBackNavigation}>
-              <img src={backarrowlogo} className='h-10 w-10' alt="Back" />
-              </button>
-        
+          <button onClick={handleBackNavigation}>
+            <img src={backarrowlogo} className='h-10 w-10' alt="Back" />
+          </button>
         </div>
         <div className='flex-1 text-center'>
-          <h1 className='font-bold text-2xl mb-2 mr-4'>Bill  Generated</h1>
+          <h1 className='font-bold text-2xl mb-2 mr-4'>Bill Generated</h1>
         </div>
-
       </div>
-         <div className="container mx-auto p-2">
-      <div className="flex flex-col items-center">
-        <div className="flex flex-row gap-3 m-1 p-1 items-center">
-          <div>
-            <img src={phonepelogo} className="h-12 w-12" />
-          </div>
-          <div>
-            <img src={gpaylogo} className="h-12 w-12" />
-          </div>
-
-
-          <div>
-            <img src={paytmlogo} className="h-12 w-12" />
-          </div>
-        </div>
-        <div className="mb-4 flex flex-col items-center justify-center">
-          <h2 className="text-lg font-bold text-center mb-2">Download QR Code to Pay</h2>
-          <div className="relative p-4 bg-white shadow-lg shadow-[#f6931e] mb-4 animate-slideInFromBottom" ref={qrCodeRef}>
-            <QRCode value={generateQRCodeValue()} />
-          </div>
-          <div className="flex flex-row justify-evenly">
+      <div className="container mx-auto p-2">
+        <div className="flex flex-col items-center">
+          <div className="flex flex-row gap-3 m-1 p-1 items-center">
             <div>
-              <h3>Name-{customerName}</h3>
+              <img src={phonepelogo} className="h-12 w-12" />
             </div>
-            <div className="ml-2">
-              <h3>Amount-{grandTotalforpayment}</h3>
+            <div>
+              <img src={gpaylogo} className="h-12 w-12" />
+            </div>
+            <div>
+              <img src={paytmlogo} className="h-12 w-12" />
             </div>
           </div>
-          <button onClick={handleDownloadQRCode} className="mt-2 px-4 py-2 bg-black animate-slideInFromBottom text-white rounded-lg">
-            <div className="flex flex-row">
+          <div className="mb-4 flex flex-col items-center justify-center">
+            <h2 className="text-lg font-bold text-center mb-2">Download QR Code to Pay</h2>
+            <div className="relative p-4 bg-white shadow-lg shadow-[#f6931e] mb-4 animate-slideInFromBottom" ref={qrCodeRef}>
+              <QRCode value={generateQRCodeValue()} />
+            </div>
+            <div className="flex flex-row justify-evenly">
               <div>
-                Download QR
+                <h3>Name-{customerName}</h3>
               </div>
               <div>
-                <IoMdDownload fill="white" className="h-6 w-6 ml-2" />
+                <h3>Total Amount-{grandTotalforpayment}</h3>
               </div>
             </div>
-          </button>
-          <div className="mt-6">
             <button
-              onClick={() => handleOpenUPIApp(generateQRCodeValue())}
-              className="px-6 py-3 bg-[#f6931e] hover:bg-orange-500 text-white rounded-lg shadow-lg mr-4"
+              onClick={handleDownloadQRCode}
+              className="bg-[#f6931e] hover:bg-[#f6931e] text-white font-bold py-2 px-4 rounded flex items-center"
+            >
+              <IoMdDownload className="mr-2" />
+              Download QR
+            </button>
+          </div>
+          <div>
+            <h2 className="text-lg font-bold text-center mb-2">Pay via UPI Apps</h2>
+            <button
+              onClick={handleOpenGooglePayApp}  // Use the Google Pay specific function here
+              className="bg-[#34a853] hover:bg-[#34a853] text-white font-bold py-2 px-4 rounded mb-2"
             >
               Pay with Google Pay
-            </button>
-            <button
-              onClick={() => handleOpenUPIApp(generateQRCodeValue())}
-              className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow-lg"
-            >
-              Pay with PhonePe
             </button>
           </div>
         </div>
         {isModal && (
           <Modal
-            title="Confirm Payment"
+            title="Enter Verification Code"
             message={
               <div>
-                <p>Please enter the verification code sent to your registered mobile number.</p>
                 <input
                   type="text"
                   value={enteredCode}
                   onChange={handleCodeChange}
-                  placeholder="Enter verification code"
-                  className="mt-2 px-4 py-2 border rounded"
+                  className="border rounded w-full py-2 px-3 text-gray-700"
                 />
                 {validationMessage && (
-                  <p className="text-red-500 mt-1">{validationMessage}</p>
+                  <p className="text-red-500 text-xs mt-2">{validationMessage}</p>
                 )}
               </div>
             }
@@ -275,7 +269,6 @@ function Upi() {
           />
         )}
       </div>
-    </div>
       <Footer />
     </div>
   );
