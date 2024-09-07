@@ -45,50 +45,27 @@ function Upi() {
 
   const generateRandomCode = () => {
     let code = '';
+
+    // Generate a simple 7-digit numeric code
     for (let i = 0; i < 7; i++) {
-      code += Math.floor(Math.random() * 10);
+      code += Math.floor(Math.random() * 10); // Append random digit
     }
+
     setGeneratedCode(code);
+    
   };
 
   const generateQRCodeValue = () => {
+    // Use generated code as "Bill No" in the 'tn' parameter
     const verificationCode = generatedCode;
-    const payAddress = upinumber || '9971299049@ibl';
-    const payName = upiname || 'Default Name';
     
-    return `upi://pay?pa=${payAddress}&pn=${payName}&am=300&cu=INR&tn=Bill%No:${verificationCode}`;
-  };
-
-  // Function to handle payment redirection specifically to Google Pay
-  const handleOpenGooglePayApp = () => {
-    const verificationCode = generatedCode;
-    const payAddress = upinumber || '9971299049@ibl';
-    const payName = upiname || 'Default Name';
-    const amount = grandTotalforpayment || 300; // Use actual payment amount
-  
-    // Construct the deep link URL specifically for Google Pay
-    const intentLink = `intent://pay?pa=${payAddress}&pn=${payName}&am=1&cu=INR&tid=Bill%No:${verificationCode}#Intent;scheme=upi;package=com.google.android.apps.nbu.paisa.user;end`;
-  
-    window.location.href = intentLink; // Redirect to Google Pay app
-  };
-
-  // Function to handle payment redirection specifically to PhonePe
-  const handleOpenPhonePeApp = () => {
-    const verificationCode = generatedCode;
-    const payAddress = upinumber || '9971299049@ibl';
-    const payName = upiname || 'Default Name';
-    const amount = grandTotalforpayment || 1; // Use actual payment amount
-  
-    // Construct the deep link URL specifically for PhonePe
-    const intentLink = `intent://pay?pa=${payAddress}&pn=${payName}&am=1&cu=INR&tid=Bill%No:${verificationCode}#Intent;scheme=upi;package=com.phonepe.app;end`;
-  
-    window.location.href = intentLink; // Redirect to PhonePe app
+    const payAddress = upinumber || '9971299049@ibl'; // Example fallback UPI address
+    const payName = upiname || 'Default Name'; // Example fallback UPI name
+    
+    return `upi://pay?pa=${payAddress}&pn=${payName}&am=${grandTotalforpayment}&cu=INR&tn=Bill%No:${verificationCode}`;
   };
   
-  const handleOpenUPIApp = (upiLink) => {
-    window.location.href = upiLink;  // Redirect to the UPI link to open the UPI app
-  };
-
+  
   const handleCloseModal = () => {
     setIsModal(false);
   };
@@ -136,7 +113,7 @@ function Upi() {
         name: customerName,
         amount: grandTotalforpayment,
         customerTable,
-        email: buyerEmail,
+        email: buyerEmail ,
         paymentmode: paymentmode2,
         address: selectedAddress || "",
         customerPhoneNo: customerPhone,
@@ -169,8 +146,8 @@ function Upi() {
   };
 
   const handleConfirm = () => {
-    setIsModal(false);
-    savePaymentDetails();
+    setIsModal(false); // Close the modal
+    savePaymentDetails(); // Save payment detail
   };
 
   function Modal({ title, message, onConfirm, onClose }) {
@@ -200,100 +177,98 @@ function Upi() {
 
   const handleBackNavigation = () => {
     if (customerTable === "Website") {
-      navigate("/bill?table=undefined");
+      navigate("/bill?table=undefined"); // Navigate to empty table
     } else {
-      navigate(`/bill?table=${customerTable}`);
+      navigate(`/bill?table=${customerTable}`); // Navigate with query parameter
     }
   };
 
   return (
     <div>
-      <div className='flex items-center mb-4'>
+    <div className='flex items-center mb-4'>
         <div className='mr-4'>
-          <button onClick={handleBackNavigation}>
-            <img src={backarrowlogo} className='h-10 w-10' alt="Back" />
-          </button>
+         
+              <button onClick={handleBackNavigation}>
+              <img src={backarrowlogo} className='h-10 w-10' alt="Back" />
+              </button>
+        
         </div>
         <div className='flex-1 text-center'>
-          <h1 className='font-bold text-2xl mb-2 mr-4'>Bill Generated</h1>
+          <h1 className='font-bold text-2xl mb-2 mr-4'>Bill  Generated</h1>
         </div>
+
       </div>
-      <div className="container mx-auto p-2">
-        <div className="flex flex-col items-center">
-          <div className="flex flex-row gap-3 m-1 p-1 items-center">
-            <div>
-              <img src={phonepelogo} className="h-12 w-12" />
-            </div>
-            <div>
-              <img src={gpaylogo} className="h-12 w-12" />
-            </div>
-            <div>
-              <img src={paytmlogo} className="h-12 w-12" />
-            </div>
+         <div className="container mx-auto p-2">
+      <div className="flex flex-col items-center">
+        <div className="flex flex-row gap-3 m-1 p-1 items-center">
+          <div>
+            <img src={phonepelogo} className="h-12 w-12" />
           </div>
-          <div className="text-center">
-            <QRCode
-              ref={qrCodeRef}
-              value={generateQRCodeValue()}
-              size={256}
-              bgColor={"#ffffff"}
-              fgColor={"#000000"}
-              level={"L"}
-              includeMargin={true}
-            />
-            <div className="mt-4">
-              <button
-                onClick={handleDownloadQRCode}
-                className="bg-blue-500 text-white px-4 py-2 rounded shadow hover:bg-blue-600"
-              >
-                <IoMdDownload className='mr-2' />
-                Download QR Code
-              </button>
-            </div>
+          <div>
+            <img src={gpaylogo} className="h-12 w-12" />
           </div>
-          <div className="flex flex-col items-center">
-            <button
-              onClick={handleOpenGooglePayApp}
-              className="bg-[#4285F4] text-white px-4 py-2 rounded shadow mt-4"
-            >
-              <img src={gpaylogo} className="h-8 w-8 inline mr-2" alt="Google Pay" />
-              Pay with Google Pay
-            </button>
-            <button
-              onClick={handleOpenPhonePeApp}
-              className="bg-[#1d3c6b] text-white px-4 py-2 rounded shadow mt-4"
-            >
-              <img src={phonepelogo} className="h-8 w-8 inline mr-2" alt="PhonePe" />
-              Pay with PhonePe
-            </button>
-            <button
-              onClick={() => handleOpenUPIApp(generateQRCodeValue())}
-              className="bg-[#f6931e] text-white px-4 py-2 rounded shadow mt-4"
-            >
-              Pay with UPI
-            </button>
+
+          <div>
+            <img src={paytmlogo} className="h-12 w-12" />
           </div>
         </div>
+        <div className="mb-4 flex flex-col items-center justify-center">
+          <h2 className="text-lg font-bold text-center mb-2">Download QR Code to Pay</h2>
+          <div className="relative p-4 bg-white shadow-lg shadow-[#f6931e] mb-4 animate-slideInFromBottom" ref={qrCodeRef}>
+            <QRCode value={generateQRCodeValue()} />
+          </div>
+          <div className="flex flex-row justify-evenly">
+            <div>
+              <h3>Name-{customerName}</h3>
+            </div>
+            <div className="ml-2">
+              <h3>Amount-{grandTotalforpayment}</h3>
+            </div>
+          </div>
+          <button onClick={handleDownloadQRCode} className="mt-2 px-4 py-2 bg-black animate-slideInFromBottom text-white rounded-lg">
+            <div className="flex flex-row">
+              <div>
+                Download QR
+              </div>
+              <div>
+                <IoMdDownload fill="white" className="h-6 w-6 ml-2" />
+              </div>
+            </div>
+          </button>
+        </div>
+        <div className="mb-4">
+          <Stepmodal />
+        </div>
+        <div className="mb-4 w-full max-w-md">
+            <label className="block text-lg font-bold mb-2 text-center">Enter Bill No for verification -</label>
+            <input type="text" value={enteredCode} onChange={handleCodeChange} className="w-full h-10 border border-gray-500 rounded-lg p-2 focus:outline-[#f6931e] focus:outline-none" />
+          </div>
+          {
+            validationMessage && (
+              <p className="text-red-500 font-bold mb-2">{validationMessage}</p>
+            )
+          }
+          <button onClick={handleSubmit} className="h-12 w-40 bg-[#f6931e] animate-slideInFromBottom hover:bg-green-700 font-bold text-xl text-white rounded-lg transition duration-300">Submit</button>
+
+          <div className="mt-4 animate-slideInFromBottom">
+          </div>
+        </div>
+      <Stepmodal isOpen={isModal} onClose={handleCloseModal} />
+     
+     </div>
+     <div className="bg-white p-3 rounded-lg shadow-lg max-w-md w-full">
+       <h2 className="text-xl mb-4 font-semibold">Upi Payment Steps :</h2>
+       <ol className="list-decimal list-inside font-bold">
+             <li>Download the QR code or take screenshot on your phone.</li>
+             <li>Scan it through any UPI app like Paytm, Google Pay, or PhonePe, etc.</li>
+            <li>Enter the Bill No after the payment completion from transcation history of UPI app.</li>
+             <li>It is 100% safe and secure gateway through SSL and bank partners.</li>
+           </ol>
+     </div>
+     <Footer />
+      
       </div>
-      {isModal && (
-        <Modal
-          title="Enter Verification Code"
-          message={`Please enter the verification code sent to your email.`}
-          onConfirm={handleSubmit}
-          onClose={handleCloseModal}
-        >
-          <input
-            type="text"
-            value={enteredCode}
-            onChange={handleCodeChange}
-            className="border rounded p-2 w-full mt-4"
-            placeholder="Enter code here"
-          />
-          {validationMessage && <p className="text-red-500 mt-2">{validationMessage}</p>}
-        </Modal>
-      )}
-      <Footer />
-    </div>
+   
   );
 }
 
