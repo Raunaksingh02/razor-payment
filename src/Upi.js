@@ -52,11 +52,9 @@ function Upi() {
     }
 
     setGeneratedCode(code);
-    
   };
 
   const generateQRCodeValue = () => {
-    // Use generated code as "Bill No" in the 'tn' parameter
     const verificationCode = generatedCode;
     
     const payAddress = upinumber || '9971299049@ibl'; // Example fallback UPI address
@@ -64,7 +62,11 @@ function Upi() {
     
     return `upi://pay?pa=${payAddress}&pn=${payName}&am=${grandTotalforpayment}&cu=INR&tn=Bill%No:${verificationCode}`;
   };
-  
+
+  const handleOpenUPIApp = () => {
+    const upiLink = generateQRCodeValue();
+    window.location.href = upiLink;  // Redirect to the UPI link to open the UPI app
+  };
   
   const handleCloseModal = () => {
     setIsModal(false);
@@ -185,15 +187,18 @@ function Upi() {
 
   return (
     <div>
-    <div className="flex items-center shadow-lg shadow-gray-300 text-center">
-        <div>
-         <button onClick={handleBackNavigation} >
-          <img src={backarrowlogo} className="h-10 w-10 m-2" />
-         </button>
+    <div className='flex items-center mb-4'>
+        <div className='mr-4'>
+         
+              <button onClick={handleBackNavigation}>
+              <img src={backarrowlogo} className='h-10 w-10' alt="Back" />
+              </button>
+        
         </div>
-        <div>
-          <h1 className="text-xl font-bold ml-8">UPI Payment</h1>
+        <div className='flex-1 text-center'>
+          <h1 className='font-bold text-2xl mb-2 mr-4'>Bill  Generated</h1>
         </div>
+
       </div>
          <div className="container mx-auto p-2">
       <div className="flex flex-col items-center">
@@ -204,6 +209,7 @@ function Upi() {
           <div>
             <img src={gpaylogo} className="h-12 w-12" />
           </div>
+          
 
           <div>
             <img src={paytmlogo} className="h-12 w-12" />
@@ -232,40 +238,38 @@ function Upi() {
               </div>
             </div>
           </button>
-        </div>
-        <div className="mb-4">
-          <Stepmodal />
-        </div>
-        <div className="mb-4 w-full max-w-md">
-            <label className="block text-lg font-bold mb-2 text-center">Enter Bill No for verification -</label>
-            <input type="text" value={enteredCode} onChange={handleCodeChange} className="w-full h-10 border border-gray-500 rounded-lg p-2 focus:outline-[#f6931e] focus:outline-none" />
-          </div>
-          {
-            validationMessage && (
-              <p className="text-red-500 font-bold mb-2">{validationMessage}</p>
-            )
-          }
-          <button onClick={handleSubmit} className="h-12 w-40 bg-[#f6931e] animate-slideInFromBottom hover:bg-green-700 font-bold text-xl text-white rounded-lg transition duration-300">Submit</button>
-
-          <div className="mt-4 animate-slideInFromBottom">
+          <div className="mt-6">
+            <button
+              onClick={handleOpenUPIApp}
+              className="mt-2 px-4 py-2 bg-blue-600 text-white rounded-lg"
+            >
+              Pay Now
+            </button>
           </div>
         </div>
-      <Stepmodal isOpen={isModal} onClose={handleCloseModal} />
-     
-     </div>
-     <div className="bg-white p-3 rounded-lg shadow-lg max-w-md w-full">
-       <h2 className="text-xl mb-4 font-semibold">Upi Payment Steps :</h2>
-       <ol className="list-decimal list-inside font-bold">
-             <li>Download the QR code or take screenshot on your phone.</li>
-             <li>Scan it through any UPI app like Paytm, Google Pay, or PhonePe, etc.</li>
-            <li>Enter the Bill No after the payment completion from transcation history of UPI app.</li>
-             <li>It is 100% safe and secure gateway through SSL and bank partners.</li>
-           </ol>
-     </div>
-     <Footer />
-      
+        <div>
+          {isModal && (
+            <Modal
+              title="Verification"
+              message="Please enter the code provided to verify the payment."
+              onConfirm={handleConfirm}
+              onClose={handleCloseModal}
+            />
+          )}
+        </div>
+        <Stepmodal
+          isModalOpen={isModal}
+          handleCloseModal={handleCloseModal}
+          handleSubmit={handleSubmit}
+          handleCodeChange={handleCodeChange}
+          validationMessage={validationMessage}
+          enteredCode={enteredCode}
+          generatedCode={generatedCode}
+        />
       </div>
-   
+    </div>
+      <Footer />
+    </div>
   );
 }
 
