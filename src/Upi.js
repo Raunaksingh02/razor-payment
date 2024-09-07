@@ -60,7 +60,7 @@ function Upi() {
     const payAddress = upinumber || '9971299049@ibl'; // Example fallback UPI address
     const payName = upiname || 'Default Name'; // Example fallback UPI name
     
-    return `upi://pay?pa=${payAddress}&pn=${payName}&am=${grandTotalforpayment}&cu=INR&tn=Bill%No:${verificationCode}`;
+    return `upi://pay?pa=${payAddress}&pn=300&am=${grandTotalforpayment}&cu=INR&tn=Bill%No:${verificationCode}`;
   };
 
   const handleOpenUPIApp = () => {
@@ -209,7 +209,7 @@ function Upi() {
           <div>
             <img src={gpaylogo} className="h-12 w-12" />
           </div>
-          
+
 
           <div>
             <img src={paytmlogo} className="h-12 w-12" />
