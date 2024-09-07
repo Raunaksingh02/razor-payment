@@ -64,12 +64,17 @@ function Upi() {
     const verificationCode = generatedCode;
     const payAddress = upinumber || '9971299049@ibl';
     const payName = upiname || 'Default Name';
-
+    const amount = grandTotalforpayment || 300; // Use actual payment amount
+  
     // Construct the deep link URL specifically for Google Pay
-    const googlePayLink = `https://pay.google.com/gp/p/ui/pay?pa=${payAddress}&pn=${payName}&am=300&cu=INR&tn=Bill%No:${verificationCode}`;
-
-    window.location.href = googlePayLink; // Redirect to Google Pay app
+    const googlePayLink = `upi://pay?pa=${payAddress}&pn=${payName}&am=${amount}&cu=INR&tn=Bill%No:${verificationCode}`;
+  
+    // To ensure it opens only in Google Pay, use intent with package name
+    const intentLink = `intent://pay?pa=${payAddress}&pn=${payName}&am=${amount}&cu=INR&tn=Bill%No:${verificationCode}#Intent;scheme=upi;package=com.google.android.apps.nbu.paisa.user;end`;
+  
+    window.location.href = intentLink; // Redirect to Google Pay app
   };
+  
 
   const handleOpenUPIApp = (upiLink) => {
     window.location.href = upiLink;  // Redirect to the UPI link to open the UPI app
