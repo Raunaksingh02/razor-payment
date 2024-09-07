@@ -67,19 +67,28 @@ function Upi() {
     const amount = grandTotalforpayment || 300; // Use actual payment amount
   
     // Construct the deep link URL specifically for Google Pay
-    const googlePayLink = `upi://pay?pa=${payAddress}&pn=${payName}&am=${amount}&cu=INR&tn=Bill%No:${verificationCode}`;
-  
-    // To ensure it opens only in Google Pay, use intent with package name
-    const intentLink = `intent://pay?pa=${payAddress}&pn=${payName}&am=1&cu=INR&tid=Bill%No:${verificationCode}#Intent;scheme=upi;package=com.google.android.apps.nbu.paisa.user;end`;
+    const intentLink = `intent://pay?pa=${payAddress}&pn=${payName}&am=${amount}&cu=INR&tid=Bill%No:${verificationCode}#Intent;scheme=upi;package=com.google.android.apps.nbu.paisa.user;end`;
   
     window.location.href = intentLink; // Redirect to Google Pay app
   };
-  
 
+  // Function to handle payment redirection specifically to PhonePe
+  const handleOpenPhonePeApp = () => {
+    const verificationCode = generatedCode;
+    const payAddress = upinumber || '9971299049@ibl';
+    const payName = upiname || 'Default Name';
+    const amount = grandTotalforpayment || 300; // Use actual payment amount
+  
+    // Construct the deep link URL specifically for PhonePe
+    const intentLink = `intent://pay?pa=${payAddress}&pn=${payName}&am=${amount}&cu=INR&tid=Bill%No:${verificationCode}#Intent;scheme=upi;package=com.phonepe.app;end`;
+  
+    window.location.href = intentLink; // Redirect to PhonePe app
+  };
+  
   const handleOpenUPIApp = (upiLink) => {
     window.location.href = upiLink;  // Redirect to the UPI link to open the UPI app
   };
-  
+
   const handleCloseModal = () => {
     setIsModal(false);
   };
@@ -222,58 +231,67 @@ function Upi() {
               <img src={paytmlogo} className="h-12 w-12" />
             </div>
           </div>
-          <div className="mb-4 flex flex-col items-center justify-center">
-            <h2 className="text-lg font-bold text-center mb-2">Download QR Code to Pay</h2>
-            <div className="relative p-4 bg-white shadow-lg shadow-[#f6931e] mb-4 animate-slideInFromBottom" ref={qrCodeRef}>
-              <QRCode value={generateQRCodeValue()} />
+          <div className="text-center">
+            <QRCode
+              ref={qrCodeRef}
+              value={generateQRCodeValue()}
+              size={256}
+              bgColor={"#ffffff"}
+              fgColor={"#000000"}
+              level={"L"}
+              includeMargin={true}
+            />
+            <div className="mt-4">
+              <button
+                onClick={handleDownloadQRCode}
+                className="bg-blue-500 text-white px-4 py-2 rounded shadow hover:bg-blue-600"
+              >
+                <IoMdDownload className='mr-2' />
+                Download QR Code
+              </button>
             </div>
-            <div className="flex flex-row justify-evenly">
-              <div>
-                <h3>Name-{customerName}</h3>
-              </div>
-              <div>
-                <h3>Total Amount-{grandTotalforpayment}</h3>
-              </div>
-            </div>
-            <button
-              onClick={handleDownloadQRCode}
-              className="bg-[#f6931e] hover:bg-[#f6931e] text-white font-bold py-2 px-4 rounded flex items-center"
-            >
-              <IoMdDownload className="mr-2" />
-              Download QR
-            </button>
           </div>
-          <div>
-            <h2 className="text-lg font-bold text-center mb-2">Pay via UPI Apps</h2>
+          <div className="flex flex-col items-center">
             <button
-              onClick={handleOpenGooglePayApp}  // Use the Google Pay specific function here
-              className="bg-[#34a853] hover:bg-[#34a853] text-white font-bold py-2 px-4 rounded mb-2"
+              onClick={handleOpenGooglePayApp}
+              className="bg-[#4285F4] text-white px-4 py-2 rounded shadow mt-4"
             >
+              <img src={gpaylogo} className="h-8 w-8 inline mr-2" alt="Google Pay" />
               Pay with Google Pay
+            </button>
+            <button
+              onClick={handleOpenPhonePeApp}
+              className="bg-[#1d3c6b] text-white px-4 py-2 rounded shadow mt-4"
+            >
+              <img src={phonepelogo} className="h-8 w-8 inline mr-2" alt="PhonePe" />
+              Pay with PhonePe
+            </button>
+            <button
+              onClick={() => handleOpenUPIApp(generateQRCodeValue())}
+              className="bg-[#f6931e] text-white px-4 py-2 rounded shadow mt-4"
+            >
+              Pay with UPI
             </button>
           </div>
         </div>
-        {isModal && (
-          <Modal
-            title="Enter Verification Code"
-            message={
-              <div>
-                <input
-                  type="text"
-                  value={enteredCode}
-                  onChange={handleCodeChange}
-                  className="border rounded w-full py-2 px-3 text-gray-700"
-                />
-                {validationMessage && (
-                  <p className="text-red-500 text-xs mt-2">{validationMessage}</p>
-                )}
-              </div>
-            }
-            onConfirm={handleSubmit}
-            onClose={handleCloseModal}
-          />
-        )}
       </div>
+      {isModal && (
+        <Modal
+          title="Enter Verification Code"
+          message={`Please enter the verification code sent to your email.`}
+          onConfirm={handleSubmit}
+          onClose={handleCloseModal}
+        >
+          <input
+            type="text"
+            value={enteredCode}
+            onChange={handleCodeChange}
+            className="border rounded p-2 w-full mt-4"
+            placeholder="Enter code here"
+          />
+          {validationMessage && <p className="text-red-500 mt-2">{validationMessage}</p>}
+        </Modal>
+      )}
       <Footer />
     </div>
   );
