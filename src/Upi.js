@@ -77,7 +77,7 @@ function Upi() {
     const verificationCode = generatedCode;
     const payAddress = upinumber || '9971299049@ibl';
     const payName = upiname || 'Default Name';
-    const amount = grandTotalforpayment || 300; // Use actual payment amount
+    const amount = grandTotalforpayment || 1; // Use actual payment amount
   
     // Construct the deep link URL specifically for PhonePe
     const intentLink = `intent://pay?pa=${payAddress}&pn=${payName}&am=${amount}&cu=INR&tid=Bill%No:${verificationCode}#Intent;scheme=upi;package=com.phonepe.app;end`;
