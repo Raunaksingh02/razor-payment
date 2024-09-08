@@ -42,6 +42,7 @@ import SignupPage from "./SignupPage.js";
 import { UserProtectedRoute } from './components/UserProtectedRoute.js';
 import {BuyerContext} from "./components/Buyercontext.js";
 import Webuser from "./components/Webuser.js";
+import CouponManager from "./components/CouponManager.js";
 import Deliverydetail from "./components/Deliverydetail";
 import Uniqueuser from "./components/Uniqueuser.js";
 
@@ -79,6 +80,7 @@ const PaymentComponent = () => {
         <Route path="/docs/Shippingdetail" element={<Shipping/>} />
         <Route path="/docs/About" element={<Aboutus/>} />
         <Route path="/docs/Privacy" element={<Privacy/>} />
+        <Route path="/coupon" element={<CouponManager/>} />
         <Route path="/web/user" element={<Webuser/>} />
         <Route path="/delivery" element={<Deliverydetail/>} />
         <Route path="/docs/Cancel" element={<Cancellation/>} />

@@ -194,7 +194,7 @@ function Upi() {
         
         </div>
         <div className='flex-1 text-center'>
-          <h1 className='font-bold text-2xl mb-2 mr-4'>Bill  Generated</h1>
+          <h1 className='font-bold text-2xl mb-2 mr-4'>UPI Payment</h1>
         </div>
 
       </div>

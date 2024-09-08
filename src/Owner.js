@@ -10,6 +10,7 @@ import { IoFastFoodOutline } from "react-icons/io5";
 import { FaShopLock } from "react-icons/fa6";
 import { GiCook } from "react-icons/gi";
 import { BsBank } from "react-icons/bs";
+import { CiDiscount1 } from "react-icons/ci";
 import { FaFileInvoiceDollar } from "react-icons/fa";
 import { IoIosLogOut } from "react-icons/io";
 import axios from "axios";
@@ -67,8 +68,13 @@ function Owner() {
       
       <div className="flex-1 shadow-2xl shadow-gray-800">
         <div className="flex justify-between items-center p-4">
-          <Link to="/table">
-          <Heartbeat />
+          <Link to="/coupon">
+          <div className='flex items-center'>
+           <div>
+         <CiDiscount1  className="h-8 w-8"/>
+      </div>
+     
+    </div>
           </Link>
           <h1 className="font-extrabold text-3xl text-center text-[#18196c] ml-6">Admin Panel</h1>
           <button onClick={() => setShowModal(true)}>

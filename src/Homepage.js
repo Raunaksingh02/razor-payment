@@ -16,6 +16,8 @@ import Calling from './Calling.js';
 import Footer from "./Footer.js";
 import { BuyerContext } from './components/Buyercontext.js'; // Import BuyerContext for user authentication
 
+import { FaTag } from 'react-icons/fa';
+
 function Homepage() {
     const { table } = useParams(); 
     const navigate = useNavigate(); // useNavigate hook for navigation
@@ -33,9 +35,13 @@ function Homepage() {
     const [searchTerm, setSearchTerm] = useState('');
     const itemsPerPage = 6;
 
+  
     const dispatch = useDispatch();
     const cartfortotal = useSelector((state) => state.cart.cart);
     const totalquantityforhome = cartfortotal.map((item) => item.quantity).reduce((prev, curr) => prev + curr, 0);
+
+
+    
 
     useEffect(() => {
         axios.get('https://backendcafe-ceaj.onrender.com/getdish')
@@ -341,6 +347,8 @@ function Homepage() {
                     Next
                 </button>
             </div>
+
+           
             <Footer/>
         </div>
     );

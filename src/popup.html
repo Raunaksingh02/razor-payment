@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Coupon Code Offer Popup</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+
+  
+  <div class="fixed inset-0 bg-gray-800 bg-opacity-60 flex items-center justify-center z-40 hidden" id="couponPopup">
+    <!-- Popup Container -->
+    <div class="bg-white w-full max-w-sm md:max-w-md lg:max-w-lg rounded-lg shadow-lg overflow-hidden relative p-6 z-50">
+      
+      <!-- Close Button -->
+      <button class="absolute top-4 right-4 text-gray-500 hover:text-gray-800 focus:outline-none" onclick="togglePopup()">
+        &times;
+      </button>
+
+      <!-- Popup Content -->
+      <div class="flex flex-col items-center text-center">
+        <!-- Offer Icon -->
+        <div class="text-yellow-500 mb-2">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c.667-.667 1.333-2 2-4 2 2 3.667 4.333 5 7-2.333 2.667-4.333 5-6 7-1.667-2-3.333-4.333-5-7 1-2 1.667-3.333 2-4z" />
+          </svg>
+        </div>
+        
+        <!-- Offer Text -->
+        <h2 class="text-3xl font-bold text-gray-800 mb-2">Exclusive Offer!</h2>
+        <p class="text-gray-600 mb-4">Use the coupon code below to get a special discount on your next order.</p>
+        
+        <!-- Coupon Code with Icon -->
+        <div class="flex items-center bg-yellow-100 text-yellow-800 text-2xl font-bold py-2 px-6 rounded-lg mb-6 border border-yellow-300">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 14V5a2 2 0 012-2h2a2 2 0 012 2v9m-6 0a2 2 0 002 2h2a2 2 0 002-2m-6 0H6a2 2 0 00-2 2v2a2 2 0 002 2h12a2 2 0 002-2v-2a2 2 0 00-2-2h-3" />
+          </svg>
+          SAVE20
+        </div>
+
+        <!-- Call to Action Button with Icon -->
+        <button class="bg-red-500 text-white py-2 px-6 rounded-lg flex items-center hover:bg-red-600 transition duration-200">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h18l-1.65 9.824A2 2 0 0117.385 15H6.615a2 2 0 01-1.965-2.176L3 3zm0 0l3 16.5A2 2 0 008 21.5h8a2 2 0 001.99-2.05L18 3M5 7h14M9 15v4m6-4v4" />
+          </svg>
+          Shop Now
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript to Toggle Popup -->
+  <script>
+    function togglePopup() {
+      const popup = document.getElementById('couponPopup');
+      popup.classList.toggle('hidden');
+    }
+
+    // Show popup on page load (for demonstration purposes)
+    window.onload = function() {
+      togglePopup();
+    };
+  </script>
+</body>
+</html>
