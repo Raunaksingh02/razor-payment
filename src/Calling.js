@@ -45,23 +45,24 @@ function Calling() {
   };
 
   return (
-    <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center pointer-events-none">
+    <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center  pointer-events-none">
       {requests.map((request, index) => (
         <div 
           key={index} 
-          className="bg-white border border-red-300 text-red-800 px-6 py-4 rounded-lg shadow-lg relative mb-4 pointer-events-auto max-w-sm mx-auto transition-transform transform duration-300 ease-in-out hover:scale-105"
+          className="bg-white border border-red-400 text-red-700 px-6 py-4 rounded shadow-lg shadow-red-400 relative mb-4 pointer-events-auto animate-bounce-in-down max-w-sm mx-auto"
           role="alert"
         >
-          <div className="flex justify-between items-start">
+          <div className="flex   justify-between items-start ">
             <div>
-              <strong className="font-semibold text-lg text-gray-800">Incoming Call from {request.table}</strong>
-              <span className="block text-gray-600">Query: {request.query} at {request.time}</span>
+              <strong className="font-extrabold text-xl">Incoming Call from {request.table}!</strong>
+              <span className="block font-extrabold  sm:inline"> {request.query} at {request.time}</span>
             </div>
             <button
               onClick={() => removeRequest(index)}
-              className="text-gray-800 hover:text-red-500 transition-colors duration-300"
+              className="text-black"
             >
-              <GiCancel className='h-6 w-6' />
+            {/* <span className="text-2xl">&times;</span> */}
+            <GiCancel fill="black" className='h-6 w-6' />
             </button>
           </div>
         </div>
