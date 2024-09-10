@@ -345,7 +345,7 @@ function Billpart() {
             className='h-10 w-full border border-gray-300 rounded-lg p-2 focus:border-blue-500 focus:outline-none'
              >
             <option value="" >
-                Coupon Available
+               Select Coupon
             </option>
             {coupons.map((coupon) => (
                 <option key={coupon._id} value={coupon._id}>
