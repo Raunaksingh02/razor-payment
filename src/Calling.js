@@ -61,6 +61,7 @@ function Calling() {
               onClick={() => removeRequest(index)}
               className="text-black"
             >
+              
             {/* <span className="text-2xl">&times;</span> */}
             <GiCancel fill="black" className='h-6 w-6' />
             </button>
