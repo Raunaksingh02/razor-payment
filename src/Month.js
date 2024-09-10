@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import backarrowlogo from './images/backarrowlogo.png';
+import {  Link } from 'react-router-dom';
 import axios from 'axios';
 import { format } from 'date-fns';
 
@@ -72,8 +74,17 @@ const RevenueProfitDashboard = () => {
 
   return (
     <div className="p-8 bg-gray-100 min-h-screen">
-      <h1 className="text-3xl font-bold mb-6 text-center">Revenue and Profit Dashboard</h1>
-
+       <div className='flex items-center mb-4'>
+        
+        <div className='mr-4'>
+          <Link to="/owner">
+            <img src={backarrowlogo} className='h-10 w-10' alt="Back" />
+          </Link>
+        </div>
+        <div className='flex-1 text-center'>
+          <h1 className='font-bold text-2xl'>Revenue & Profit</h1>
+        </div>
+      </div>
       <div className="mb-6 flex justify-center items-center space-x-4">
         <div>
           <label className="block text-gray-700 mb-2 text-center">Select Month and Year</label>
