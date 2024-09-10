@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext,useRef } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom'; // import useNavigate for navigation
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
@@ -15,6 +15,8 @@ import { addToCart, removeToCart } from './redux/cartSlice.js';
 import Calling from './Calling.js';
 import Footer from "./Footer.js";
 import { BuyerContext } from './components/Buyercontext.js'; // Import BuyerContext for user authentication
+import {CouponContext } from "./components/CouponContext.js";
+import Couponmodal from "./components/Couponmodal.js";
 
 import { FaTag } from 'react-icons/fa';
 
@@ -22,7 +24,20 @@ function Homepage() {
     const { table } = useParams(); 
     const navigate = useNavigate(); // useNavigate hook for navigation
     const { buyer } = useContext(BuyerContext); // Destructure buyer from BuyerContext
+    
 
+    const { toggleModal } = useContext(CouponContext);
+
+    // useRef to persist whether the modal was opened without triggering re-render
+    const hasModalOpened = useRef(false);
+  
+    useEffect(() => {
+      if (!hasModalOpened.current) {
+        toggleModal(); 
+        hasModalOpened.current = true;
+      }
+    }, []);
+  
     const [cafes, setCafes] = useState([]);
     const [quantities, setQuantities] = useState([]);
     const [selectedSizes, setSelectedSizes] = useState([]);
@@ -173,6 +188,7 @@ function Homepage() {
                     </>
                 )
             }
+            
             <div className='flex items-center justify-between bg-[#f6931e] rounded-t-3xl p-3 '>
                 <h1 className="text-3xl font-extrabold text-white text-center m-2 mr-3">Cafe Coffee </h1>
                 <div className='flex items-center m-2 p-2'>

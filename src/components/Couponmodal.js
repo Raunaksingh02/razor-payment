@@ -1,56 +1,76 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import Modal from 'react-modal'; // Make sure to install this package or use a different modal library if preferred
-import { FaTimes } from 'react-icons/fa';
+import React, { useContext } from 'react';
+import { CouponContext } from './CouponContext';
 
-Modal.setAppElement('#root'); // For accessibility
-
-const Couponmodal = ({ isOpen, onRequestClose }) => {
-  const [coupons, setCoupons] = useState([]);
-
-  useEffect(() => {
-    if (isOpen) {
-      const fetchCoupons = async () => {
-        try {
-          const { data } = await axios.get('http://localhost:1000/coupons');
-          setCoupons(data.coupons);
-        } catch (error) {
-          console.error('Error fetching coupons:', error);
-        }
-      };
-      fetchCoupons();
-    }
-  }, [isOpen]);
+const Couponmodal = () => {
+  const { coupons, isModalOpen, toggleModal, deleteCoupon } = useContext(CouponContext);
+  console.log("the coupon is  ",coupons);
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onRequestClose={onRequestClose}
-      contentLabel="Coupons Modal"
-      className="modal max-w-lg mx-auto p-6 bg-white rounded-lg shadow-lg relative"
-      overlayClassName="overlay fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center"
-    >
-      <button
-        onClick={onRequestClose}
-        className="absolute top-2 right-2 text-2xl text-gray-500 hover:text-gray-800"
-      >
-        <FaTimes />
-      </button>
-      <h2 className="text-2xl font-bold mb-4 text-center">Available Coupons</h2>
-      <ul className="space-y-4">
-        {coupons.length > 0 ? (
-          coupons.map((coupon) => (
-            <li key={coupon._id} className="p-4 border border-gray-300 rounded-lg">
-              <p className="font-semibold text-lg">{coupon.name}</p>
-              <p className="text-sm text-gray-600">{coupon.discountPercentage}% off</p>
-              <p className="mt-2 text-gray-800">{coupon.description}</p>
-            </li>
-          ))
-        ) : (
-          <p className="text-center">No coupons available at the moment.</p>
-        )}
-      </ul>
-    </Modal>
+    <>
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
+          <div className="bg-white rounded-xl shadow-2xl w-11/12 md:w-2/3 lg:w-1/2 p-8 relative">
+            <button
+              onClick={toggleModal}
+              className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-2xl font-bold"
+            >
+              &times;
+            </button>
+            <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">Available Coupons</h2>
+
+            {/* Display Coupon Details */}
+            {coupons.length > 0 ? (
+              <div className="space-y-4">
+                {coupons.map((coupon) => (
+                  <div
+                    key={coupon._id}
+                    className="border border-gray-200 rounded-lg p-4 shadow-md hover:shadow-lg transition-shadow"
+                  >
+                    <div className="flex justify-between items-center mb-2">
+                      <h3 className="text-lg font-semibold text-gray-700">{coupon.name}</h3>
+                      <button
+                        onClick={() => deleteCoupon(coupon._id)}
+                        className="text-red-500 hover:text-red-700 text-sm"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                    <p className="text-gray-600">
+                      <strong>Discount:</strong> {coupon.discountPercentage}% off
+                    </p>
+                    {coupon.description && (
+                      <p className="text-gray-600">
+                        <strong>Description:</strong> {coupon.description}
+                      </p>
+                    )}
+                    {coupon.expiryDate && (
+                      <p className="text-gray-600">
+                        <strong>Expiry Date:</strong> {new Date(coupon.expiryDate).toLocaleDateString()}
+                      </p>
+                    )}
+                    {coupon.maxDiscountAmount && (
+                      <p className="text-gray-600">
+                        <strong>Max Discount:</strong> ₹{coupon.maxDiscountAmount}
+                      </p>
+                    )}
+                    {coupon.minOrderValue && (
+                      <p className="text-gray-600">
+                        <strong>Min Order Value:</strong> ₹{coupon.minOrderValue}
+                      </p>
+                    )}
+                    <p className={`text-sm mt-2 font-semibold ${coupon.isActive ? 'text-green-500' : 'text-red-500'}`}>
+                      {coupon.isActive ? 'Active' : 'Inactive'}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-center text-gray-500">No coupons available at the moment.</p>
+            )}
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 

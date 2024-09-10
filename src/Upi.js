@@ -26,7 +26,8 @@ function Upi() {
     customerName,
     customerPhone,
     customerTable,
-    grandTotalforpayment,
+    finalprice,
+    discountAmount,
     selectedAddress,
     cartforpayment
   } = state || {};
@@ -62,7 +63,7 @@ function Upi() {
     const payAddress = upinumber || '9971299049@ibl'; // Example fallback UPI address
     const payName = upiname || 'Default Name'; // Example fallback UPI name
     
-    return `upi://pay?pa=${payAddress}&pn=${payName}&am=${grandTotalforpayment}&cu=INR&tn=Bill%No:${verificationCode}`;
+    return `upi://pay?pa=${payAddress}&pn=${payName}&am=${finalprice}&cu=INR&tn=Bill%No:${verificationCode}`;
   };
   
   
@@ -99,7 +100,8 @@ function Upi() {
         paymentId: enteredCode,
         cartforpayment,
         name: customerName,
-        amount: grandTotalforpayment,
+        amount: finalprice,
+        discountamount:discountAmount,
         customerTable,
         email: buyerEmail,
         paymentmode: paymentmode2,
@@ -111,7 +113,8 @@ function Upi() {
         paymentId: enteredCode,
         cartforpayment,
         name: customerName,
-        amount: grandTotalforpayment,
+        amount:finalprice,
+        discountamount:discountAmount, 
         customerTable,
         email: buyerEmail ,
         paymentmode: paymentmode2,
@@ -222,7 +225,7 @@ function Upi() {
               <h3>Name-{customerName}</h3>
             </div>
             <div className="ml-2">
-              <h3>Amount-{grandTotalforpayment}</h3>
+              <h3>Amount-{finalprice}</h3>
             </div>
           </div>
           <button onClick={handleDownloadQRCode} className="mt-2 px-4 py-2 bg-black animate-slideInFromBottom text-white rounded-lg">
@@ -252,6 +255,7 @@ function Upi() {
           <div className="mt-4 animate-slideInFromBottom">
           </div>
         </div>
+
       <Stepmodal isOpen={isModal} onClose={handleCloseModal} />
      
      </div>

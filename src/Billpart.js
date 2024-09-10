@@ -12,6 +12,7 @@ import { CustomerContext } from './CustomerContext';
 import { BuyerContext } from './components/Buyercontext.js';
 import {MinOrderContext} from "./components/MinOrderContext.js"
 import {UPIDetailsContext} from "./components/UPIDetailsContext.js";
+import {CouponContext} from "./components/CouponContext.js";
 import axios from 'axios';
 import { removeToCart } from './redux/cartSlice.js';
 import Calling from './Calling.js';
@@ -27,17 +28,24 @@ function Billpart() {
   const dispatch = useDispatch();
   const { minOrderValue, deliveryCharge } = useContext(MinOrderContext);
    const { upinumber , upiname } = useContext(UPIDetailsContext);
+   const { coupons } = useContext(CouponContext);
   
 
-  const cartforpayment = useSelector((state) => state.cart.cart);
+  console.log("the coupon in billpart is ", coupons);
+  
+  const [finalprice,setfinalprice]= useState(0);
+
+
+   const cartforpayment = useSelector((state) => state.cart.cart);
   const totalforpayment = cartforpayment
     .map((item) => item.price * item.quantity)
     .reduce((prev, curr) => prev + curr, 0);
 
     
-     // Check if tableQueryParam is null or explicitly set to "undefined"
-  const isTableParamMissing = tableQueryParam === null || tableQueryParam === 'undefined';
-
+ // Check if tableQueryParam is null or explicitly set to "undefined"
+ const isTableParamMissing = tableQueryParam === null || tableQueryParam === 'undefined';
+  
+  
   // Calculate grand total
   const grandTotalforpayment =
     isTableParamMissing && totalforpayment < minOrderValue
@@ -47,11 +55,14 @@ function Billpart() {
   const [buyeraddress, setBuyerAddress] = useState([]);
   const { setCustomerName, setCustomerTable, setCustomerPhone, customerPhone, customerName, customerTable ,paymentmode1,setpaymentmode1} = useContext(CustomerContext);
   const { buyer } = useContext(BuyerContext);
-  const [confirmModalIsOpen, setConfirmModalIsOpen] = useState(false); // State for confirmation modal
+  const [confirmModalIsOpen, setConfirmModalIsOpen] = useState(false); 
 
 
   const buyerEmail = buyer?.email || "";
   console.log("the buyer email is ", buyerEmail);
+
+
+
 
   useEffect(() => {
     if (buyerEmail) {
@@ -101,20 +112,21 @@ function Billpart() {
       const response = await axios.post('https://backendcafe-ceaj.onrender.com/api/payments', {
         cartforpayment,
         name: customerName,
-        amount:grandTotalforpayment,
+        amount: finalprice,
         email: buyerEmail || "",
         customerTable,
         paymentmode: paymentmode1,
+        discountamount: discountAmount,
         address: selectedAddress || "",
         customerPhoneNo: customerPhone,
       });
-     
       const paymentId = response.data._id;
-      navigate(`/Invoice/${paymentId}?paymentmode=${paymentmode1}`);
+      navigate(`/Invoice/${paymentId}?paymentmode=${paymentmode1}&discountAmount=${discountAmount}`);
     } catch (error) {
       console.error('Error saving payment details:', error);
     }
-  };
+};
+
 
   const handleValidation = () => {
     const phoneRegex = /^\d{10}$/; // Regular expression to check for exactly 10 digits
@@ -131,7 +143,8 @@ function Billpart() {
           customerName,
           customerPhone,
           customerTable,
-          grandTotalforpayment,
+          finalprice,
+          discountAmount,
           selectedAddress,
           cartforpayment,
         },
@@ -141,11 +154,8 @@ function Billpart() {
   
 
   const generateQRCodeValue = () => {
-    // Default values as fallback in case UPI details are missing
-    const payAddress = upinumber || '9971299049@ibl'; // Example fallback UPI address
-    const payName = upiname || 'Default Name';        // Example fallback UPI name
-    
-    // Constructing the UPI payment string using the context values
+    const payAddress = upinumber || '9971299049@ibl'; 
+    const payName = upiname || 'Default Name';       
     return `upi://pay?pa=${payAddress}&pn=${payName}&am=${grandTotalforpayment}&cu=INR`;
   };
 
@@ -185,6 +195,31 @@ function Billpart() {
     ? `/${tableQueryParam}`
     : '/'; 
 
+
+    const [selectedCoupon, setSelectedCoupon] = useState(null); // State for selected coupon
+    const [discountAmount, setDiscountAmount] = useState(0); // State for calculated discount
+  
+    const calculateDiscount = () => {
+      if (selectedCoupon &&  grandTotalforpayment >= (selectedCoupon.minOrderValue || 0)) {
+        let discount = ( grandTotalforpayment * selectedCoupon.discountPercentage) / 100;
+        discount = selectedCoupon.maxDiscountAmount ? Math.min(discount, selectedCoupon.maxDiscountAmount) : discount;
+        
+        setDiscountAmount(discount);
+      } else {
+        setDiscountAmount(0);
+      }
+    };
+  
+    useEffect(() => {
+      calculateDiscount();
+    }, [selectedCoupon, grandTotalforpayment]);
+
+    useEffect(() => {
+      setfinalprice(grandTotalforpayment - discountAmount);
+    }, [discountAmount, grandTotalforpayment]);
+  
+
+    
   return (
     <div className='container mx-auto p-4'>
       {tableQueryParam === "Takeaway" && (
@@ -227,6 +262,13 @@ function Billpart() {
       <div className='mt-4 text-center'>
         <h1 className='font-bold text-2xl'>Total Amount = {totalforpayment}</h1>
         <h1 className='font-bold text-2xl'>Grand Total = {grandTotalforpayment}</h1>
+        {isTableParamMissing && totalforpayment < minOrderValue && (
+        <div className='flex flex-col items-center'>
+          <h2 className='font-bold text-red-700 text-center mt-2'>
+            Delivery Charge Added: ₹{deliveryCharge}
+          </h2>
+        </div>
+      )}
       </div>
       <div className='text-center mt-4'>
         <button onClick={openModal} className='h-12 w-60 bg-black text-white text-lg font-bold rounded-2xl'>
@@ -291,6 +333,35 @@ function Billpart() {
                 </div>
               </div>
             )}
+        {coupons.length > 0 && (
+         <div>
+          <h2 className='font-bold text-lg mb-2'>Select a Coupon:</h2>
+          <select
+            value={selectedCoupon ? selectedCoupon._id : ''}
+            onChange={(e) => {
+                const coupon = coupons.find((coupon) => coupon._id === e.target.value);
+                setSelectedCoupon(coupon || null);
+            }}
+            className='h-10 w-full border border-gray-300 rounded-lg p-2 focus:border-blue-500 focus:outline-none'
+             >
+            <option value="" >
+                Coupon Available
+            </option>
+            {coupons.map((coupon) => (
+                <option key={coupon._id} value={coupon._id}>
+                    {coupon.name} - {coupon.discountPercentage}% off -- (Minimun Order Value: ₹{coupon.minOrderValue})
+                </option>
+            ))}
+              </select>
+             {selectedCoupon && discountAmount > 0 && (
+            <div>
+                <p className='text-green-500 font-bold mt-2'>Discount Applied: ₹{discountAmount.toFixed(2)}</p>
+                <p className='text-green-500 font-bold mt-2'>Grand Total: ₹{finalprice}</p>
+            </div>
+               )}
+           </div>
+             )}
+
             {validationMessage && (
               <div className="text-red-500 font-bold mb-2">
                 {validationMessage}
@@ -305,8 +376,7 @@ function Billpart() {
               </button>
             </div>
           </div>
-          {tableQueryParam === "Takeaway" && (
-       
+      {tableQueryParam === "Takeaway" && (
        <div 
        ref={qrCodeRef} 
       className="flex flex-col items-center justify-center mt-6 mx-auto p-4 max-w-xs"
@@ -345,7 +415,7 @@ function Billpart() {
         Cancel
       </button>
       </div>
- <div className='ml-3'>
+      <div className='ml-3'>
         <button
         className="bg-[#f6931e] text-white p-3 md:px-8 md:py-4 rounded-2xl font-bold hover:bg-green-700 mr-4"
         onClick={savePaymentDetails2}
@@ -353,16 +423,14 @@ function Billpart() {
       Submit
       </button>
       </div>
-
-      
-    </div>
-  </div>
-</Modal>
+      </div>
+      </div>
+      </Modal>
 
       
       <Footer/>
-    </div>
-  );
+       </div>
+     );
 }
 
 export default Billpart;

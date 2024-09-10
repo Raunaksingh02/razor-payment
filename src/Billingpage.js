@@ -11,6 +11,7 @@ function BillingPage() {
     const [customerData, setCustomerData] = useState(null);
     const [minOrderValue, setMinOrderValue] = useState(0);
     const [deliveryCharge, setDeliveryCharge] = useState(0);
+    const [discountAmount, setDiscountAmount] = useState(0); // New state for discount
 
     useEffect(() => {
         fetchData();
@@ -21,6 +22,11 @@ function BillingPage() {
         try {
             const response = await axios.get(`https://backendcafe-ceaj.onrender.com/api/payments/${_id}`);
             setCustomerData(response.data);
+            
+            // Fetch discount amount if it exists
+            if (response.data.discountamount) {
+                setDiscountAmount(response.data.discountamount);
+            }
         } catch (error) {
             console.error('Error fetching payment details:', error.message);
         }
@@ -50,7 +56,10 @@ function BillingPage() {
     };
 
     const calculateGrandTotal = () => {
-        return calculateSubtotal() + calculateAdditionalCharge();
+        const subtotal = calculateSubtotal();
+        const additionalCharge = calculateAdditionalCharge();
+        const totalBeforeDiscount = subtotal + additionalCharge;
+        return totalBeforeDiscount - discountAmount; // Subtract discount amount if applicable
     };
 
     const downloadPDF = () => {
@@ -132,10 +141,16 @@ function BillingPage() {
                             <td colSpan="3" className="border px-4 py-2 text-right">Subtotal:</td>
                             <td className="border px-4 py-2">{calculateSubtotal().toFixed(2)}</td>
                         </tr>
-                        { calculateAdditionalCharge() > 0 && (
+                        {calculateAdditionalCharge() > 0 && (
                             <tr>
                                 <td colSpan="3" className="border px-4 py-2 text-right">Delivery Charge:</td>
                                 <td className="border px-4 py-2">{deliveryCharge.toFixed(2)}</td>
+                            </tr>
+                        )}
+                        {discountAmount > 0 && (
+                            <tr>
+                                <td colSpan="3" className="border px-4 py-2 text-right">Discount:</td>
+                                <td className="border px-4 py-2">-{discountAmount.toFixed(2)}</td>
                             </tr>
                         )}
                         <tr>
@@ -147,26 +162,24 @@ function BillingPage() {
 
                 {/* Footer */}
                 <div className="text-center pt-4 border-t mt-4">
-                    <p className="text-gray-600">Thank you for your business!</p>
+                    <p className="text-gray-600">Thank you for your Order!</p>
                     <p className="text-gray-600">We appreciate your patronage.</p>
                     <p className="text-gray-600 text-sm mt-2">Note: The status of the payment will change to "Received" after the payment has been received by the merchant.</p>
-              
                 </div>
             </div>
 
             {/* Download and WhatsApp Buttons */}
-            <div className="flex justify-center mt-4">
-                <button onClick={downloadPDF} className="flex items-center justify-center h-16 w-32 p-3 m-3 border-2 border-black bg-black text-white rounded-xl font-bold">
-                    <div className="flex items-center">
-                        <div>Download</div>
-                        <FaFilePdf className="ml-2" />
-                    </div>
+            <div className="flex justify-center items-center mt-4">
+                <button onClick={whatsappInvoice} className="bg-green-500 text-white px-4 py-2 rounded mr-2 flex items-center">
+                    <FaWhatsapp className="mr-2" />
+                    Send on WhatsApp
                 </button>
-                <button onClick={whatsappInvoice} className="flex items-center justify-center h-16 w-32 p-4 m-3 border-2 border-black bg-black text-white rounded-xl font-bold">
-                    <div className="flex items-center">
-                        <div>WhatsApp</div>
-                        <FaWhatsapp className="ml-2" />
-                    </div>
+                <button
+                    className="bg-red-500 text-white px-4 py-2 rounded flex items-center"
+                    onClick={downloadPDF}
+                >
+                    <FaFilePdf className="mr-2" />
+                    Download Invoice
                 </button>
             </div>
         </div>

@@ -96,6 +96,17 @@ const CouponManager = () => {
           />
         </div>
         <div>
+          <input
+            type="number"
+            name="minOrderValue"
+            value={newCoupon.minOrderValue}
+            onChange={handleInputChange}
+            placeholder="minOrderValue"
+            className="border p-2 w-full"
+            required
+          />
+        </div>
+        <div>
           <textarea
             name="description"
             value={newCoupon.description}

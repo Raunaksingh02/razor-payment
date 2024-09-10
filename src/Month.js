@@ -58,8 +58,11 @@ const RevenueProfitDashboard = () => {
   // Render table data dynamically
   const renderTableData = (data) => {
     return data.map((item) => (
-      <tr key={item._id.day || item._id.month}>
-        <td className="border px-4 py-2 text-center">{item._id.day || item._id.month}</td>
+      <tr key={item._id}>
+        <td className="border px-4 py-2 text-center">
+          {/* Convert the day or month to a readable format */}
+          {item._id.day ? `Day ${item._id}` : `Month ${item._id}`} 
+        </td>
         <td className="border px-4 py-2 text-center">{item.revenue || item.totalRevenue}</td>
         <td className="border px-4 py-2 text-center">{item.cost || item.totalCost}</td>
         <td className="border px-4 py-2 text-center font-bold text-green-500">{item.profit || item.totalProfit}</td>

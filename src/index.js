@@ -9,12 +9,14 @@ import { CustomerProvider } from './CustomerContext';
 import { AuthProvider } from './AuthContext';
 import { BuyerProvider } from './components/Buyercontext.js';
 import { MinOrderProvider } from "./components/MinOrderContext.js";
+import {CouponProvider} from "./components/CouponContext.js";
 import {UPIDetailsProvider} from "./components/UPIDetailsContext.js";
 
 ReactDOM.render(
   <Provider store={store}>
     <UPIDetailsProvider>
     <MinOrderProvider>
+      <CouponProvider>
     <BuyerProvider>
         <AuthProvider>
     <CustomerProvider>
@@ -22,9 +24,9 @@ ReactDOM.render(
     </CustomerProvider>
     </AuthProvider>
     </BuyerProvider>
+    </CouponProvider>
     </MinOrderProvider>
     </UPIDetailsProvider>
-    
   </Provider>,
   document.getElementById('root')
 );
