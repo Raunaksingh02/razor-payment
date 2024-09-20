@@ -4,28 +4,14 @@ import { GiCancel } from "react-icons/gi";
 
 const socket = io("https://backendcafe-ceaj.onrender.com");
 
+
 function Calling() {
   const [requests, setRequests] = useState([]);
   const audioRef = useRef(new Audio('/alertsound.mp3'));
-  const [audioAllowed, setAudioAllowed] = useState(false); // Track if audio is allowed
 
   useEffect(() => {
     const audioElement = audioRef.current;
     audioElement.load(); // Preload the audio
-
-    // Unlock audio context after user interaction
-    const unlockAudioContext = () => {
-      if (!audioAllowed) {
-        audioElement.play().catch(() => {
-          // Prevent errors for blocked play attempts
-          console.log('User interaction is required to play audio.');
-        });
-        setAudioAllowed(true); // Set audio as allowed after interaction
-        window.removeEventListener('click', unlockAudioContext); // Remove listener once triggered
-      }
-    };
-
-    window.addEventListener('click', unlockAudioContext);
 
     socket.on('Request', (data) => {
       const newRequest = { ...data, time: new Date().toLocaleTimeString() };
@@ -40,11 +26,11 @@ function Calling() {
         audioRef.current = null;
       }
     };
-  }, [audioAllowed]); // Dependencies to re-run if audioAllowed changes
+  }, []);
 
   const playAlertSound = () => {
     const audioElement = audioRef.current;
-    if (audioElement && audioAllowed) {
+    if (audioElement) {
       audioElement.currentTime = 0; // Ensure the sound plays from the start
       audioElement.play().catch(error => {
         console.error('Error playing audio:', error);
@@ -67,16 +53,18 @@ function Calling() {
           className="bg-white border border-red-400 text-red-700 px-6 py-4 rounded shadow-lg shadow-red-400 relative mb-4 pointer-events-auto animate-bounce-in-down max-w-sm mx-auto"
           role="alert"
         >
-          <div className="flex justify-between items-start">
+          <div className="flex   justify-between items-start ">
             <div>
               <strong className="font-extrabold text-xl">Incoming Call from {request.table}!</strong>
-              <span className="block font-extrabold sm:inline"> {request.query} at {request.time}</span>
+              <span className="block font-extrabold  sm:inline"> {request.query} at {request.time}</span>
             </div>
             <button
               onClick={() => removeRequest(index)}
               className="text-black"
             >
-              <GiCancel fill="black" className='h-6 w-6' />
+              
+            {/* <span className="text-2xl">&times;</span> */}
+            <GiCancel fill="black" className='h-6 w-6' />
             </button>
           </div>
         </div>
