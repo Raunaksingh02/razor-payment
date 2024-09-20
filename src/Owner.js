@@ -71,7 +71,7 @@ function Owner() {
             <IoIosLogOut className="h-8 w-8" />
           </button>
         </div>
-
+        
         <div className="w-full h-auto p-6 md:h-56 rounded-2xl bg-[#18196c] flex flex-col items-center justify-center mb-6 shadow-lg">
           <div className="flex flex-row items-center justify-between w-full px-4">
             <div className="text-white">
