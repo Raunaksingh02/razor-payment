@@ -56,7 +56,7 @@ function Calling() {
           <div className="flex   justify-between items-start ">
             <div>
               <strong className="font-extrabold text-xl">Incoming Call from {request.table}!</strong>
-              <span className="block font-extrabold  sm:inline"> {request.query} at {request.time}</span>
+              <span className="block text-xl font-extrabold  sm:inline"> {request.query} at {request.time}</span>
             </div>
             <button
               onClick={() => removeRequest(index)}
