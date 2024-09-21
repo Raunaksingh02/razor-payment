@@ -144,6 +144,7 @@ function Owner() {
                 Logout
               </button>
             </div>
+            
           </div>
         </div>
       )}
@@ -152,3 +153,4 @@ function Owner() {
 }
 
 export default Owner;
+
