@@ -239,7 +239,7 @@ function Homepage() {
             </div>
 
          
-  <div className="flex flex-col md:flex-row items-start md:items-center justify-start font-bold text-xl p-3">
+            <div className="flex flex-col md:flex-row items-start md:items-center justify-start font-bold text-xl p-3">
   {/* Tab Container with Centering for Desktop */}
   <div className="flex flex-nowrap overflow-x-auto space-x-4 w-full md:w-auto pb-3 md:pb-0 md:justify-center mx-auto">
     {categories.map((category, index) => (
