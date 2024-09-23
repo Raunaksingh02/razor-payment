@@ -258,9 +258,7 @@ function Homepage() {
   </div>
 </div>
 
-
-
-            <div className="grid grid-cols-1 mt-3 sm:grid sm:grid-cols-3 sm:gap-4">
+  <div className="grid grid-cols-1 mt-3 sm:grid sm:grid-cols-3 sm:gap-4">
   {currentCafes.map((item, index) => (
     <div
       className="flex flex-row bg-gray-100 ease-in duration-300 rounded-2xl shadow-inner shadow-gray-400 animate-slideInFromBottom p-4 mb-4 hover:bg-gray-400"
