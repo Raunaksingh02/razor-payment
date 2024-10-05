@@ -55,11 +55,8 @@ function Homepage() {
     const cartfortotal = useSelector((state) => state.cart.cart);
     const totalquantityforhome = cartfortotal.map((item) => item.quantity).reduce((prev, curr) => prev + curr, 0);
 
-
-    
-
     useEffect(() => {
-        axios.get('https://backendcafe-ceaj.onrender.com/getdish')
+        axios.get('https://backendcafe-zqt8.onrender.com/getdish')
             .then(response => {
                 setCafes(response.data);
                 setQuantities(Array(response.data.length).fill(0));
@@ -176,7 +173,7 @@ function Homepage() {
     };
     
     return (
-        <div className="container mx-auto p-3 ">
+        <div className=" m-3">
             {
                 table === "Takeaway" && (
                     <>

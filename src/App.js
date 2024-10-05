@@ -6,7 +6,6 @@ import ProtectedRoute from './ProtectedRoute';
 import Customerlogin from "./components/Customerlogin.js";
 import Customerotp from './components/Customerotp.js';
 import Customersign from './components/Customersign.js';
-
 import Billpart from './Billpart'; 
 import Admin from './Admin.js';
 import Owner from './Owner.js'
@@ -45,6 +44,11 @@ import Webuser from "./components/Webuser.js";
 import CouponManager from "./components/CouponManager.js";
 import Deliverydetail from "./components/Deliverydetail";
 import Uniqueuser from "./components/Uniqueuser.js";
+import Pos from "./Pos.js";
+import AddRewardCoupon from './AddRewardCoupon.js';
+import Wallet from "./Wallet.js"
+import Wheel from "./Wheel.js"
+
 
 const PaymentComponent = () => {
  
@@ -55,9 +59,7 @@ const PaymentComponent = () => {
       <Route
           path="/:table"
           element={
-           
               <Homepage />
-           
           }
         />
         <Route path="/" element={<Homepage />} />  
@@ -68,9 +70,12 @@ const PaymentComponent = () => {
           } />
         <Route path="/Success" element={<Successpage/>} />
         <Route path="/orders" element={<Customerorder/>} />
+        <Route path="/pos" element={<Pos />} />
+        <Route path="/addreward" element={<AddRewardCoupon/>} />
+        <Route path="/wallet" element={<Wallet />} />
         <Route path="/web/signup" element={<Customersign/>} />
-         <Route path="/web/login" element={<Customerlogin/>} />
-         <Route path="/web/otp" element={<Customerotp/>} />
+        <Route path="/web/login" element={<Customerlogin/>} />
+        <Route path="/web/otp" element={<Customerotp/>} />
         <Route path="/Fail" element={<Failurepage/>} />
         <Route path="/docs/terms" element={<Termcondition/>} />
         <Route path="/docs/Contact" element={<Contactus/>} />
@@ -81,6 +86,7 @@ const PaymentComponent = () => {
         <Route path="/docs/About" element={<Aboutus/>} />
         <Route path="/docs/Privacy" element={<Privacy/>} />
         <Route path="/coupon" element={<CouponManager/>} />
+        <Route path="/loyal/wheel" element={< Wheel/>} />
         <Route path="/web/user" element={<Webuser/>} />
         <Route path="/delivery" element={<Deliverydetail/>} />
         <Route path="/docs/Cancel" element={<Cancellation/>} />
@@ -109,21 +115,16 @@ const PaymentComponent = () => {
              <Dishmanage />
           </ProtectedRoute>
           } />
-
           <Route
           path="/bill"
           element={
-           
               <Billpart />
-           
           }
         />
         <Route path="/update/:_id" element={
           <ProtectedRoute>
               <Updatepart />
           </ProtectedRoute>
-        
-
           } />   
       </Routes>
     </Router>

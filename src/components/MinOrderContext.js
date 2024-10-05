@@ -10,7 +10,7 @@ export const MinOrderProvider = ({ children }) => {
   useEffect(() => {
     const fetchMinOrderDetails = async () => {
       try {
-        const response = await axios.get('https://backendcafe-ceaj.onrender.com/min-order-delivery');
+        const response = await axios.get('https://backendcafe-zqt8.onrender.com/min-order-delivery');
         setMinOrderValue(response.data.minOrderValue);
         setDeliveryCharge(response.data.deliveryCharge);
       } catch (error) {

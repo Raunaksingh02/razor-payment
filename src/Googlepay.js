@@ -14,7 +14,7 @@ const Googlepay = () => {
   useEffect(() => {
     const fetchUPIDetails = async () => {
       try {
-        const response = await axios.get('https://backendcafe-ceaj.onrender.com/upi-details');
+        const response = await axios.get('https://backendcafe-zqt8.onrender.com/upi-details');
         setUpinumber(response.data.upinumber || '');
         setUpiname(response.data.upiname || '');
       } catch (error) {
@@ -28,7 +28,7 @@ const Googlepay = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.put('https://backendcafe-ceaj.onrender.com/upi-details', { upinumber, upiname });
+      const response = await axios.put('https://backendcafe-zqt8.onrender.com/upi-details', { upinumber, upiname });
       setMessage(response.data.message);
     } catch (error) {
       setMessage('Failed to update UPI details');

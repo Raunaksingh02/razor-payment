@@ -26,7 +26,7 @@ const DishManagement = () => {
 
   const fetchDishes = async () => {
     try{
-      const response = await axios.get('https://backendcafe-ceaj.onrender.com/getdish')
+      const response = await axios.get('https://backendcafe-zqt8.onrender.com/getdish')
       setDishes(response.data);
     } catch (error) {
       console.error('Error fetching dishes', error);
@@ -36,7 +36,7 @@ const DishManagement = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`https://backendcafe-ceaj.onrender.com/deletedish/${id}`);
+      await axios.delete(`https://backendcafe-zqt8.onrender.com/deletedish/${id}`);
    {/*   setDishes(dishes.filter((dish) => dish.id !== id)); */}
     } catch (error) {
       console.error('Error deleting dish', error);
@@ -52,7 +52,7 @@ const DishManagement = () => {
       const validSizes = validateSizes(newDish.sizes);
       const dishToAdd = { ...newDish, sizes: validSizes };
   
-      const response = await axios.post('https://backendcafe-ceaj.onrender.com/postdish', dishToAdd, {
+      const response = await axios.post('https://backendcafe-zqt8.onrender.com/postdish', dishToAdd, {
         headers: {
           'Content-Type': 'application/json',
         },
@@ -84,7 +84,7 @@ const DishManagement = () => {
   
   const handleUpdate = async () => {
     try {
-      const response = await axios.put(`https://backendcafe-ceaj.onrender.com/dishes/${editDish.id}`, editDish);
+      const response = await axios.put(`https://backendcafe-zqt8.onrender.com/dishes/${editDish.id}`, editDish);
       setDishes(dishes.map((dish) => (dish.id === editDish.id ? response.data : dish)));
       setEditDish(null);
     } catch (error) {

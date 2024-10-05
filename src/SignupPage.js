@@ -12,7 +12,7 @@ const SignupPage = () => {
   const handleSignup = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('https://backendcafe-ceaj.onrender.com/api/signup', { username, password, email, phoneNo });
+      const response = await axios.post('https://backendcafe-zqt8.onrender.com/api/signup', { username, password, email, phoneNo });
       if (response.data.success) {
         // Redirect or set authentication state
         navigate('/login'); // example redirection

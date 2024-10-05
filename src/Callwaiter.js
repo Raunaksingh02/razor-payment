@@ -4,7 +4,7 @@ import waiterphoto from "./images/waiterphoto.jpg";
 import backarrowlogo from "./images/backarrowlogo.png";
 import { io } from 'socket.io-client';
 
-const socket = io("https://backendcafe-ceaj.onrender.com");
+const socket = io("https://backendcafe-zqt8.onrender.com");
 
 export default function Callwaiter() {
   const [table, setTable] = useState('');

@@ -22,8 +22,12 @@ import Salechart from './Salechart';
 import Webisteorder from './Webisteorder';
 import Homepage from './Homepage';
 import Upi from './Upi';
+import { MdOutlineLoyalty } from "react-icons/md";
 import Deliverydetail from './components/Deliverydetail';
+import Pos from "./Pos";
 import Chart from 'react-apexcharts';
+import CouponManager from  './components/CouponManager';
+import AddRewardCoupon from './AddRewardCoupon';
 
 function Owner() {
   const [stats, setStats] = useState({});
@@ -38,7 +42,7 @@ function Owner() {
 
   const fetchStats = useCallback(async () => {
     try {
-      const response = await axios.get('https://backendcafe-ceaj.onrender.com/todays-stats');
+      const response = await axios.get('https://backendcafe-zqt8.onrender.com/todays-stats');
       setStats(response.data);
     } catch (error) {
       console.error('Error fetching stats', error);
@@ -46,11 +50,7 @@ function Owner() {
   }, []);
 
 
-  useEffect(() => {
-    if (selectedTab === 'Create Bill') {
-      navigate('/Takeaway'); // Redirect to /takeaway when the 'Create Bill' tab is selected
-    }
-  }, [selectedTab, navigate]);
+ 
 
   useEffect(() => {
     fetchStats();
@@ -113,7 +113,7 @@ function Owner() {
   const tabs = [
     { name: 'Dashboard', icon: <FaChartLine />, component: renderDashboard },
     { name: 'OrderDetails', icon: <IoFastFoodSharp />, component: <OrderDetails /> },
-    { name: 'Create Bill', icon: <FaFileInvoiceDollar />, component: null },
+    { name: 'Create Bill', icon: <FaFileInvoiceDollar />, component: <Pos/> },
     { name: 'Website Order', icon: <MdElectricMoped />, component: <Webisteorder /> },
     { name: 'Menu-Items', icon: <GiCook />, component: <Dishmanage /> },
     { name: 'Cost Price', icon: <MdOutlinePayments />, component: null },
@@ -122,8 +122,9 @@ function Owner() {
     { name: 'Total Report', icon: <TbReport />, component: null },
     { name: 'Web User', icon: <BiSolidUserDetail />, component: null },
     { name: 'Delivery', icon: <TbTruckDelivery />, component: <Deliverydetail /> },
+    { name: 'Reward', icon: < MdOutlineLoyalty />, component: <AddRewardCoupon /> },
     { name: 'History', icon: <FaHistory />, component: null },
-    { name: 'Coupons', icon: <CiDiscount1 />, component: <Link to="/coupon" /> },
+    { name: 'Coupons', icon: <CiDiscount1 />, component: <CouponManager /> },
     { name: 'Logout', icon: <IoIosLogOut />, component: handleLogout },
   ];
 
@@ -159,7 +160,7 @@ function Owner() {
       </div>
 
       {/* Main Content */}
-      <div className="w-5/6 p-8 overflow-x-auto">
+      <div className="w-5/6 p-4 overflow-x-auto">
         <div className="bg-white p-6 rounded-lg shadow-xl">
           {renderSelectedTab()}
         </div>

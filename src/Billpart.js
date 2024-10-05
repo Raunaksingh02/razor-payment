@@ -66,7 +66,7 @@ function Billpart() {
 
   useEffect(() => {
     if (buyerEmail) {
-      axios.get(`https://backendcafe-ceaj.onrender.com/addresses?email=${buyerEmail}`)
+      axios.get(`https://backendcafe-zqt8.onrender.com/addresses?email=${buyerEmail}`)
         .then(response => {
           setBuyerAddress(response.data);
           if (response.data.length > 0) {
@@ -109,7 +109,7 @@ function Billpart() {
 
   const savePaymentDetails2 = async () => {
     try {
-      const response = await axios.post('https://backendcafe-ceaj.onrender.com/api/payments', {
+      const response = await axios.post('https://backendcafe-zqt8.onrender.com/api/payments', {
         cartforpayment,
         name: customerName,
         amount: finalprice,

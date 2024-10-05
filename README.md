@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { io } from 'socket.io-client';
 import { GiCancel } from "react-icons/gi";
 
-const socket = io("https://backendcafe-ceaj.onrender.com");
+const socket = io("https://backendcafe-zqt8.onrender.com");
 
 function Calling() {
   const [requests, setRequests] = useState([]);

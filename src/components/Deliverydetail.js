@@ -11,7 +11,7 @@ const Deliverydetail = () => {
   useEffect(() => {
     const fetchSettings = async () => {
       try {
-        const response = await axios.get('https://backendcafe-ceaj.onrender.com/min-order-delivery');
+        const response = await axios.get('https://backendcafe-zqt8.onrender.com/min-order-delivery');
         setMinOrderValue(response.data.minOrderValue);
         setDeliveryCharge(response.data.deliveryCharge);
       } catch (error) {
@@ -24,7 +24,7 @@ const Deliverydetail = () => {
 
   const handleUpdate = async () => {
     try {
-      await axios.put('https://backendcafe-ceaj.onrender.com/min-order-delivery', {
+      await axios.put('https://backendcafe-zqt8.onrender.com/min-order-delivery', {
         minOrderValue,
         deliveryCharge,
       });

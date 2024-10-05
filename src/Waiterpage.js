@@ -12,7 +12,7 @@ function Waiterpage() {
   useEffect(() => {
     const fetchDishes = async () => {
       try {
-        const response = await axios.get('https://backendcafe-ceaj.onrender.com/getdish');
+        const response = await axios.get('https://backendcafe-zqt8.onrender.com/getdish');
         setDishes(response.data);
       } catch (error) {
         console.error('Error fetching dishes:', error);
@@ -36,7 +36,7 @@ function Waiterpage() {
 
   const handleSubmit = async () => {
     try {
-      await axios.put(`https://backendcafe-ceaj.onrender.com/getdish/${selectedDish._id}/size`, {
+      await axios.put(`https://backendcafe-zqt8.onrender.com/getdish/${selectedDish._id}/size`, {
         sizes: costPrices
       });
       alert('Cost prices updated successfully');

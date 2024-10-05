@@ -10,7 +10,7 @@ export const CouponProvider = ({ children }) => {
   // Fetch coupons from API or backend
   useEffect(() => {
     // Example: Fetch coupons from backend (replace with your API endpoint)
-    fetch('https://backendcafe-ceaj.onrender.com/coupons')
+    fetch('https://backendcafe-zqt8.onrender.com/coupons')
       .then((response) => response.json())
       .then((data) => {
         setCoupons(data.coupons);

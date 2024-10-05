@@ -16,7 +16,7 @@ const Uniqueuser = () => {
   useEffect(() => {
     const fetchUniqueUsers = async () => {
       try {
-        const response = await axios.get('http://localhost:1000/unique-users');
+        const response = await axios.get('https://backendcafe-zqt8.onrender.com/unique-users');
         setUniqueUsers(response.data);
       } catch (err) {
         console.error('Error fetching unique users:', err);
@@ -33,7 +33,7 @@ const Uniqueuser = () => {
     }
     try {
       setError('');
-      const response = await axios.get(`http://localhost:1000/analysis/${phoneNo}`);
+      const response = await axios.get(`https://backendcafe-zqt8.onrender.com/analysis/${phoneNo}`);
       setAnalysisData(response.data);
       setShowAnalysis(true);
     } catch (err) {

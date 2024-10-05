@@ -1,0 +1,40 @@
+.wheel {
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  position: relative;
+  border: 5px solid #333;
+  transition: transform 4s ease-out; /* Smooth transition for spinning */
+}
+
+.slice {
+  position: absolute;
+  width: 50%;
+  height: 50%;
+  top: 0;
+  left: 50%;
+  transform-origin: 0% 100%;
+  overflow: hidden;
+}
+
+.slice span {
+  display: block;
+  width: 200%;
+  height: 200%;
+  text-align: right;
+  line-height: 200px;
+  padding-right: 10px;
+  color: #fff;
+  font-size: 12px;
+  background-color: #f6931e;
+}
+
+.indicator {
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-bottom: 20px solid #f6931e;
+}
+
+.spinning {
+  transition: transform 4s cubic-bezier(0.33, 1, 0.68, 1);
+}

@@ -16,7 +16,7 @@ const Customerotp = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('https://backendcafe-ceaj.onrender.com/api/customers/verify-otp', { email, otp });
+      await axios.post('http://localhost-1000/api/customers/verify-otp', { email, otp });
       navigate('/signup-success');
     } catch (err) {
       alert('OTP verification failed');

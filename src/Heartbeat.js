@@ -8,7 +8,7 @@ const Heartbeat = memo(() => {
   useEffect(() => {
     const sendHeartbeat = async () => {
       try {
-        const response = await axios.get('https://backendcafe-ceaj.onrender.com/getdish');
+        const response = await axios.get('https://backendcafe-zqt8.onrender.com/getdish');
         console.log('Server response:', response.data);
 
         // Increment heartbeat count

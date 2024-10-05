@@ -109,7 +109,7 @@ function Upi() {
         customerPhoneNo: customerPhone,
       });
 
-      const res = await axios.post('https://backendcafe-ceaj.onrender.com/api/payments', {
+      const res = await axios.post('https://backendcafe-zqt8.onrender.com/api/payments', {
         paymentId: enteredCode,
         cartforpayment,
         name: customerName,

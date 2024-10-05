@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import io from "socket.io-client";
 
-const socket = io("https://backendcafe-ceaj.onrender.com");
+const socket = io("https://backendcafe-zqt8.onrender.com");
 
 const OrderPopup = () => {
   const [showPopup, setShowPopup] = useState(false);

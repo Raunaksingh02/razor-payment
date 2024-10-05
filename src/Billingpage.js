@@ -20,7 +20,7 @@ function BillingPage() {
 
     const fetchData = async () => {
         try {
-            const response = await axios.get(`https://backendcafe-ceaj.onrender.com/api/payments/${_id}`);
+            const response = await axios.get(`https://backendcafe-zqt8.onrender.com/api/payments/${_id}`);
             setCustomerData(response.data);
             
             // Fetch discount amount if it exists
@@ -34,7 +34,7 @@ function BillingPage() {
 
     const fetchMinOrderDetails = async () => {
         try {
-            const response = await axios.get('https://backendcafe-ceaj.onrender.com/min-order-delivery');
+            const response = await axios.get('https://backendcafe-zqt8.onrender.com/min-order-delivery');
             setMinOrderValue(response.data.minOrderValue);
             setDeliveryCharge(response.data.deliveryCharge);
         } catch (error) {

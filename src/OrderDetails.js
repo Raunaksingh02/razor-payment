@@ -17,7 +17,7 @@ const PaymentDetails = () => {
     useEffect(() => {
         const fetchPayments = async () => {
             try {
-                const response = await axios.get('https://backendcafe-ceaj.onrender.com/api/payments');
+                const response = await axios.get('https://backendcafe-zqt8.onrender.com/api/payments');
                 setPayments(response.data);
             } catch (error) {
                 console.error("There was an error fetching the payments!", error);
@@ -30,7 +30,7 @@ const PaymentDetails = () => {
 
     const handleDelete = async (paymentId) => {
         try {
-            const response = await axios.delete(`https://backendcafe-ceaj.onrender.com/${paymentId}`);
+            const response = await axios.delete(`https://backendcafe-zqt8.onrender.com/${paymentId}`);
             console.log('Delete response:', response);
             setPayments(payments.filter(payment => payment._id !== paymentId));
         } catch (error) {

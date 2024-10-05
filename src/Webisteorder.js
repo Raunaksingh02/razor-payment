@@ -15,7 +15,7 @@ const WebsiteOrder = () => {
   const [selectedPayment, setSelectedPayment] = useState(null);
 
   useEffect(() => {
-    fetch('https://backendcafe-ceaj.onrender.com/api/payments')
+    fetch('https://backendcafe-zqt8.onrender.com/api/payments')
       .then((response) => response.json())
       .then((data) => {
         // Filter out payments that have a non-empty address and customerTable as 'website'
@@ -49,7 +49,7 @@ const WebsiteOrder = () => {
 
   const handleDelete = async (paymentId) => {
     try {
-      await axios.delete(`https://backendcafe-ceaj.onrender.com/${paymentId}`);
+      await axios.delete(`https://backendcafe-zqt8.onrender.com/${paymentId}`);
       setPayments(payments.filter(payment => payment._id !== paymentId));
     } catch (error) {
       console.error('There was an error deleting the payment!', error);
