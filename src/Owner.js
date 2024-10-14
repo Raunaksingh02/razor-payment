@@ -1,42 +1,34 @@
 import React, { useEffect, useState, useCallback, useContext } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { MdOutlinePayments } from "react-icons/md";
-import { IoFastFoodSharp } from "react-icons/io5";
-import { FaMoneyCheckDollar, FaUserTie, FaChartLine } from "react-icons/fa6";
-import { TbReport, TbTruckDelivery } from "react-icons/tb";
-import { BiSolidUserDetail } from "react-icons/bi";
-import { FaFileInvoiceDollar, FaHistory } from "react-icons/fa";
-import { MdElectricMoped } from "react-icons/md";
-import { CiDiscount1 } from "react-icons/ci";
-import { IoIosLogOut } from "react-icons/io";
-import { BsBank } from "react-icons/bs";
-import { GiCook } from "react-icons/gi";
-import axios from "axios";
+import { useNavigate } from 'react-router-dom';
+import { FaChartLine, FaFileInvoiceDollar, FaMoneyCheckDollar, FaHistory } from 'react-icons/fa';
+import { IoFastFoodSharp, IoIosLogOut } from 'react-icons/io5';
+import { MdElectricMoped, MdOutlineLoyalty, MdOutlinePayments } from 'react-icons/md';
+import { GiCook } from 'react-icons/gi';
+import { TbReport, TbTruckDelivery } from 'react-icons/tb';
+import { BiSolidUserDetail } from 'react-icons/bi';
+import { CiDiscount1 } from 'react-icons/ci';
+import axios from 'axios';
 import { AuthContext } from './AuthContext';
-import Calling from "./Calling";
-import OrderPopup from "./OrderPopup";
+import Calling from './Calling';
+import OrderPopup from './OrderPopup';
 import OrderDetails from './OrderDetails';
 import Billingpage from './Billingpage';
 import Dishmanage from './Dishmanage';
 import Salechart from './Salechart';
 import Webisteorder from './Webisteorder';
-import Homepage from './Homepage';
-import Upi from './Upi';
-import { MdOutlineLoyalty } from "react-icons/md";
+import Pos from './Pos';
 import Deliverydetail from './components/Deliverydetail';
-import Pos from "./Pos";
-import Chart from 'react-apexcharts';
-import CouponManager from  './components/CouponManager';
+import CouponManager from './components/CouponManager';
 import AddRewardCoupon from './AddRewardCoupon';
+import Chart from 'react-apexcharts';
 
 function Owner() {
   const [stats, setStats] = useState({});
-  const [showModal, setShowModal] = useState(false);
   const { logout } = useContext(AuthContext);
-  const [currentDate, setCurrentDate] = useState('');
-  const [selectedTab, setSelectedTab] = useState('Dashboard'); // Default to Dashboard
+  const [selectedTab, setSelectedTab] = useState('Dashboard');
   const [chartOptions, setChartOptions] = useState({});
   const [chartSeries, setChartSeries] = useState([]);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const navigate = useNavigate();
 
@@ -49,16 +41,11 @@ function Owner() {
     }
   }, []);
 
-
- 
-
   useEffect(() => {
     fetchStats();
     const date = new Date();
     const formattedDate = `${String(date.getDate()).padStart(2, '0')}/${String(date.getMonth() + 1).padStart(2, '0')}/${date.getFullYear()}`;
-    setCurrentDate(formattedDate);
-
-    // Setup Chart
+    
     setChartOptions({
       chart: { type: 'bar' },
       xaxis: { categories: ['Orders', 'Profit', 'Revenue', 'Units Sold'] },
@@ -73,16 +60,12 @@ function Owner() {
 
   const renderDashboard = () => (
     <div>
-        <Calling />
-        <OrderPopup />
-      
-      {/* Welcome Note */}
-      <div className="bg-white p-6 rounded-lg shadow-2xl  mb-6">
+      <Calling />
+      <OrderPopup />
+      <div className="bg-white p-6 rounded-lg shadow-2xl mb-6">
         <h1 className="text-2xl font-bold mb-4">Welcome to the Admin Dashboard!</h1>
         <p className="text-lg">Here are your today's stats.</p>
       </div>
-
-      {/* Today's Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
         <div className="bg-gradient-to-r from-[#f6931e] to-orange-400 p-6 rounded-lg shadow-lg">
           <h2 className="text-xl font-bold text-white mb-2">Orders</h2>
@@ -101,8 +84,6 @@ function Owner() {
           <p className="text-3xl font-bold text-white">{stats.totalDishesSold || 'N/A'}</p>
         </div>
       </div>
-
-      {/* Chart */}
       <div className="bg-white p-6 rounded-lg shadow-xl">
         <h2 className="text-xl font-bold mb-4">Today's Performance</h2>
         <Chart options={chartOptions} series={chartSeries} type="bar" height={350} />
@@ -113,19 +94,13 @@ function Owner() {
   const tabs = [
     { name: 'Dashboard', icon: <FaChartLine />, component: renderDashboard },
     { name: 'OrderDetails', icon: <IoFastFoodSharp />, component: <OrderDetails /> },
-    { name: 'Create Bill', icon: <FaFileInvoiceDollar />, component: <Pos/> },
+    { name: 'Create Bill', icon: <FaFileInvoiceDollar />, component: <Pos /> },
     { name: 'Website Order', icon: <MdElectricMoped />, component: <Webisteorder /> },
     { name: 'Menu-Items', icon: <GiCook />, component: <Dishmanage /> },
-    { name: 'Cost Price', icon: <MdOutlinePayments />, component: null },
-    { name: 'Item Analysis', icon: <FaMoneyCheckDollar />, component: null },
-    { name: 'Sales Chart', icon: <FaChartLine />, component: <Salechart /> },
-    { name: 'Total Report', icon: <TbReport />, component: null },
-    { name: 'Web User', icon: <BiSolidUserDetail />, component: null },
     { name: 'Delivery', icon: <TbTruckDelivery />, component: <Deliverydetail /> },
-    { name: 'Reward', icon: < MdOutlineLoyalty />, component: <AddRewardCoupon /> },
-    { name: 'History', icon: <FaHistory />, component: null },
+    { name: 'Reward', icon: <MdOutlineLoyalty />, component: <AddRewardCoupon /> },
     { name: 'Coupons', icon: <CiDiscount1 />, component: <CouponManager /> },
-    { name: 'Logout', icon: <IoIosLogOut />, component: handleLogout },
+   
   ];
 
   const renderSelectedTab = () => {
@@ -138,51 +113,38 @@ function Owner() {
 
   return (
     <div className="flex min-h-screen bg-gray-50">
-    
+      {/* Mobile Sidebar Toggle */}
+      <div className="fixed top-4 right-4 z-50 md:hidden">
+        <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="text-white bg-black p-2 rounded-lg">
+          <svg className="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7" />
+          </svg>
+        </button>
+      </div>
 
       {/* Sidebar */}
-      <div className="w-1/6 bg-[#18196c] text-white p-4 flex flex-col items-start shadow-lg min-h-screen">
-        <h1 className="text-2xl font-bold mb-6 text-center">Admin Panel</h1>
-
-        {/* Navigation Tabs */}
-        {tabs.map((tab, index) => (
-          <button
-            key={index}
-            className={`w-full py-3 px-2 rounded-lg mb-2 flex items-center space-x-4 transition-all ${
-              selectedTab === tab.name ? 'bg-[#f6931e]' : 'hover:bg-[#374785]'
-            }`}
-            onClick={() => setSelectedTab(tab.name)}
-          >
-            <span className="h-6 w-6 ml-1">{tab.icon}</span> {/* Adjust icon size */}
-            <span className="text-lg">{tab.name}</span> {/* Adjust text spacing */}
-          </button>
-        ))}
+      <div className={`fixed inset-y-0 left-0 transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} transition-transform duration-200 md:relative md:translate-x-0 w-64 bg-[#18196c] text-white p-4 flex flex-col items-start shadow-lg min-h-screen`}>
+        <div className="text-2xl font-bold mb-8">Admin Panel</div>
+        <button className="text-white absolute top-4 right-4 md:hidden" onClick={() => setIsSidebarOpen(false)}>
+          <svg className="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+        <ul className="flex flex-col w-full">
+          {tabs.map(tab => (
+            <li
+              key={tab.name}
+              className={`flex items-center space-x-2 p-3 rounded-lg mb-2 cursor-pointer ${selectedTab === tab.name ? 'bg-[#f6931e] text-white' : 'hover:bg-[#f6931e] hover:text-white'}`}
+              onClick={() => setSelectedTab(tab.name)}>
+              {tab.icon}
+              <span className={`${isSidebarOpen ? '' : 'hidden'} md:inline`}>{tab.name}</span>
+            </li>
+          ))}
+        </ul>
       </div>
 
       {/* Main Content */}
-      <div className="w-5/6 p-4 overflow-x-auto">
-        <div className="bg-white p-6 rounded-lg shadow-xl">
-          {renderSelectedTab()}
-        </div>
-      </div>
-
-      {/* Logout Modal */}
-      {showModal && (
-        <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75">
-          <div className="bg-white p-6 rounded-lg shadow-xl">
-            <h2 className="text-lg font-bold mb-4">Confirm Logout</h2>
-            <p className="mb-4">Are you sure you want to logout?</p>
-            <div className="flex justify-end">
-              <button className="bg-gray-300 hover:bg-gray-400 text-gray-700 py-2 px-4 rounded mr-2" onClick={() => setShowModal(false)}>
-                Cancel
-              </button>
-              <button className="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded" onClick={handleLogout}>
-                Logout
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <div className="flex-1 p-4">{renderSelectedTab()}</div>
     </div>
   );
 }

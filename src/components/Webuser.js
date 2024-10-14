@@ -35,6 +35,7 @@ const Webuser = () => {
               <th className="py-2 px-4">Name</th>
               <th className="py-2 px-4">Phone No</th>
               <th className="py-2 px-4">Email</th>
+              <th className="py-2 px-4">Wallet</th>
               <th className="py-2 px-4">Addresses</th>
               <th className="py-2 px-4">OTP Verified</th>
             </tr>
@@ -45,6 +46,7 @@ const Webuser = () => {
                 <td className="py-2 px-4">{customer.name}</td>
                 <td className="py-2 px-4">{customer.phoneNo}</td>
                 <td className="py-2 px-4">{customer.email}</td>
+                <td className="py-2 px-4">{customer.wallet}</td>
                 <td className="py-2 px-4">
                   <button
                     className="text-blue-500 underline"
