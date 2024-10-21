@@ -29,7 +29,7 @@ const Scratch = () => {
 
   const validateQRCode = async (qrId) => {
     try {
-      const response = await fetch(`http://localhost:1000/validateqr/${qrId}`);
+      const response = await fetch(`https://backendcafe-zqt8.onrender.com/validateqr/${qrId}`);
       const data = await response.json();
       if (data.success) {
         setIsValidQR(true); // Valid QR Code
@@ -60,7 +60,7 @@ const Scratch = () => {
   const claimReward = async () => {
     if (isAuthenticated) {
       try {
-        const response = await fetch(`http://localhost:1000/updateredeemed/${qrid}`, { method: 'POST' });
+        const response = await fetch(`https://backendcafe-zqt8.onrender.com/updateredeemed/${qrid}`, { method: 'POST' });
         const data = await response.json();
         if (data.success) {
           alert(`Reward of Rs 10 added to your wallet!`);
@@ -74,6 +74,18 @@ const Scratch = () => {
     } else {
       alert('Please log in to claim your reward.');
     }
+  };
+
+  // Function to send two WhatsApp messages
+  const sendWhatsAppMessages = () => {
+    const phone1 = '911234567890'; // Replace with first phone number (country code included)
+    const phone2 = '919876543210'; // Replace with second phone number (country code included)
+    const message1 = encodeURIComponent('Hello, this is your first message from the Scratch and Win!');
+    const message2 = encodeURIComponent('Hello, this is your second message from the Scratch and Win!');
+
+    // Open WhatsApp chats for both numbers
+    window.open(`https://api.whatsapp.com/send?phone=${phone1}&text=${message1}`, '_blank');
+    window.open(`https://api.whatsapp.com/send?phone=${phone2}&text=${message2}`, '_blank');
   };
 
   if (loading) {
@@ -137,6 +149,14 @@ const Scratch = () => {
           )}
         </>
       )}
+
+      {/* WhatsApp Button */}
+      <button
+        onClick={sendWhatsAppMessages}
+        className="px-6 py-3 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600 transition-colors mt-4"
+      >
+        Send WhatsApp Messages
+      </button>
     </div>
   );
 };

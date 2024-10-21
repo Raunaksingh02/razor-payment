@@ -34,7 +34,7 @@ const WheelComponent = () => {
 
   const fetchRewards = async () => {
     try {
-      const response = await fetch('http://localhost:1000/REWARDS');
+      const response = await fetch('https://backendcafe-zqt8.onrender.com/REWARDS');
       const data = await response.json();
       if (response.ok) {
         const formattedRewards = data.map((reward) => ({
@@ -52,7 +52,7 @@ const WheelComponent = () => {
 
   const validateQRCode = async (qrId) => {
     try {
-      const response = await fetch(`http://localhost:1000/validateqr/${qrId}`);
+      const response = await fetch(`https://backendcafe-zqt8.onrender.com/validateqr/${qrId}`);
       const data = await response.json();
       if (data.success) {
         setIsValidQR(true); // Valid QR Code
@@ -80,7 +80,7 @@ const WheelComponent = () => {
     if (isSpinning || hasSpun || rewards.length === 0 || isRedeemed) return;
 
     try {
-      const response = await fetch(`http://localhost:1000/spin/${qrid}`, { method: 'POST' });
+      const response = await fetch(`https://backendcafe-zqt8.onrender.com/spin/${qrid}`, { method: 'POST' });
       const data = await response.json();
       if (data.success) {
         setMustSpin(true);
@@ -112,7 +112,7 @@ const WheelComponent = () => {
   const claimReward = async () => {
     if (isAuthenticated) {
       try {
-        const response = await fetch(`http://localhost:1000/redeem/${qrid}`, { method: 'POST' });
+        const response = await fetch(`https://backendcafe-zqt8.onrender.com/redeem/${qrid}`, { method: 'POST' });
         const data = await response.json();
         if (data.success) {
           alert(`Reward of ${rewardWon} Points added to your wallet!`);

@@ -61,7 +61,7 @@ const AddRewardCoupon = () => {
     }
 
     try {
-      const response = await axios.post('http://localhost:1000/generate-links', { numLinks: numberOfLinks });
+      const response = await axios.post('https://backendcafe-zqt8.onrender.com/generate-links', { numLinks: numberOfLinks });
       setGeneratedLinks(response.data.links); // Assuming response contains an array of links
       setMessage('Links generated successfully!');
       setNumLinks('');

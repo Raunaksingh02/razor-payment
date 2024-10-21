@@ -36,7 +36,7 @@ const Pos = () => {
   useEffect(() => {
     const fetchwallet = async () => {
       try {
-        const response = await axios.get(`http://localhost:1000/api/customer/${customerPhone}`);
+        const response = await axios.get(`https://backendcafe-zqt8.onrender.com/api/customer/${customerPhone}`);
         setwalletamt(response.data.wallet);
         console.log(response.data);
       } catch (error) {
