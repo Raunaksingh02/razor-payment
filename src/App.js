@@ -48,7 +48,7 @@ import Pos from "./Pos.js";
 import AddRewardCoupon from './AddRewardCoupon.js';
 import Wallet from "./Wallet.js"
 import Wheel from "./Wheel.js"
-
+import Scratch from "./Scratch.js";
 
 const PaymentComponent = () => {
  
@@ -99,6 +99,7 @@ const PaymentComponent = () => {
         <Route path="/Billdata/:_id" element={<Billingpage/>} />
         <Route path="/Website" element={<Webisteorder/>} />
         <Route path="/Call" element={<Callwaiter/>} />
+        <Route path="/loyal/card" element={< Scratch/>} />
         <Route path="/Unique" element={<Uniqueuser/>} />
         <Route path="/Upi" element={<Upi/>} />
         <Route path="/Address" element={<Address/>} />

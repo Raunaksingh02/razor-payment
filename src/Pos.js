@@ -17,19 +17,34 @@ const Pos = () => {
   const [customerName, setCustomerName] = useState('');
   const [customerPhone, setCustomerPhone] = useState('');
   console.log(cart);
+  const [walletamt,setwalletamt] = useState(0);
+  const [walletuse,setwalletuse] = useState(false);
 
   useEffect(() => {
-    // Fetch items from the backend
     const fetchItems = async () => {
       try {
         const response = await axios.get('https://backendaggrawal-8dey.onrender.com/getdish');
         setItems(response.data);
+
       } catch (error) {
         console.error('Error fetching items:', error);
       }
     };
-    fetchItems();
+    fetchItems(); 
   }, []);
+
+  useEffect(() => {
+    const fetchwallet = async () => {
+      try {
+        const response = await axios.get(`http://localhost:1000/api/customer/${customerPhone}`);
+        setwalletamt(response.data.wallet);
+        console.log(response.data);
+      } catch (error) {
+        console.error('Error fetching items:', error);
+      }
+    };
+    fetchwallet(); 
+  }, [customerPhone]);
 
   useEffect(() => {
     calculateTotal();
@@ -38,10 +53,12 @@ const Pos = () => {
   const calculateTotal = () => {
     let totalAmount = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
     totalAmount -= discount;
+    if(walletuse  === true){
+      totalAmount-= walletamt;
+    }
     setTotal(totalAmount);
-
     let totalQuantity = cart.reduce((acc, item) => acc + item.quantity, 0);
-    setQuantity(totalQuantity); // Update total quantity
+    setQuantity(totalQuantity); 
   };
 
   const addToCart = (item, size = '', price = '') => {
@@ -51,17 +68,17 @@ const Pos = () => {
       price = item.sizes[0].price; // Default to the first price
     }
 
-    const existingItem = cart.find(cartItem => cartItem.id === item.id && cartItem.size === size);
+    const existingItem = cart.find(cartItem => cartItem.id === item._id && cartItem.size === size);
     if (existingItem) {
       const updatedCart = cart.map(cartItem => {
-        if (cartItem.id === item.id && cartItem.size === size) {
+        if (cartItem.id === item._id && cartItem.size === size) {
           return { ...cartItem, quantity: cartItem.quantity + 1 };
         }
         return cartItem;
       });
       setCart(updatedCart);
     } else {
-      setCart([...cart, { ...item, size, price, quantity: 1 }]);
+      setCart([...cart, { ...item, id: item._id, size, price, quantity: 1 }]); // Ensure correct `id` and size
     }
   };
 
@@ -200,36 +217,95 @@ const Pos = () => {
       {/* Bill Section */}
       {showBill && (
         <div className="fixed top-0 left-0 w-full h-screen bg-white p-4 overflow-y-auto z-50">
-          <h3 className="text-xl font-bold mb-4">Bill Summary</h3>
+          <div className="flex justify-between">
+            <h3 className="text-xl font-bold mb-4">Bill Summary</h3>
+            <button
+              className="text-gray-500"
+              onClick={() => setShowBill(false)}
+            >
+              Close
+            </button>
+          </div>
           {cart.length === 0 ? (
             <p className="text-gray-500">No items in cart</p>
           ) : (
             <div>
               {cart.map((item) => (
-                <div key={item.id} className="flex justify-between mb-2">
-                  <span>{item.name} ({item.size}) x {item.quantity}</span>
+                <div key={`${item._id}-${item.size}`} className="flex justify-between items-center border-b py-2">
                   <div>
-                    <button onClick={() => decrementQuantity(item.id, item.size)} className="px-2">-</button>
-                    <span> {item.quantity} </span>
-                    <button onClick={() => incrementQuantity(item.id, item.size)} className="px-2">+</button>
+                    <h4 className="font-bold">{item.name} ({item.size})</h4>
+                    <p>₹{item.price} x {item.quantity}</p>
                   </div>
-                  <span>₹{item.price * item.quantity}</span>
-                  <button onClick={() => removeFromCart(item.id, item.size)} className="text-red-500 ml-4">
-                    <MdDelete />
-                  </button>
+
+                  <div className='flex' >
+                    <button
+                      onClick={() => decrementQuantity(item._id, item.size)}
+                      className="px-2 py-1 bg-red-500 text-white rounded-lg"
+                    >
+                      -
+                    </button>
+                    <span className="mx-2">{item.quantity}</span>
+                    <button
+                      onClick={() => incrementQuantity(item._id, item.size)}
+                      className="px-2 py-1 bg-green-500 text-white rounded-lg"
+                    >
+                      +
+                    </button>
+                    <MdDelete
+                      className="text-red-500 h-8 w-8 ml-2 mt-1 cursor-pointer"
+                      onClick={() => removeFromCart(item._id, item.size)}
+                    />
+                  </div>
                 </div>
               ))}
-              <hr />
-              <div className="flex justify-between mt-2">
-                <span>Discount:</span>
-                <span>₹{discount}</span>
-              </div>
-              <div className="flex justify-between font-bold mt-2">
-                <span>Total Amount:</span>
-                <span>₹{total}</span>
-              </div>
             </div>
           )}
+
+          {/* Payment Details */}
+          <div className="mt-4">
+            <label className="font-bold">Payment Mode:</label>
+            <select
+              value={paymentMode}
+              onChange={(e) => setPaymentMode(e.target.value)}
+              className="w-full border p-2 rounded-md mt-2"
+            >
+              <option value="">Select</option>
+              <option value="Cash">Cash</option>
+              <option value="Wallet">Wallet (₹{walletamount})</option>
+              {/* Add other payment options */}
+            </select>
+            <label className="mt-4 font-bold">Discount:</label>
+            <input
+              type="number"
+              value={discount}
+              onChange={(e) => setDiscount(parseInt(e.target.value) || 0)}
+              className="w-full border p-2 rounded-md mt-2"
+              placeholder="Enter discount amount"
+            />
+            <label className="mt-4 font-bold">Customer Details:</label>
+            <input
+              type="text"
+              value={customerName}
+              onChange={(e) => setCustomerName(e.target.value)}
+              className="w-full border p-2 rounded-md mt-2"
+              placeholder="Enter customer name"
+            />
+            <input
+              type="text"
+              value={customerPhone}
+              onChange={(e) => setCustomerPhone(e.target.value)}
+              className="w-full border p-2 rounded-md mt-2"
+              placeholder="Enter customer phone number"
+            />
+            <label className="mt-4 font-bold">Wallet : Rs.{walletamt}</label>
+        
+            <button
+              className="bg-green-500 text-white w-full py-2 mt-4 rounded-lg"
+              onClick={handlePayment}
+            >
+              Pay ₹{total}
+            </button>
+          </div>
         </div>
       )}
     </div>

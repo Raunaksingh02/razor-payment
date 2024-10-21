@@ -6,13 +6,14 @@ const AddRewardCoupon = () => {
   const [value, setValue] = useState('');
   const [message, setMessage] = useState('');
   const [rewards, setRewards] = useState([]); // State to hold the list of rewards
+  const [numLinks, setNumLinks] = useState(''); // Number of links to generate
+  const [generatedLinks, setGeneratedLinks] = useState([]); // State for generated links
 
   // Fetch existing rewards when the component mounts
   useEffect(() => {
     const fetchRewards = async () => {
       try {
         const response = await axios.get('https://backendcafe-zqt8.onrender.com/rewards'); // Adjust the endpoint as needed
-        console.log(response.data);
         setRewards(response.data); // Assuming the response contains the array of rewards
       } catch (error) {
         console.error('Error fetching rewards:', error);
@@ -44,7 +45,6 @@ const AddRewardCoupon = () => {
   const handleDelete = async (rewardId) => {
     try {
       await axios.delete(`https://backendcafe-zqt8.onrender.com/rewards/${rewardId}`);
-      // Update the rewards state to remove the deleted reward
       setRewards((prevRewards) => prevRewards.filter((reward) => reward._id !== rewardId));
       setMessage('Reward deleted successfully!');
     } catch (error) {
@@ -52,17 +52,35 @@ const AddRewardCoupon = () => {
     }
   };
 
+  // Handle generating links and saving to the backend
+  const handleGenerateLinks = async () => {
+    const numberOfLinks = parseInt(numLinks);
+    if (!numberOfLinks || numberOfLinks <= 0) {
+      setMessage('Please enter a valid number of links.');
+      return;
+    }
+
+    try {
+      const response = await axios.post('http://localhost:1000/generate-links', { numLinks: numberOfLinks });
+      setGeneratedLinks(response.data.links); // Assuming response contains an array of links
+      setMessage('Links generated successfully!');
+      setNumLinks('');
+    } catch (error) {
+      setMessage(error.response?.data?.message || 'Error generating links.');
+    }
+  };
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-md p-6 bg-white rounded-lg shadow-md">
         <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Add Reward Coupon</h2>
-        
+
         {message && (
           <div className={`text-center mb-4 p-2 ${message.includes('successfully') ? 'text-green-500' : 'text-red-500'}`}>
             {message}
           </div>
         )}
-        
+
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-gray-700 font-medium">Reward Label</label>
@@ -116,6 +134,45 @@ const AddRewardCoupon = () => {
             </ul>
           )}
         </div>
+
+        {/* Link Generator Section */}
+        <div className="mt-8">
+          <h3 className="text-lg font-bold text-gray-800">Generate Reward Links</h3>
+          <div className="mt-4">
+            <label className="block text-gray-700 font-medium">Number of Links</label>
+            <input
+              type="number"
+              value={numLinks}
+              onChange={(e) => setNumLinks(e.target.value)}
+              className="w-full mt-2 p-2 border border-gray-300 rounded-md"
+              placeholder="Enter number of links"
+              required
+            />
+          </div>
+          <button
+            onClick={handleGenerateLinks}
+            className="w-full mt-4 py-2 bg-green-500 text-white font-semibold rounded-md hover:bg-green-600"
+          >
+            Generate Links
+          </button>
+        </div>
+
+        {/* Render generated links */}
+        {generatedLinks.length > 0 && (
+          <div className="mt-6">
+            <h3 className="text-lg font-bold text-gray-800">Generated Links</h3>
+            <ul className="mt-2 space-y-2">
+              {generatedLinks.map((link, index) => (
+                <li key={index} className="p-2 border border-gray-300 rounded-md">
+                  <a href={link.url} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
+                    {link.url}
+                  </a>
+                  <span className="ml-2 text-gray-500">(QR ID: {link.qrId})</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </div>
     </div>
   );

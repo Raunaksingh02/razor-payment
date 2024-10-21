@@ -21,6 +21,7 @@ import Deliverydetail from './components/Deliverydetail';
 import CouponManager from './components/CouponManager';
 import AddRewardCoupon from './AddRewardCoupon';
 import Chart from 'react-apexcharts';
+import Profitpage from './Profitpage';
 
 function Owner() {
   const [stats, setStats] = useState({});
@@ -97,7 +98,7 @@ function Owner() {
     { name: 'Create Bill', icon: <FaFileInvoiceDollar />, component: <Pos /> },
     { name: 'Website Order', icon: <MdElectricMoped />, component: <Webisteorder /> },
     { name: 'Menu-Items', icon: <GiCook />, component: <Dishmanage /> },
-    { name: 'Delivery', icon: <TbTruckDelivery />, component: <Deliverydetail /> },
+    { name: 'Profit', icon: <TbTruckDelivery />, component: <Profitpage /> },
     { name: 'Reward', icon: <MdOutlineLoyalty />, component: <AddRewardCoupon /> },
     { name: 'Coupons', icon: <CiDiscount1 />, component: <CouponManager /> },
    
