@@ -8,24 +8,28 @@ const Pos = () => {
   const [items, setItems] = useState([]);
   const [cart, setCart] = useState([]);
   const [total, setTotal] = useState(0);
-  const [quantity, setQuantity] = useState(0); // For total quantity in cart
+  const [quantity, setQuantity] = useState(0);
   const [discount, setDiscount] = useState(0);
   const [paymentMode, setPaymentMode] = useState('');
   const [cash, setCash] = useState(0);
-  const [category, setCategory] = useState('All'); // For category selection
-  const [showBill, setShowBill] = useState(false); // Toggle Bill section
+  const [category, setCategory] = useState('All');
+  const [showBill, setShowBill] = useState(false); 
   const [customerName, setCustomerName] = useState('');
   const [customerPhone, setCustomerPhone] = useState('');
-  console.log(cart);
   const [walletamt,setwalletamt] = useState(0);
-  const [walletuse,setwalletuse] = useState(false);
+ 
+  const [finalAmount, setFinalAmount] = useState(0); // Final total after wallet
+  const [message, setMessage] = useState("");
+  const [walletApplied, setWalletApplied] = useState(false); // Track wallet application
+  const [showCustomerForm, setShowCustomerForm] = useState(false);
+
+
 
   useEffect(() => {
     const fetchItems = async () => {
       try {
         const response = await axios.get('https://backendaggrawal-8dey.onrender.com/getdish');
         setItems(response.data);
-
       } catch (error) {
         console.error('Error fetching items:', error);
       }
@@ -40,7 +44,7 @@ const Pos = () => {
         setwalletamt(response.data.wallet);
         console.log(response.data);
       } catch (error) {
-        console.error('Error fetching items:', error);
+        console.error('Error fetching wallet:', error);
       }
     };
     fetchwallet(); 
@@ -48,24 +52,23 @@ const Pos = () => {
 
   useEffect(() => {
     calculateTotal();
-  }, [cart, discount]);
+}, [cart, discount, walletApplied]);
+
 
   const calculateTotal = () => {
-    let totalAmount = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
-    totalAmount -= discount;
-    if(walletuse  === true){
-      totalAmount-= walletamt;
-    }
-    setTotal(totalAmount);
+    let baseAmount = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
+    baseAmount -= discount;
+    let updatedAmount = walletApplied && baseAmount > walletamt ? baseAmount - walletamt : baseAmount;
+    setTotal(baseAmount); // Set raw total
+    setFinalAmount(updatedAmount); // Set final total considering wallet
     let totalQuantity = cart.reduce((acc, item) => acc + item.quantity, 0);
-    setQuantity(totalQuantity); 
-  };
+    setQuantity(totalQuantity);
+};
 
   const addToCart = (item, size = '', price = '') => {
-    // Default to the first available size if none selected
     if (!size) {
-      size = item.sizes[0].size; // Default to the first size
-      price = item.sizes[0].price; // Default to the first price
+      size = item.sizes[0].size;
+      price = item.sizes[0].price;
     }
 
     const existingItem = cart.find(cartItem => cartItem.id === item._id && cartItem.size === size);
@@ -78,7 +81,7 @@ const Pos = () => {
       });
       setCart(updatedCart);
     } else {
-      setCart([...cart, { ...item, id: item._id, size, price, quantity: 1 }]); // Ensure correct `id` and size
+      setCart([...cart, { ...item, id: item._id, size, price, quantity: 1 }]);
     }
   };
 
@@ -119,7 +122,7 @@ const Pos = () => {
         customerName,
         customerPhone
       };
-      const response = await axios.post('/api/pay', paymentData);
+      const response = await axios.post('http:localhost:1000/api/payments', paymentData);
       alert('Payment successful!');
     } catch (error) {
       console.error('Payment error:', error);
@@ -127,6 +130,17 @@ const Pos = () => {
     }
   };
 
+
+  const handleWalletToggle = () => {
+    setWalletApplied(!walletApplied);
+};
+
+// useEffect to recalculate whenever wallet toggle or cart updates
+
+// In render function, showing Final Amount if Wallet is used
+{walletApplied && finalAmount !== total && (
+    <p className="text-gray-800 font-semibold">After Wallet Deduction: ₹{finalAmount}</p>
+)}
   const handleCategoryChange = (selectedCategory) => {
     setCategory(selectedCategory);
   };
@@ -134,68 +148,48 @@ const Pos = () => {
   return (
     <div className="h-screen flex flex-col justify-between">
       <h2 className="text-2xl font-bold mb-4">POS System</h2>
-
-      {/* Category Tabs */}
-      <div className="flex mb-4">
-        {['All', ...new Set(items.map(item => item.category))].map((cat, index) => (
-          <button
-            key={index}
-            className={`shrink-0 px-4 py-2 text-sm m-1 font-bold rounded-md transition duration-300 whitespace-nowrap ${category === cat ? 'bg-[#f6931e] text-white' : 'bg-gray-200 text-gray-600'}`}
-            onClick={() => handleCategoryChange(cat)}
-          >
-            {cat}
-          </button>
-        ))}
-      </div>
-
       {/* Items Grid */}
-      <div className="flex">
-        <div className="grid grid-cols-2 mb-4">
-          {items.filter(item => category === 'All' || item.category === category).map((item) => (
-            <div key={item._id} className="border p-2 rounded-lg">
-              <img src={item.image} alt={item.name} className="h-20 w-20" />
-              <h4 className="text-lg font-bold">{item.name}</h4>
-
-              <div className="mt-2">
-                {/* Size selection with dropdown */}
-                <select
-                  id={`size-select-${item._id}`}
-                  className="w-30 p-2 border rounded-md text-gray-600"
-                  onChange={(e) => {
-                    const selectedSize = item.sizes.find(sizeOption => sizeOption.size === e.target.value);
-                    if (selectedSize) {
-                      addToCart(item, selectedSize.size, selectedSize.price);
-                    }
-                  }}
-                >
-                  <option value="">Choose size</option>
-                  {item.sizes.map((sizeOption) => (
-                    <option key={sizeOption.size} value={sizeOption.size}>
-                      {sizeOption.size} - ₹{sizeOption.price}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              {/* Increment/Decrement Buttons */}
-              <div className="flex items-center mt-2">
-                <button
-                  onClick={() => decrementQuantity(item._id, item.sizes[0].size)}
-                  className="px-2 py-1 bg-red-500 text-white rounded-lg"
-                >
-                  -
-                </button>
-                <span className="mx-2">{cart.find(cartItem => cartItem.id === item._id && cartItem.size === item.sizes[0].size)?.quantity || 0}</span>
-                <button
-                  onClick={() => incrementQuantity(item._id, item.sizes[0].size)}
-                  className="px-2 py-1 bg-green-500 text-white rounded-lg"
-                >
-                  +
-                </button>
-              </div>
+      <div className="grid grid-cols-2 gap-2 mb-4">
+        {items.filter(item => category === 'All' || item.category === category).map((item) => (
+          <div key={item._id} className="w-40 ">
+            <img src={item.image} alt={item.name} className="h-20 w-20 object-cover mx-auto" />
+            <h4 className="text-lg font-bold text-center">{item.name}</h4>
+            <div className="mt-2">
+              <select
+                id={`size-select-${item._id}`}
+                className="w-30 p-2 border rounded-md mr-4 text-gray-600"
+                onChange={(e) => {
+                  const selectedSize = item.sizes.find(sizeOption => sizeOption.size === e.target.value);
+                  if (selectedSize) {
+                    addToCart(item, selectedSize.size, selectedSize.price);
+                  }
+                }}
+              >
+                <option value="">Choose size</option>
+                {item.sizes.map((sizeOption) => (
+                  <option key={sizeOption.size} value={sizeOption.size}>
+                    {sizeOption.size} - ₹{sizeOption.price}
+                  </option>
+                ))}
+              </select>
             </div>
-          ))}
-        </div>
+            <div className="flex justify-center items-center mt-2">
+              <button
+                onClick={() => decrementQuantity(item._id, item.sizes[0].size)}
+                className="px-2 py-1 bg-red-500 text-white rounded-lg"
+              >
+                -
+              </button>
+              <span className="mx-2">{cart.find(cartItem => cartItem.id === item._id && cartItem.size === item.sizes[0].size)?.quantity || 0}</span>
+              <button
+                onClick={() => incrementQuantity(item._id, item.sizes[0].size)}
+                className="px-2 py-1 bg-green-500 text-white rounded-lg"
+              >
+                +
+              </button>
+            </div>
+          </div>
+        ))}
       </div>
 
       {/* Fixed Footer */}
@@ -217,8 +211,16 @@ const Pos = () => {
       {/* Bill Section */}
       {showBill && (
         <div className="fixed top-0 left-0 w-full h-screen bg-white p-4 overflow-y-auto z-50">
-          <div className="flex justify-between">
-            <h3 className="text-xl font-bold mb-4">Bill Summary</h3>
+          <div className="flex justify-between items-center">
+            <h3 className="text-xl font-bold mb-2">Bill Summary</h3>
+            <div>
+            <button
+                onClick={() => setShowCustomerForm(!showCustomerForm)}
+                className=" px-4 py-2 bg-[#f6931e] text-white rounded-lg font-bold hover:bg-[#f6931e] focus:outline-none"
+            >
+              + Add
+            </button>
+            </div>
             <button
               className="text-gray-500"
               onClick={() => setShowBill(false)}
@@ -226,90 +228,115 @@ const Pos = () => {
               Close
             </button>
           </div>
-          {cart.length === 0 ? (
-            <p className="text-gray-500">No items in cart</p>
-          ) : (
-            <div>
-              {cart.map((item) => (
-                <div key={`${item._id}-${item.size}`} className="flex justify-between items-center border-b py-2">
-                  <div>
-                    <h4 className="font-bold">{item.name} ({item.size})</h4>
-                    <p>₹{item.price} x {item.quantity}</p>
-                  </div>
-
-                  <div className='flex' >
-                    <button
-                      onClick={() => decrementQuantity(item._id, item.size)}
-                      className="px-2 py-1 bg-red-500 text-white rounded-lg"
-                    >
-                      -
-                    </button>
-                    <span className="mx-2">{item.quantity}</span>
-                    <button
-                      onClick={() => incrementQuantity(item._id, item.size)}
-                      className="px-2 py-1 bg-green-500 text-white rounded-lg"
-                    >
-                      +
-                    </button>
-                    <MdDelete
-                      className="text-red-500 h-8 w-8 ml-2 mt-1 cursor-pointer"
-                      onClick={() => removeFromCart(item._id, item.size)}
+           {/* Render form on "Add Customer" button click */}
+           {showCustomerForm && (
+                <div className="mt-4">
+                     <label className="block text-lg font-bold mb-2">Name:</label>
+                    <input
+                        type="text"
+                        className="w-full p-2 border rounded-md text-gray-600"
+                        value={customerName}
+                        onChange={(e) => setCustomerName(e.target.value)}
                     />
-                  </div>
+                    <label className="block text-lg font-bold mb-2">Phone No:</label>
+                    <input
+                        type="number"
+                        className="w-full p-2 border rounded-md text-gray-600"
+                        value={customerPhone}
+                        onChange={(e) => setCustomerPhone(e.target.value)}
+                    />
+                    
+                    {/* Wallet option */}
+                    <label className="flex items-center cursor-pointer mt-2">
+                        <input
+                            type="checkbox"
+                            checked={walletApplied}
+                            onChange={handleWalletToggle}
+                            className="form-checkbox text-blue-600 h-5 w-5 mr-2"
+                        />
+                        <span className="text-gray-700">Apply Wallet: ₹{walletamt}</span>
+                    </label>
+                    
+                    {/* Wallet usage warning */}
+                    {walletApplied && total < walletamt && (
+                        <p className="text-red-500 text-sm mt-1">Add more items to use wallet balance.</p>
+                    )}
                 </div>
-              ))}
-            </div>
+            )}
+          {cart.length === 0 ? (
+            <p>No items in the cart.</p>
+          ) : (
+            cart.map((item, index) => (
+              <div key={index} className="flex justify-between border-b pb-2 mb-2">
+                <div>
+                <h4 className="text-lg font-bold">{item.name}</h4>
+                <p>Size: {item.size}</p>
+                <p>Quantity: {item.quantity}</p>
+                <p>Price: ₹{item.price * item.quantity}</p>
+                </div>
+                <div>
+                <button
+                  className="text-red-500"
+                  onClick={() => removeFromCart(item.id, item.size)}
+                >
+                  <MdDelete size={24} />
+                </button>
+                </div>
+              </div>
+            ))
           )}
 
-          {/* Payment Details */}
+          {/* Payment Section */}
           <div className="mt-4">
-            <label className="font-bold">Payment Mode:</label>
+            <label className="block text-lg font-bold mb-2">Payment Mode:</label>
             <select
+              className="w-full p-2 border rounded-md text-gray-600"
               value={paymentMode}
               onChange={(e) => setPaymentMode(e.target.value)}
-              className="w-full border p-2 rounded-md mt-2"
             >
-              <option value="">Select</option>
+              <option value="">Choose payment mode</option>
               <option value="Cash">Cash</option>
-              <option value="Wallet">Wallet (₹{walletamount})</option>
-              {/* Add other payment options */}
+              <option value="UPI">UPI</option>
+              <option value="Wallet">Wallet</option>
             </select>
-            <label className="mt-4 font-bold">Discount:</label>
-            <input
-              type="number"
-              value={discount}
-              onChange={(e) => setDiscount(parseInt(e.target.value) || 0)}
-              className="w-full border p-2 rounded-md mt-2"
-              placeholder="Enter discount amount"
-            />
-            <label className="mt-4 font-bold">Customer Details:</label>
-            <input
-              type="text"
-              value={customerName}
-              onChange={(e) => setCustomerName(e.target.value)}
-              className="w-full border p-2 rounded-md mt-2"
-              placeholder="Enter customer name"
-            />
-            <input
-              type="text"
-              value={customerPhone}
-              onChange={(e) => setCustomerPhone(e.target.value)}
-              className="w-full border p-2 rounded-md mt-2"
-              placeholder="Enter customer phone number"
-            />
-            <label className="mt-4 font-bold">Wallet : Rs.{walletamt}</label>
-        
-            <button
-              className="bg-green-500 text-white w-full py-2 mt-4 rounded-lg"
+
+           
+
+            <div>
+            {/* Add Customer Button */}
+            
+          
+
+           
+        </div>
+          <button
+              className="mt-4 w-full bg-[#f6931e] text-white px-6 py-2 rounded-lg"
               onClick={handlePayment}
             >
-              Pay ₹{total}
+              Pay ₹{finalAmount}
             </button>
+
+          
           </div>
         </div>
       )}
     </div>
   );
+
 };
 
 export default Pos;
+
+
+
+
+
+
+
+
+
+
+
+
+
+

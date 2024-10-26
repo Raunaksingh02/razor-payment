@@ -86,7 +86,7 @@ const PaymentComponent = () => {
         <Route path="/docs/About" element={<Aboutus/>} />
         <Route path="/docs/Privacy" element={<Privacy/>} />
         <Route path="/coupon" element={<CouponManager/>} />
-        <Route path="/loyal/wheel" element={< Wheel/>} />
+        <Route path="/loyal/wheel/:qrid" element={< Wheel/>} />
         <Route path="/web/user" element={<Webuser/>} />
         <Route path="/delivery" element={<Deliverydetail/>} />
         <Route path="/docs/Cancel" element={<Cancellation/>} />

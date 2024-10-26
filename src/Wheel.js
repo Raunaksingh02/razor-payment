@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { Wheel } from 'react-custom-roulette';
 import Confetti from 'react-confetti';
 import { BuyerContext } from './components/Buyercontext.js';
 
 const WheelComponent = () => {
-  const location = useLocation();
+  const { qrid } = useParams(); // Get qrid directly from route params
   const { isAuthenticated, buyer } = useContext(BuyerContext);
   const [rewards, setRewards] = useState([]);
   const [mustSpin, setMustSpin] = useState(false);
@@ -15,23 +15,18 @@ const WheelComponent = () => {
   const [isSpinning, setIsSpinning] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
   const [isValidQR, setIsValidQR] = useState(null);
-  const [isRedeemed, setIsRedeemed] = useState(false); // Track if QR is already redeemed
+  const [isRedeemed, setIsRedeemed] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [qrid, setQrId] = useState('');
 
-  // Parse the query string to get the qrId
-  const query = new URLSearchParams(location.search);
-  
   useEffect(() => {
-    const qrIdFromURL = query.get('qrId');
-    if (qrIdFromURL) {
-      setQrId(qrIdFromURL);
+    if (qrid) {
       fetchRewards(); // Fetch rewards when component mounts
-      validateQRCode(qrIdFromURL); // Validate QR ID
+      validateQRCode(qrid); // Validate QR ID
     }
-  }, [location.search]);
-
+  }, [qrid]);
+  
+  console.log(qrid);
   const fetchRewards = async () => {
     try {
       const response = await fetch('https://backendcafe-zqt8.onrender.com/REWARDS');
@@ -50,24 +45,24 @@ const WheelComponent = () => {
     }
   };
 
-  const validateQRCode = async (qrId) => {
+  const validateQRCode = async (qrid) => {
     try {
-      const response = await fetch(`https://backendcafe-zqt8.onrender.com/validateqr/${qrId}`);
+      const response = await fetch(`https://backendcafe-zqt8.onrender.com/validateqr/${qrid}`);
       const data = await response.json();
       if (data.success) {
-        setIsValidQR(true); // Valid QR Code
-        setIsRedeemed(data.redeemed); // Check if already redeemed
+        setIsValidQR(true);
+        setIsRedeemed(data.redeemed);
       } else {
-        setIsValidQR(false); // Invalid or already used QR code
-        setError(data.message); // Show error message
-        setIsRedeemed(data.redeemed); // Set the redeemed status
+        setIsValidQR(false);
+        setError(data.message);
+        setIsRedeemed(data.redeemed);
       }
     } catch (error) {
       console.error('Error validating QR code:', error);
       setError('Server error, please try again later.');
       setIsValidQR(false);
     } finally {
-      setLoading(false); // Stop loading spinner
+      setLoading(false);
     }
   };
 
