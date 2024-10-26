@@ -5,8 +5,9 @@ import Confetti from 'react-confetti';
 import { BuyerContext } from './components/Buyercontext.js';
 
 const WheelComponent = () => {
-  const { qrid } = useParams(); // Get qrid directly from route params
+  const { qrid } = useParams();
   const { isAuthenticated, buyer } = useContext(BuyerContext);
+
   const [rewards, setRewards] = useState([]);
   const [mustSpin, setMustSpin] = useState(false);
   const [prizeNumber, setPrizeNumber] = useState(0);
@@ -21,12 +22,11 @@ const WheelComponent = () => {
 
   useEffect(() => {
     if (qrid) {
-      fetchRewards(); // Fetch rewards when component mounts
-      validateQRCode(qrid); // Validate QR ID
+      fetchRewards();
+      validateQRCode(qrid);
     }
   }, [qrid]);
-  
-  console.log(qrid);
+
   const fetchRewards = async () => {
     try {
       const response = await fetch('https://backendcafe-zqt8.onrender.com/REWARDS');
@@ -78,29 +78,32 @@ const WheelComponent = () => {
       const response = await fetch(`https://backendcafe-zqt8.onrender.com/spin/${qrid}`, { method: 'POST' });
       const data = await response.json();
       if (data.success) {
-        setMustSpin(true);
-        setIsSpinning(true);
         const randomPrizeNumber = Math.floor(Math.random() * rewards.length);
+        console.log("Prize number selected:", randomPrizeNumber); // Debugging
         setPrizeNumber(randomPrizeNumber);
+        setMustSpin(true); // Start spinning
+        setIsSpinning(true);
 
         setTimeout(() => {
           setRewardWon(rewards[randomPrizeNumber].option);
+          setMustSpin(false); // Stop spinning
           setIsSpinning(false);
-          setMustSpin(false);
           setHasSpun(true);
           setShowConfetti(true);
 
+          // Store the reward locally
           localStorage.setItem('spinReward', rewards[randomPrizeNumber].option);
 
           setTimeout(() => {
             setShowConfetti(false);
           }, 5000);
-        }, 4000);
+        }, 4000); // Adjust this delay if needed
       } else {
-        setError('Failed to spin the wheel. QR code might already be spinned.');
+        setError('Failed to spin the wheel. QR code might already be spun.');
       }
     } catch (error) {
       console.error('Error spinning the wheel:', error);
+      setError('Spin failed. Please try again.');
     }
   };
 

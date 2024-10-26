@@ -1,35 +1,29 @@
 import React, { useState, useEffect, useContext } from 'react';
 import ScratchCard from 'react-scratchcard';
 import Confetti from 'react-confetti';
-import { useLocation } from 'react-router-dom';
+import { useParams } from 'react-router-dom'; // Import useParams
 import scratchImage from './images/scratchcard.png'; // Ensure the path is correct
 import { BuyerContext } from './components/Buyercontext.js';
 
 const Scratch = () => {
-  const location = useLocation();
+  const { qrid } = useParams(); // Get qrid directly from the URL parameters
   const { isAuthenticated, buyer } = useContext(BuyerContext);
   const [isScratched, setIsScratched] = useState(false);
   const [isRedeemed, setIsRedeemed] = useState(false); // Track if QR is already redeemed
   const [isValidQR, setIsValidQR] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [qrid, setQrId] = useState('');
   const [showConfetti, setShowConfetti] = useState(false);
 
-  // Parse the query string to get the qrId
-  const query = new URLSearchParams(location.search);
-
   useEffect(() => {
-    const qrIdFromURL = query.get('qrId');
-    if (qrIdFromURL) {
-      setQrId(qrIdFromURL);
-      validateQRCode(qrIdFromURL); // Validate QR ID
+    if (qrid) {
+      validateQRCode(qrid); // Validate QR ID if available
     }
-  }, [location.search]);
+  }, [qrid]);
 
-  const validateQRCode = async (qrId) => {
+  const validateQRCode = async (qrid) => {
     try {
-      const response = await fetch(`https://backendcafe-zqt8.onrender.com/validateqr/${qrId}`);
+      const response = await fetch(`https://backendcafe-zqt8.onrender.com/validateqr/${qrid}`);
       const data = await response.json();
       if (data.success) {
         setIsValidQR(true); // Valid QR Code
@@ -76,20 +70,9 @@ const Scratch = () => {
     }
   };
 
-  // Function to send two WhatsApp messages
-  const sendWhatsAppMessages = () => {
-    const phone1 = '911234567890'; // Replace with first phone number (country code included)
-    const phone2 = '919876543210'; // Replace with second phone number (country code included)
-    const message1 = encodeURIComponent('Hello, this is your first message from the Scratch and Win!');
-    const message2 = encodeURIComponent('Hello, this is your second message from the Scratch and Win!');
-
-    // Open WhatsApp chats for both numbers
-    window.open(`https://api.whatsapp.com/send?phone=${phone1}&text=${message1}`, '_blank');
-    window.open(`https://api.whatsapp.com/send?phone=${phone2}&text=${message2}`, '_blank');
-  };
 
   if (loading) {
-    return <div className="text-center mt-20">Validating QR code...</div>;
+    return <div className="text-center mt-20">Validating Scratch code...</div>;
   }
 
   if (!isValidQR) {
@@ -150,15 +133,28 @@ const Scratch = () => {
         </>
       )}
 
-      {/* WhatsApp Button */}
-      <button
-        onClick={sendWhatsAppMessages}
-        className="px-6 py-3 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600 transition-colors mt-4"
-      >
-        Send WhatsApp Messages
-      </button>
+   
     </div>
   );
 };
 
 export default Scratch;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

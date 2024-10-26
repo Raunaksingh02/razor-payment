@@ -17,7 +17,6 @@ const Pos = () => {
   const [customerName, setCustomerName] = useState('');
   const [customerPhone, setCustomerPhone] = useState('');
   const [walletamt,setwalletamt] = useState(0);
- 
   const [finalAmount, setFinalAmount] = useState(0); // Final total after wallet
   const [message, setMessage] = useState("");
   const [walletApplied, setWalletApplied] = useState(false); // Track wallet application
