@@ -33,7 +33,7 @@ const Profitpage = () => {
       const year = startDate.getFullYear();
       
       try {
-        const response = await axios.get(`https://backendcafe-zqt8.onrender.com/top-selling-products`, {
+        const response = await axios.get(`http://localhost:1000/top-selling-products`, {
           params: { month, year },
         });
         const data = response.data;

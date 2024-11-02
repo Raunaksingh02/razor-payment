@@ -13,7 +13,7 @@ const LoginPage = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('https://backendcafe-zqt8.onrender.com/api/login', { username, password });
+      const response = await axios.post('http://localhost:1000/api/login', { username, password });
       if (response.data.success) {
         login();
         navigate('/Owner'); 

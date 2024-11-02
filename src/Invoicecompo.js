@@ -25,7 +25,7 @@ function Invoicecompo() {
     useEffect(() => {
         const fetchMinOrderDetails = async () => {
             try {
-                const response = await axios.get('https://backendcafe-zqt8.onrender.com/min-order-delivery');
+                const response = await axios.get('http://localhost:1000/min-order-delivery');
                 setMinOrderValue(response.data.minOrderValue);
                 setDeliveryCharge(response.data.deliveryCharge);
                 console.log("the min order value -", response.data.minOrderValue);

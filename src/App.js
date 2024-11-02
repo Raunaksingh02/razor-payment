@@ -99,7 +99,7 @@ const PaymentComponent = () => {
         <Route path="/Billdata/:_id" element={<Billingpage/>} />
         <Route path="/Website" element={<Webisteorder/>} />
         <Route path="/Call" element={<Callwaiter/>} />
-        <Route path="/loyal/card/:qrid" element={< Scratch/>} />
+        <Route path="/loyal/card/:qrid/:reward" element={< Scratch/>} />
         <Route path="/Unique" element={<Uniqueuser/>} />
         <Route path="/Upi" element={<Upi/>} />
         <Route path="/Address" element={<Address/>} />

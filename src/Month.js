@@ -21,7 +21,7 @@ const RevenueProfitDashboard = () => {
     try {
       const month = format(startDate, 'M');
       const year = format(startDate, 'yyyy');
-      const response = await axios.get(`https://backendcafe-zqt8.onrender.com/daily-revenue-profit`, {
+      const response = await axios.get(`http://localhost:1000/daily-revenue-profit`, {
         params: { month, year },
       });
       setDailyData(response.data);
@@ -39,7 +39,7 @@ const RevenueProfitDashboard = () => {
     setError(null);
     try {
       const year = format(startDate, 'yyyy');
-      const response = await axios.get(`https://backendcafe-zqt8.onrender.com/monthly-revenue-profit`, {
+      const response = await axios.get(`http://localhost:1000/monthly-revenue-profit`, {
         params: { year },
       });
       setMonthlyData(response.data);

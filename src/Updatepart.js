@@ -16,7 +16,7 @@ const UpdatePart = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get(`https://backendcafe-zqt8.onrender.com/api/payments/${_id}`);
+                const response = await axios.get(`http://localhost:1000/api/payments/${_id}`);
                 setData(response.data);
             } catch (error) {
                 console.error('Error fetching payment details:', error.message);
@@ -37,7 +37,7 @@ const UpdatePart = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.put(`https://backendcafe-zqt8.onrender.com/api/payments/${_id}`, data);
+            const response = await axios.put(`http://localhost:1000/api/payments/${_id}`, data);
             console.log('Payment updated:', response.data);
             alert('Payment updated successfully');
         } catch (error) {

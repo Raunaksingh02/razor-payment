@@ -13,7 +13,7 @@ const AddRewardCoupon = () => {
   useEffect(() => {
     const fetchRewards = async () => {
       try {
-        const response = await axios.get('https://backendcafe-zqt8.onrender.com/rewards'); // Adjust the endpoint as needed
+        const response = await axios.get('http://localhost:1000/rewards'); // Adjust the endpoint as needed
         setRewards(response.data); // Assuming the response contains the array of rewards
       } catch (error) {
         console.error('Error fetching rewards:', error);
@@ -32,7 +32,7 @@ const AddRewardCoupon = () => {
     };
 
     try {
-      const response = await axios.post('https://backendcafe-zqt8.onrender.com/rewards', rewardData);
+      const response = await axios.post('http://localhost:1000/rewards', rewardData);
       setRewards((prevRewards) => [...prevRewards, response.data]); // Update rewards state with the new reward
       setMessage('Reward added successfully!');
       setLabel('');
@@ -44,7 +44,7 @@ const AddRewardCoupon = () => {
 
   const handleDelete = async (rewardId) => {
     try {
-      await axios.delete(`https://backendcafe-zqt8.onrender.com/rewards/${rewardId}`);
+      await axios.delete(`http://localhost:1000/rewards/${rewardId}`);
       setRewards((prevRewards) => prevRewards.filter((reward) => reward._id !== rewardId));
       setMessage('Reward deleted successfully!');
     } catch (error) {
@@ -59,16 +59,19 @@ const AddRewardCoupon = () => {
       setMessage('Please enter a valid number of links.');
       return;
     }
-
+  
     try {
-      const response = await axios.post('https://backendcafe-zqt8.onrender.com/generate-links', { numLinks: numberOfLinks });
-      setGeneratedLinks(response.data.links); // Assuming response contains an array of links
+      const response = await axios.post('http://localhost:1000/generate-links', { numLinks: numberOfLinks });
+      console.log(response.data.links);
+      setGeneratedLinks(response.data.links); // Assuming the response is an array of URLs
       setMessage('Links generated successfully!');
       setNumLinks('');
     } catch (error) {
       setMessage(error.response?.data?.message || 'Error generating links.');
+      
     }
   };
+  
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
@@ -159,20 +162,19 @@ const AddRewardCoupon = () => {
 
         {/* Render generated links */}
         {generatedLinks.length > 0 && (
-          <div className="mt-6">
-            <h3 className="text-lg font-bold text-gray-800">Generated Links</h3>
-            <ul className="mt-2 space-y-2">
-              {generatedLinks.map((link, index) => (
-                <li key={index} className="p-2 border border-gray-300 rounded-md">
-                  <a href={link.url} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
-                    {link.url}
-                  </a>
-                  <span className="ml-2 text-gray-500">(QR ID: {link.qrId})</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
+  <div className="mt-6">
+    <h3 className="text-lg font-bold text-gray-800">Generated Links</h3>
+    <ul className="mt-2 space-y-2">
+      {generatedLinks.map((link, index) => (
+        <li key={index} className="p-2 border border-gray-300 rounded-md">
+          <a href={link} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
+            {link}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+)}
       </div>
     </div>
   );

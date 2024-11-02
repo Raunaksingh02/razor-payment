@@ -13,7 +13,7 @@ export const UPIDetailsProvider = ({ children }) => {
   useEffect(() => {
     const fetchUPIDetails = async () => {
       try {
-        const response = await axios.get('https://backendcafe-zqt8.onrender.com/upi-details');
+        const response = await axios.get('http://localhost:1000/upi-details');
         setUpinumber(response.data.upinumber || '');
         setUpiname(response.data.upiname || '');
       } catch (error) {
@@ -27,7 +27,7 @@ export const UPIDetailsProvider = ({ children }) => {
   // Function to update UPI details
   const updateUPIDetails = async (newUPINumber, newUPIName) => {
     try {
-      const response = await axios.put('https://backendcafe-zqt8.onrender.com/upi-details', {
+      const response = await axios.put('http://localhost:1000/upi-details', {
         upinumber: newUPINumber,
         upiname: newUPIName,
       });

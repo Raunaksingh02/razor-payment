@@ -19,7 +19,7 @@ const Customerlogin = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('https://backendcafe-zqt8.onrender.com/login', formData);
+      const response = await axios.post('http://localhost:1000/login', formData);
       if (response.data.success) {
         login(response.data.customer); // Update BuyerContext with customer data
         alert('Login successful');

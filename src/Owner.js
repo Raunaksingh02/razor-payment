@@ -35,7 +35,7 @@ function Owner() {
 
   const fetchStats = useCallback(async () => {
     try {
-      const response = await axios.get('https://backendcafe-zqt8.onrender.com/todays-stats');
+      const response = await axios.get('http://localhost:1000/todays-stats');
       setStats(response.data);
     } catch (error) {
       console.error('Error fetching stats', error);

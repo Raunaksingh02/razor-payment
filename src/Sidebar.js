@@ -23,6 +23,7 @@ const Sidebar = ({ isOpen, onClose }) => {
       <div className="hidden lg:flex items-center justify-evenly w-full ml-4 px-4 py-2 z-20 ">
         <Link to="/profile" className="hover:bg-black bg-white px-2 py-1 font-bold text-black hover:text-white shadow-md shadow-gray-200 rounded-lg ml-3 ">Profile</Link>
         <Link to="/orders" className="hover:bg-black bg-white px-2 py-1 font-bold text-black hover:text-white shadow-md shadow-gray-200 rounded-lg ml-3" >Orders</Link>
+        <Link to="/wallet" className="hover:bg-black bg-white px-2 py-1 font-bold text-black hover:text-white shadow-md shadow-gray-200 rounded-lg ml-3">Wallet</Link>
         <Link to="/address" className="hover:bg-black bg-white px-2 py-1 font-bold text-black hover:text-white shadow-md shadow-gray-200 rounded-lg ml-3">Address</Link>
         <button onClick={handleLogoutClick} className="hover:bg-black bg-white px-2 py-1 font-bold text-black hover:text-white shadow-md shadow-gray-200 rounded-lg ml-3">Logout</button>
       </div>
@@ -50,6 +51,11 @@ const Sidebar = ({ isOpen, onClose }) => {
               <li className="mb-4">
                 <Link to="/address" className="block hover:bg-gray-200 px-3 py-2 font-bold rounded-md">
                   Address
+                </Link>
+              </li>
+              <li className="mb-4">
+                <Link to="/wallet" className="block hover:bg-gray-200 px-3 py-2 font-bold rounded-md">
+                  Wallet
                 </Link>
               </li>
               <li className="mb-4">

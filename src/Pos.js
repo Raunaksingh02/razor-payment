@@ -2,6 +2,9 @@ import React, { useState, useEffect, useContext } from 'react';
 import { MdDelete } from 'react-icons/md';
 import axios from 'axios';
 import { BuyerContext } from './components/Buyercontext.js';
+import QRCode from 'qrcode.react';
+import { UPIDetailsContext } from "./components/UPIDetailsContext.js";
+
 
 const Pos = () => {
   const { walletamount, customerDetails } = useContext(BuyerContext);
@@ -11,6 +14,8 @@ const Pos = () => {
   const [quantity, setQuantity] = useState(0);
   const [discount, setDiscount] = useState(0);
   const [paymentMode, setPaymentMode] = useState('');
+  const [showQRModal, setShowQRModal] = useState(false);
+  const { upinumber, upiname } = useContext(UPIDetailsContext);
   const [cash, setCash] = useState(0);
   const [category, setCategory] = useState('All');
   const [showBill, setShowBill] = useState(false); 
@@ -23,6 +28,7 @@ const Pos = () => {
   const [showCustomerForm, setShowCustomerForm] = useState(false);
 
 
+  const upiString = `upi://pay?pa=${upinumber}&pn=${upiname}&am=${finalAmount}&cu=INR`;
 
   useEffect(() => {
     const fetchItems = async () => {
@@ -39,7 +45,7 @@ const Pos = () => {
   useEffect(() => {
     const fetchwallet = async () => {
       try {
-        const response = await axios.get(`https://backendcafe-zqt8.onrender.com/api/customer/${customerPhone}`);
+        const response = await axios.get(`http://localhost:1000/api/customer/${customerPhone}`);
         setwalletamt(response.data.wallet);
         console.log(response.data);
       } catch (error) {
@@ -143,6 +149,20 @@ const Pos = () => {
   const handleCategoryChange = (selectedCategory) => {
     setCategory(selectedCategory);
   };
+
+  
+  const handlePaymentChange = (e) => {
+    const selectedMode = e.target.value;
+    setPaymentMode(selectedMode);
+
+    // Open QR modal if UPI is selected
+    if (selectedMode === 'UPI') {
+      setShowQRModal(true);
+    } else {
+      setShowQRModal(false);
+    }
+  };
+
 
   return (
     <div className="h-screen flex flex-col justify-between">
@@ -285,43 +305,51 @@ const Pos = () => {
             ))
           )}
 
-          {/* Payment Section */}
+            {/* Payment Section */}
           <div className="mt-4">
             <label className="block text-lg font-bold mb-2">Payment Mode:</label>
             <select
               className="w-full p-2 border rounded-md text-gray-600"
               value={paymentMode}
-              onChange={(e) => setPaymentMode(e.target.value)}
+              onChange={handlePaymentChange}
             >
               <option value="">Choose payment mode</option>
               <option value="Cash">Cash</option>
               <option value="UPI">UPI</option>
               <option value="Wallet">Wallet</option>
             </select>
-
-           
-
             <div>
-            {/* Add Customer Button */}
-            
-          
-
-           
-        </div>
+           {/* Add Customer Button */}
+           {/* QR Modal */}
+           {showQRModal && (
+           <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+           < div className="bg-white rounded-lg shadow-lg p-6 w-11/12 sm:w-1/2 md:w-1/3">
+            <h2 className="text-2xl font-semibold mb-4">Scan UPI QR Code</h2>
+            <div className="flex justify-center mb-4">
+              {/* Render QR Code with UPI details */}
+              <QRCode value={upiString} size={160} />
+            </div>
+            <button
+              onClick={() => setShowQRModal(false)}
+              className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition duration-200"
+            >
+           Close
+          </button>
+           </div>
+           </div>
+          )}
+          </div>
           <button
               className="mt-4 w-full bg-[#f6931e] text-white px-6 py-2 rounded-lg"
               onClick={handlePayment}
             >
               Pay ₹{finalAmount}
-            </button>
-
-          
+            </button>          
           </div>
         </div>
       )}
     </div>
   );
-
 };
 
 export default Pos;

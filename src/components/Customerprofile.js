@@ -17,7 +17,7 @@ function Customerprofile() {
     
     const fetchBuyerDetails = async () => {
       try {
-        const response = await axios.get(`https://backendcafe-zqt8.onrender.com/buyerdata?email=${buyerEmail}`);
+        const response = await axios.get(`http://localhost:1000/buyerdata?email=${buyerEmail}`);
         setBuyerDetails(response.data);
         setUpdatedName(response.data.name);
         setUpdatedPhone(response.data.phoneNo);
@@ -34,7 +34,7 @@ function Customerprofile() {
 
   const handleUpdate = async () => {
     try {
-      const response = await axios.put(`https://backendcafe-zqt8.onrender.com/updatebuyer`, {
+      const response = await axios.put(`http://localhost:1000/updatebuyer`, {
         email: buyerEmail, // Email remains unchanged
         name: updatedName,
         phoneNo: updatedPhone,

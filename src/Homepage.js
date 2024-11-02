@@ -56,7 +56,7 @@ function Homepage() {
     const totalquantityforhome = cartfortotal.map((item) => item.quantity).reduce((prev, curr) => prev + curr, 0);
 
     useEffect(() => {
-        axios.get('https://backendcafe-zqt8.onrender.com/getdish')
+        axios.get('http://localhost:1000/getdish')
             .then(response => {
                 setCafes(response.data);
                 setQuantities(Array(response.data.length).fill(0));
