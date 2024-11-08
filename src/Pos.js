@@ -118,14 +118,11 @@ const Pos = () => {
   const handlePayment = async () => {
     try {
       const paymentData = {
-        cart,
-        total,
-        discount,
+        cartforpayment:cart,
+        discountamount:total,
         paymentMode,
-        cash,
-        walletUsed: paymentMode === 'Wallet' ? walletamount : 0,
         customerName,
-        customerPhone
+        customerPhonenNo:customerPhone
       };
       const response = await axios.post('http:localhost:1000/api/payments', paymentData);
       alert('Payment successful!');
@@ -327,7 +324,11 @@ const Pos = () => {
             <h2 className="text-2xl font-semibold mb-4">Scan UPI QR Code</h2>
             <div className="flex justify-center mb-4">
               {/* Render QR Code with UPI details */}
-              <QRCode value={upiString} size={160} />
+              <QRCode value={upiString}
+                size={256} // Increase this value for higher resolution
+                level="H" // High error correction for better scanning
+                includeMargin={true}
+               />
             </div>
             <button
               onClick={() => setShowQRModal(false)}
