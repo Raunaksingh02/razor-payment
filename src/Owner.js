@@ -17,13 +17,22 @@ import Dishmanage from './Dishmanage';
 import Salechart from './Salechart';
 import Webisteorder from './Webisteorder';
 import Pos from './Pos';
+import { FaChartBar } from "react-icons/fa";
 import Deliverydetail from './components/Deliverydetail';
 import CouponManager from './components/CouponManager';
 import AddRewardCoupon from './AddRewardCoupon';
 import Chart from 'react-apexcharts';
+import Month from "./Month";
 import Profitpage from './Profitpage';
+import { MdCalendarMonth } from "react-icons/md";
+import Googlepay from "./Googlepay";
+import { MdPayments } from "react-icons/md";
+
+import Webuser from "./components/Webuser";
+import Uniqueuser from './components/Uniqueuser';
 
 function Owner() {
+
   const [stats, setStats] = useState({});
   const { logout } = useContext(AuthContext);
   const [selectedTab, setSelectedTab] = useState('Dashboard');
@@ -101,9 +110,13 @@ function Owner() {
     { name: 'Profit', icon: <TbTruckDelivery />, component: <Profitpage /> },
     { name: 'Reward', icon: <MdOutlineLoyalty />, component: <AddRewardCoupon /> },
     { name: 'Coupons', icon: <CiDiscount1 />, component: <CouponManager /> },
-   
+    { name: 'Chart', icon: < FaChartBar/>, component: <Chart /> },
+    { name: 'Month', icon: < MdCalendarMonth/>, component: <Month /> },
+    { name: 'Upi', icon: < MdPayments />, component: <Googlepay/> },
+    { name: 'User', icon: <MdPayments />, component: <Webuser/> },
+    { name: 'History', icon: <FaHistory /> ,component: <Uniqueuser/> },
+    
   ];
-
   const renderSelectedTab = () => {
     if (selectedTab === 'Dashboard') {
       return renderDashboard();

@@ -13,7 +13,7 @@ import Stepmodal from "./Stepmodal.js";
 import { BuyerContext } from './components/Buyercontext.js';
 import { UPIDetailsContext } from "./components/UPIDetailsContext.js";
 import { CustomerContext } from './CustomerContext';
-
+ 
 function Upi() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -190,11 +190,9 @@ function Upi() {
     <div>
     <div className='flex items-center mb-4'>
         <div className='mr-4'>
-         
               <button onClick={handleBackNavigation}>
               <img src={backarrowlogo} className='h-10 w-10' alt="Back" />
               </button>
-        
         </div>
         <div className='flex-1 text-center'>
           <h1 className='font-bold text-2xl mb-2 mr-4'>UPI Payment</h1>
@@ -210,7 +208,6 @@ function Upi() {
           <div>
             <img src={gpaylogo} className="h-12 w-12" />
           </div>
-
           <div>
             <img src={paytmlogo} className="h-12 w-12" />
           </div>
@@ -255,9 +252,7 @@ function Upi() {
           <div className="mt-4 animate-slideInFromBottom">
           </div>
         </div>
-
       <Stepmodal isOpen={isModal} onClose={handleCloseModal} />
-     
      </div>
      <div className="bg-white p-3 rounded-lg shadow-lg max-w-md w-full">
        <h2 className="text-xl mb-4 font-semibold">Upi Payment Steps :</h2>
@@ -269,7 +264,6 @@ function Upi() {
            </ol>
      </div>
      <Footer />
-      
       </div>
    
   );
