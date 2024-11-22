@@ -14,11 +14,12 @@ import { CiSearch } from "react-icons/ci";
 import { addToCart, removeToCart } from './redux/cartSlice.js';
 import Calling from './Calling.js';
 import Footer from "./Footer.js";
-import { BuyerContext } from './components/Buyercontext.js'; // Import BuyerContext for user authentication
+import { BuyerContext } from './components/Buyercontext.js';
 import {CouponContext } from "./components/CouponContext.js";
+import WhatsAppButton from "./WhatsAppButton.js";
 import Couponmodal from "./components/Couponmodal.js";
 
-import { FaTag } from 'react-icons/fa';
+import { FaTag } from 'react-icons';
 
 function Homepage() {
     const { table } = useParams(); 
@@ -48,15 +49,14 @@ function Homepage() {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const [searchTerm, setSearchTerm] = useState('');
-    const itemsPerPage = 6;
+    const itemsPerPage = 9;
 
-  
     const dispatch = useDispatch();
     const cartfortotal = useSelector((state) => state.cart.cart);
     const totalquantityforhome = cartfortotal.map((item) => item.quantity).reduce((prev, curr) => prev + curr, 0);
 
     useEffect(() => {
-        axios.get('http://localhost:1000/getdish')
+        axios.get('https://backendaggrawal-8dey.onrender.com/getdish')
             .then(response => {
                 setCafes(response.data);
                 setQuantities(Array(response.data.length).fill(0));
@@ -173,7 +173,8 @@ function Homepage() {
     };
     
     return (
-        <div className=" m-3">
+        <div className="m-3 ">
+          <WhatsAppButton/>
             {
                 table === "Takeaway" && (
                     <>
@@ -184,10 +185,9 @@ function Homepage() {
                         </div>
                     </>
                 )
-            }
-            
-            <div className='flex items-center justify-between bg-[#f6931e] rounded-t-3xl p-3 '>
-                <h1 className="text-3xl font-extrabold text-white text-center m-2 mr-3">Cafe Coffee </h1>
+            }  
+         <div className='flex items-center justify-between bg-[#f6931e] rounded-t-3xl p-3 '>
+                <h1 className="text-2xl font-extrabold text-white text-center m-2 mr-3">Cafe House </h1>
                 <div className='flex items-center m-2 p-2'>
                 {table && (
           <button onClick={handleClickOnDial} className="flex items-center p-2 bg-gray-100 rounded-xl shadow-lg hover:bg-gray-300 hover:shadow-xl transition-all duration-200">
@@ -255,7 +255,9 @@ function Homepage() {
   </div>
 </div>
 
-  <div className="grid grid-cols-1 mt-3 sm:grid sm:grid-cols-3 sm:gap-4">
+
+
+            <div className="grid grid-cols-1 mt-3 sm:grid sm:grid-cols-3 sm:gap-4">
   {currentCafes.map((item, index) => (
     <div
       className="flex flex-row bg-gray-100 ease-in duration-300 rounded-2xl shadow-inner shadow-gray-400 animate-slideInFromBottom p-4 mb-4 hover:bg-gray-400"
@@ -331,33 +333,34 @@ function Homepage() {
     </div>
   ))}
 </div>
-   
-        
-            <div className="flex justify-center mt-4">
-                <button
-                    onClick={() => paginate(currentPage - 1)}
-                    disabled={currentPage === 1}
-                    className="px-4 py-2 mx-1 bg-gray-300 rounded-md hover:bg-gray-400 disabled:opacity-50"
-                >
-                    Previous
-                </button>
-                {[...Array(Math.ceil(searchedCafes.length / itemsPerPage)).keys()].map((number) => (
-                    <button
-                        key={number + 1}
-                        onClick={() => paginate(number + 1)}
-                        className={`px-4 py-2 mx-1 ${currentPage === number + 1 ? 'bg-gray-600 text-white' : 'bg-gray-300'} rounded-md hover:bg-gray-400`}
-                    >
-                        {number + 1}
-                    </button>
-                ))}
-                <button
-                    onClick={() => paginate(currentPage + 1)}
-                    disabled={currentPage === Math.ceil(searchedCafes.length / itemsPerPage)}
-                    className="px-4 py-2 mx-1 bg-gray-300 rounded-md hover:bg-gray-400 disabled:opacity-50"
-                >
-                    Next
-                </button>
-            </div>
+
+        <div className="overflow-x-auto py-4">
+        <div className="flex space-x-2 px-4">
+        <button
+            onClick={() => paginate(currentPage - 1)}
+            disabled={currentPage === 1}
+            className="px-4 py-2 bg-gray-300 rounded-md hover:bg-gray-400 disabled:opacity-50 text-sm md:text-base"
+        >
+            Previous
+        </button>
+        {[...Array(Math.ceil(searchedCafes.length / itemsPerPage)).keys()].map((number) => (
+            <button
+                key={number + 1}
+                onClick={() => paginate(number + 1)}
+                className={`px-4 py-2 rounded-md text-sm md:text-base ${currentPage === number + 1 ? 'bg-gray-600 text-white' : 'bg-gray-300'} hover:bg-gray-400`}
+            >
+                {number + 1}
+            </button>
+          ))}
+          <button
+            onClick={() => paginate(currentPage + 1)}
+            disabled={currentPage === Math.ceil(searchedCafes.length / itemsPerPage)}
+            className="px-4 py-2 bg-gray-300 rounded-md hover:bg-gray-400 disabled:opacity-50 text-sm md:text-base"
+          >
+            Next
+          </button>
+          </div>
+          </div>
 
            
             <Footer/>

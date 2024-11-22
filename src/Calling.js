@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { io } from 'socket.io-client';
 import { GiCancel } from "react-icons/gi";
 
-const socket = io("http://localhost:1000");
+const socket = io("https://backendcafe-nefw.onrender.com");
 
 
 function Calling() {

@@ -17,7 +17,7 @@ const CouponManager = () => {
   useEffect(() => {
     const fetchCoupons = async () => {
       try {
-        const { data } = await axios.get('http://localhost:1000/coupons');
+        const { data } = await axios.get('https://backendcafe-nefw.onrender.com/coupons');
         setCoupons(data.coupons); // Ensure you're accessing the correct field from the response
         
       } catch (error) {
@@ -36,11 +36,11 @@ const CouponManager = () => {
   const handleAddCoupon = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:1000/add', newCoupon); // Correct POST endpoint
+      await axios.post('https://backendcafe-nefw.onrender.com/add', newCoupon); // Correct POST endpoint
       setNewCoupon({ name: '', discountPercentage: '', description: '', maxDiscountAmount: '', minOrderValue: '' });
       alert('Coupon added successfully!');
       // Refresh the coupon list after adding a new coupon
-      const { data } = await axios.get('http://localhost:1000/coupons');
+      const { data } = await axios.get('https://backendcafe-nefw.onrender.com/coupons');
       setCoupons(data.coupons);
     } catch (error) {
       console.error('Error adding coupon:', error);
@@ -50,7 +50,7 @@ const CouponManager = () => {
   // Delete Coupon
   const handleDeleteCoupon = async (couponName) => {
     try {
-      await axios.delete(`http://localhost:1000/delete/${couponName}`); // Correct DELETE endpoint
+      await axios.delete(`https://backendcafe-nefw.onrender.com/delete/${couponName}`); // Correct DELETE endpoint
       setCoupons(coupons.filter((coupon) => coupon.name !== couponName));
       alert('Coupon deleted successfully!');
     } catch (error) {

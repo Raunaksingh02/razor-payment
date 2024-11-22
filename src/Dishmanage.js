@@ -26,7 +26,7 @@ const DishManagement = () => {
 
   const fetchDishes = async () => {
     try{
-      const response = await axios.get('http://localhost:1000/getdish')
+      const response = await axios.get('https://backendcafe-nefw.onrender.com/getdish')
       setDishes(response.data);
     } catch (error) {
       console.error('Error fetching dishes', error);
@@ -36,7 +36,7 @@ const DishManagement = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:1000/deletedish/${id}`);
+      await axios.delete(`https://backendcafe-nefw.onrender.com/deletedish/${id}`);
    {/*   setDishes(dishes.filter((dish) => dish.id !== id)); */}
     } catch (error) {
       console.error('Error deleting dish', error);
@@ -52,7 +52,7 @@ const DishManagement = () => {
       const validSizes = validateSizes(newDish.sizes);
       const dishToAdd = { ...newDish, sizes: validSizes };
   
-      const response = await axios.post('http://localhost:1000/postdish', dishToAdd, {
+      const response = await axios.post('https://backendcafe-nefw.onrender.com/postdish', dishToAdd, {
         headers: {
           'Content-Type': 'application/json',
         },
@@ -84,8 +84,8 @@ const DishManagement = () => {
   
   const handleUpdate = async () => {
     try {
-      const response = await axios.put(`http://localhost:1000/dishes/${editDish.id}`, editDish);
-      setDishes(dishes.map((dish) => (dish.id === editDish.id ? response.data : dish)));
+      const response = await axios.put(`http://localhost:1000/dishes/${editDish._id}`, editDish);
+      setDishes(dishes.map((dish) => (dish._id === editDish._id ? response.data : dish)));
       setEditDish(null);
     } catch (error) {
       console.error('Error updating dish', error);
@@ -152,40 +152,79 @@ const DishManagement = () => {
             onChange={(e) => setNewDish({ ...newDish, rating: e.target.value })}
             className="border p-2 rounded"
           />
-          {newDish.sizes.map((size, index) => (
-            <div key={index} className="flex space-x-4 items-center">
-              <input
-                type="text"
-                placeholder="Size"
-                value={size.size}
-                onChange={(e) =>
-                  handleSizeChange(index, 'size', e.target.value, setNewDish, newDish)
-                }
-                className="border p-2 rounded"
-              />
-              <input
-                type="number"
-                placeholder="Price"
-                value={size.price}
-                onChange={(e) =>
-                  handleSizeChange(index, 'price', e.target.value, setNewDish, newDish)
-                }
-                className="border p-2 rounded"
-              />
-              <button
-                onClick={() => removeSizeField(index, setNewDish, newDish)}
-                className="bg-red-500 text-white p-2 rounded"
-              >
-                Remove
-              </button>
-            </div>
-          ))}
-          <button
-            onClick={() => addSizeField(setNewDish, newDish)}
-            className="bg-green-500 text-white p-2 rounded"
-          >
-            Add Size
-          </button>
+         
+         {newDish.sizes.map((size, index) => (
+  <div key={index} className="flex space-x-4 items-center">
+    <input
+      type="text"
+      placeholder="Size"
+      value={size.size}
+      onChange={(e) =>
+        handleSizeChange(index, 'size', e.target.value, setNewDish, newDish)
+      }
+      className="border p-2 rounded"
+    />
+    <input
+      type="number"
+      placeholder="Price"
+      value={size.price}
+      onChange={(e) =>
+        handleSizeChange(index, 'price', e.target.value, setNewDish, newDish)
+      }
+      className="border p-2 rounded"
+    />
+      <input
+      type="number"
+      placeholder=" costPrice"
+      value={size.costPrice}
+      onChange={(e) =>
+        handleSizeChange(index, 'costPrice', e.target.value, setNewDish, newDish)
+      }
+      className="border p-2 rounded"
+    />
+    <input
+      type="number"
+      placeholder="Stock"
+      value={size.stock ?? 0}
+      onChange={(e) =>
+        handleSizeChange(index, 'stock', e.target.value, setNewDish, newDish)
+      }
+      className="border p-2 rounded"
+    />
+    <input
+      type="number"
+      placeholder="Points"
+      value={size.points}
+      onChange={(e) =>
+        handleSizeChange(index, 'points', e.target.value, setNewDish, newDish)
+      }
+      className="border p-2 rounded"
+    />
+    <input
+      type="number"
+      placeholder="minquantity"
+      value={size.stock}
+      onChange={(e) =>
+        handleSizeChange(index, 'minquantity', e.target.value, setNewDish, newDish)
+      }
+      className="border p-2 rounded"
+    />
+    
+    <button
+      onClick={() => removeSizeField(index, setNewDish, newDish)}
+      className="bg-red-500 text-white p-2 rounded"
+    >
+      Remove
+    </button>
+  </div>
+))}
+<button
+  onClick={() => addSizeField(setNewDish, newDish)}
+  className="bg-green-500 text-white p-2 rounded"
+>
+  Add Size
+</button>
+
           <input
             type="text"
             placeholder="Image URL"
@@ -291,6 +330,42 @@ const DishManagement = () => {
                             }
                             className="border p-2 rounded w-full"
                         />
+                         <input
+                            type="number"
+                            placeholder="cost"
+                            value={size.costPrice}
+                            onChange={(e) =>
+                                handleSizeChange(index, 'costPrice', e.target.value, setEditDish, editDish)
+                            }
+                            className="border p-2 rounded w-full"
+                        />
+                          <input
+                            type="number"
+                            placeholder="stock"
+                            value={size.stock}
+                            onChange={(e) =>
+                                handleSizeChange(index, 'stock', e.target.value, setEditDish, editDish)
+                            }
+                            className="border p-2 rounded w-full"
+                        />
+                          <input
+                            type="number"
+                            placeholder="Points"
+                            value={size.points}
+                            onChange={(e) =>
+                                handleSizeChange(index, 'points', e.target.value, setEditDish, editDish)
+                            }
+                            className="border p-2 rounded w-full"
+                        />
+                         <input 
+                       type="number"
+                       placeholder="minquantity"
+                        value={size.minquantity}
+                       onChange={(e) =>
+                       handleSizeChange(index, 'minquantity', e.target.value, setNewDish, newDish)
+                         }
+                       className="border p-2 rounded"
+                     />
                         <button
                             onClick={() => removeSizeField(index, setEditDish, editDish)}
                             className="bg-red-500 text-white p-2 rounded"

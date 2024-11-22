@@ -27,9 +27,13 @@ import Profitpage from './Profitpage';
 import { MdCalendarMonth } from "react-icons/md";
 import Googlepay from "./Googlepay";
 import { MdPayments } from "react-icons/md";
-
 import Webuser from "./components/Webuser";
 import Uniqueuser from './components/Uniqueuser';
+import { TbBuildingWarehouse } from "react-icons/tb";
+import { BsQrCode } from "react-icons/bs";
+import Inventory from "./Inventory.js";
+import Dynamicqr from './Dynamicqr.js'
+
 
 function Owner() {
 
@@ -44,7 +48,7 @@ function Owner() {
 
   const fetchStats = useCallback(async () => {
     try {
-      const response = await axios.get('http://localhost:1000/todays-stats');
+      const response = await axios.get('https://backendcafe-nefw.onrender.com/todays-stats');
       setStats(response.data);
     } catch (error) {
       console.error('Error fetching stats', error);
@@ -107,6 +111,7 @@ function Owner() {
     { name: 'Create Bill', icon: <FaFileInvoiceDollar />, component: <Pos /> },
     { name: 'Website Order', icon: <MdElectricMoped />, component: <Webisteorder /> },
     { name: 'Menu-Items', icon: <GiCook />, component: <Dishmanage /> },
+    { name: 'Inventory', icon: <TbBuildingWarehouse/> ,component: <Inventory/> },
     { name: 'Profit', icon: <TbTruckDelivery />, component: <Profitpage /> },
     { name: 'Reward', icon: <MdOutlineLoyalty />, component: <AddRewardCoupon /> },
     { name: 'Coupons', icon: <CiDiscount1 />, component: <CouponManager /> },
@@ -115,8 +120,12 @@ function Owner() {
     { name: 'Upi', icon: < MdPayments />, component: <Googlepay/> },
     { name: 'User', icon: <MdPayments />, component: <Webuser/> },
     { name: 'History', icon: <FaHistory /> ,component: <Uniqueuser/> },
-    
+    { name: 'Delivery', icon: <FaHistory /> ,component: <Deliverydetail/> },
+    { name: 'Safepay', icon: < BsQrCode /> ,component: <Dynamicqr/> },
+
+   
   ];
+
   const renderSelectedTab = () => {
     if (selectedTab === 'Dashboard') {
       return renderDashboard();

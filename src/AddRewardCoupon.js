@@ -14,7 +14,7 @@ const AddRewardCoupon = () => {
   useEffect(() => {
     const fetchRewards = async () => {
       try {
-        const response = await axios.get('http://localhost:1000/rewards');
+        const response = await axios.get('https://backendcafe-nefw.onrender.com/rewards');
         setRewards(response.data);
       } catch (error) {
         console.error('Error fetching rewards:', error);
@@ -33,7 +33,7 @@ const AddRewardCoupon = () => {
     };
 
     try {
-      const response = await axios.post('http://localhost:1000/rewards', rewardData);
+      const response = await axios.post('https://backendcafe-nefw.onrender.com/rewards', rewardData);
       setRewards((prevRewards) => [...prevRewards, response.data]);
       setMessage('Reward added successfully!');
       setLabel('');
@@ -45,7 +45,7 @@ const AddRewardCoupon = () => {
 
   const handleDelete = async (rewardId) => {
     try {
-      await axios.delete(`http://localhost:1000/rewards/${rewardId}`);
+      await axios.delete(`https://backendcafe-nefw.onrender.com/rewards/${rewardId}`);
       setRewards((prevRewards) => prevRewards.filter((reward) => reward._id !== rewardId));
       setMessage('Reward deleted successfully!');
     } catch (error) {
@@ -65,7 +65,7 @@ const AddRewardCoupon = () => {
     }
 
     try {
-      const response = await axios.post('http://localhost:1000/generate-links', {
+      const response = await axios.post('https://backendcafe-nefw.onrender.com/generate-links', {
         numOfLinks: numberOfLinks,
         type,
         prizeName,

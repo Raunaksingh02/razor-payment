@@ -25,7 +25,7 @@ const Scratch = () => {
 
   const validateQRCode = async (qrid) => {
     try {
-      const response = await fetch(`http://localhost:1000/validateqr/${qrid}`);
+      const response = await fetch(`https://backendcafe-nefw.onrender.com/validateqr/${qrid}`);
       const data = await response.json();
       if (data.success) {
         setIsValidQR(true);
@@ -54,7 +54,7 @@ const Scratch = () => {
     if (isAuthenticated) {
       try {
         // Step 1: Add reward to wallet using reward from URL
-        const addWalletResponse = await fetch(`http://localhost:1000/addwallet`, {
+        const addWalletResponse = await fetch(`https://backendcafe-nefw.onrender.com/addwallet`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ reward: parseInt(reward), email: buyer.email }),
@@ -67,7 +67,7 @@ const Scratch = () => {
         }
 
         // Step 2: Update the redemption status
-        const redeemResponse = await fetch(`http://localhost:1000/updateredeemed/${qrid}`, { method: 'POST' });
+        const redeemResponse = await fetch(`https://backendcafe-nefw.onrender.com/updateredeemed/${qrid}`, { method: 'POST' });
         const redeemData = await redeemResponse.json();
 
         if (redeemData.success) {

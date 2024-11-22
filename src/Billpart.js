@@ -66,7 +66,7 @@ function Billpart() {
 
   useEffect(() => {
     if (buyerEmail) {
-      axios.get(`http://localhost:1000/addresses?email=${buyerEmail}`)
+      axios.get(`https://backendcafe-nefw.onrender.com/addresses?email=${buyerEmail}`)
         .then(response => {
           setBuyerAddress(response.data);
           if (response.data.length > 0) {
@@ -109,7 +109,7 @@ function Billpart() {
 
   const savePaymentDetails2 = async () => {
     try {
-      const response = await axios.post('http://localhost:1000/api/payments', {
+      const response = await axios.post('https://backendcafe-nefw.onrender.com/api/payments', {
         cartforpayment,
         name: customerName,
         amount: finalprice,

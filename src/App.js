@@ -48,7 +48,9 @@ import Pos from "./Pos.js";
 import AddRewardCoupon from './AddRewardCoupon.js';
 import Wallet from "./Wallet.js"
 import Wheel from "./Wheel.js"
+import Dynamicqr from './Dynamicqr.js'
 import Scratch from "./Scratch.js";
+import Inventory from './Inventory.js'
 
 const PaymentComponent = () => {
  
@@ -69,6 +71,9 @@ const PaymentComponent = () => {
          </ProtectedRoute>
           } />
         <Route path="/Success" element={<Successpage/>} />
+        <Route path="/Inventory" element={<Inventory/>} />
+        <Route path="/Dyanmic" element={<Dynamicqr/>} />
+      
         <Route path="/orders" element={<Customerorder/>} />
         <Route path="/pos" element={<Pos />} />
         <Route path="/addreward" element={<AddRewardCoupon/>} />

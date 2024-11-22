@@ -4,19 +4,26 @@ import axios from 'axios';
 import { BuyerContext } from './components/Buyercontext.js';
 import QRCode from 'qrcode.react';
 import { UPIDetailsContext } from "./components/UPIDetailsContext.js";
-
+import { useDispatch, useSelector } from 'react-redux';
+import { addToCart, removeToCart ,emptyCart} from './redux/cartSlice.js';
+import { useNavigate } from 'react-router-dom';
 
 const Pos = () => {
+
+
+  const navigate = useNavigate(); 
+  const dispatch = useDispatch();
   const { walletamount, customerDetails } = useContext(BuyerContext);
   const [items, setItems] = useState([]);
   const [cart, setCart] = useState([]);
   const [total, setTotal] = useState(0);
+  const [discountAmount ,setdiscountAmount] = useState(0); 
   const [quantity, setQuantity] = useState(0);
   const [discount, setDiscount] = useState(0);
-  const [paymentMode, setPaymentMode] = useState('');
+  const [paymentMode, setPaymentMode] = useState("Cash");
   const [showQRModal, setShowQRModal] = useState(false);
   const { upinumber, upiname } = useContext(UPIDetailsContext);
-  const [location,setlocation]= useState("");
+  const [location,setlocation]= useState("Pickup");
   const [cash, setCash] = useState(0);
   const [category, setCategory] = useState('All');
   const [whatsappNumbers, setWhatsappNumbers] = useState([]);
@@ -26,7 +33,6 @@ const Pos = () => {
   const [newPhone, setNewPhone] = useState('');
   const [showBill, setShowBill] = useState(false); 
   const [customerName, setCustomerName] = useState('');
-  const [customerPhone, setCustomerPhone] = useState('');
   const [walletamt,setwalletamt] = useState(0);
   const [finalAmount, setFinalAmount] = useState(0); // Final total after wallet
   const [message, setMessage] = useState("");
@@ -35,7 +41,15 @@ const Pos = () => {
   const [verificationCode, setVerificationCode] = useState('');
   const [generatedCode, setGeneratedCode] = useState('');
   const [isVerified, setIsVerified] = useState(false);
-
+  const [qrData, setQrData] = useState(null);
+  const [prizeAmount, setPrizeAmount] = useState("");
+  const [customerPhone, setCustomerPhone] = useState("");
+  const [message2, setMessage2] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const [paymentId, setPaymentId] = useState("");
+  const [balance,setbalance]= useState(0);
+  const [amountpaid,setamountpaid]= useState(0);
+ 
   useEffect(() => {
     const randomCode = Math.floor(1000 + Math.random() * 9000).toString();
     setGeneratedCode(randomCode);
@@ -47,8 +61,9 @@ const Pos = () => {
   useEffect(() => {
     const fetchItems = async () => {
       try {
-        const response = await axios.get('https://backendaggrawal-8dey.onrender.com/getdish');
+        const response = await axios.get('https://backendcafe-nefw.onrender.com/getdish');
         setItems(response.data);
+        console.log(response.data);
       } catch (error) {
         console.error('Error fetching items:', error);
       }
@@ -59,7 +74,7 @@ const Pos = () => {
   useEffect(() => {
     const fetchwallet = async () => {
       try {
-        const response = await axios.get(`http://localhost:1000/api/customer/${customerPhone}`);
+        const response = await axios.get(`https://backendcafe-nefw.onrender.com/api/customer/${customerPhone}`);
         setwalletamt(response.data.wallet);
         console.log(response.data);
       } catch (error) {
@@ -68,14 +83,138 @@ const Pos = () => {
     };
     fetchwallet(); 
   }, [customerPhone]);
-
   useEffect(() => {
     calculateTotal();
 }, [cart, discount, walletApplied]);
 
+const handleSendBill = async () => {
+  if (!prizeAmount || isNaN(prizeAmount)) {
+    setMessage("Please enter a valid prize amount.");
+    return;
+  }
+  try {
+    const response = await axios.get("https://backendcafe-nefw.onrender.com/unredeemed-unspinned-qr");
+    if (response.data.success) {
+      const qrData = response.data.data;
+      const billLink = `https://cafehouse.vercel.app/loyal/CARD/${qrData.id}/${prizeAmount}`;
+      const whatsappLink = `https://wa.me/${customerPhone}?text=Hello!%20Here%20is%20your%20bill%20link:%20${encodeURIComponent(
+        billLink
+      )}`;
+      // Open the WhatsApp link
+      window.open(whatsappLink, "_blank");
+      setMessage("WhatsApp message link generated!");
+    } else {
+      setMessage("Failed to retrieve QR data.");
+    }
+  } catch (error) {
+    console.error("Error fetching QR data:", error);
+    setMessage("Error fetching QR data.");
+  }
+};
 
+const handlePayment = async () => {
+  try {
+    // Calculate the updated balance
+    const updatedBalance = finalAmount - amountpaid;
+    // Prepare payment data
+    const paymentData = {
+      name: customerName || "",
+      amount: finalAmount || 0,
+      customerTable: location || "Table 1",
+      paymentmode: paymentMode || "",
+      customerPhoneNo: customerPhone,
+      discountamount: discountAmount || 0,
+      balance: updatedBalance, // Include the calculated balance
+      amountpaid: amountpaid || 0,
+      cartforpayment: cart || [],
+      verificationCode: verificationCode || "",
+    };
 
+    console.log("Sending payment data:", paymentData); // Debug log
 
+    // Make API request
+    const response = await axios.post("https://backendcafe-nefw.onrender.com/api/payments", paymentData);
+
+    if (response.data) {
+      // Set the payment ID received from API
+      setPaymentId(response.data.payment._id);
+      console.log("Payment ID:", response.data.payment._id);
+    }
+
+    // Display success message
+    alert("Payment successful!");
+
+    // Clear the cart and close the bill
+    emptyCart();
+    setShowBill(false);
+    setShowModal(true); // Open the modal
+  } catch (error) {
+    console.error("Payment error:", error.response || error);
+
+    // Check for validation errors or backend issues
+    if (error.response) {
+      alert(`Payment failed: ${error.response.data.error || "Unknown error"}`);
+    } else {
+      alert("Payment failed. Please check your connection and try again.");
+    }
+  }
+};
+
+// Update balance dynamically when `finalAmount` or `amountpaid` changes
+useEffect(() => {
+  if (finalAmount && amountpaid) {
+    const calculatedBalance = finalAmount - amountpaid;
+    setbalance(calculatedBalance); // Update state
+    console.log("Updated Balance:", calculatedBalance);
+  }
+}, [finalAmount, amountpaid]);
+
+  
+const sendReceiptToWhatsApp = async () => {
+  if (!paymentId) {
+    alert("Payment ID is missing. Cannot send the receipt.");
+    return;
+  }
+
+  try {
+    let scratchCardLink = "";
+    // Fetch QR data and generate scratch card link only if prizeAmount > 0
+    if (prizeAmount > 0 && !isNaN(prizeAmount)) {
+      const qrResponse = await axios.get("https://backendcafe-nefw.onrender.com/unredeemed-unspinned-qr");
+      if (qrResponse.data.success) {
+        const qrData = qrResponse.data.data;
+        scratchCardLink = `https://cafehouse.vercel.app/loyal/CARD/${qrData.id}/${prizeAmount}`;
+      } else {
+        setMessage("Failed to generate QR data for scratch card.");
+        return;
+      }
+    }
+
+    // Generate the invoice link
+    const invoiceLink = `https://cafehouse.vercel.app/billdata/${paymentId}`;
+
+    // Construct the WhatsApp message with conditional scratch card link
+    const message = prizeAmount > 0
+      ? `Dear ${customerName}, 
+      Here is your bill: ${invoiceLink} 
+      And here is your scratch card: ${scratchCardLink}. 
+      Thank you for choosing CafeHouse!`
+      : `Dear ${customerName}, 
+      Here is your bill: ${invoiceLink}. 
+     Thank you for choosing CafeHouse!`;
+
+    // Generate the WhatsApp link
+    const whatsappLink = `https://api.whatsapp.com/send?phone=91${customerPhone}&text=${encodeURIComponent(message)}`;
+
+    // Open WhatsApp with the generated link
+    window.open(whatsappLink, "_blank");
+
+    setMessage("WhatsApp message sent successfully!");
+  } catch (error) {
+    console.error("Error generating QR data or sending WhatsApp message:", error);
+    alert("Failed to send the WhatsApp message. Please try again.");
+  }
+};
 
   const calculateTotal = () => {
     let baseAmount = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
@@ -132,40 +271,14 @@ const Pos = () => {
     setCart(updatedCart);
   };
 
-  const handlePayment = async () => {
-    try {
-      // Ensure that all required attributes according to the schema are included
-      const paymentData = {
-        // Example function for generating orderId
-        name: customerName,           // Ensure customerEmail is set before calling this function
-        amount: finalAmount,                     // Assuming total is the final payable amount
-        customerTable: location || 'Table 1',  // Use the default if no table specified
-        paymentmode: paymentMode,
-        customerPhoneNo: customerPhone,    // Corrected to match schema
-        status: 'pending',                 // Default status, can be set as needed
-        cartforpayment: cart,              // Assuming `cart` is structured per `cartItemSchema`
-                         // Current date as per schema default
-      };
-  
-      // Make sure to define and validate all required fields used in `paymentData`
-  
-      const response = await axios.post('http://localhost:1000/api/payments', paymentData);
-      alert('Payment successful!');
-    } catch (error) {
-      console.error('Payment error:', error);
-      alert('Payment failed. Please try again.');
-    }
+  const emptyCart = () => {
+    setCart([]); // Completely clear the cart
   };
-  
 
- 
   const handleWalletToggle = () => {
     setWalletApplied(!walletApplied);
 };
 
-// useEffect to recalculate whenever wallet toggle or cart updates
-
-// In render function, showing Final Amount if Wallet is used
 {walletApplied && finalAmount !== total && (
     <p className="text-gray-800 font-semibold">After Wallet Deduction: ₹{finalAmount}</p>
 )}
@@ -240,12 +353,26 @@ const Pos = () => {
     setWhatsappNumbers(updatedNumbers);
   };
 
-
+  const categories = ['All', ...new Set(items.map(item => item.category))];
+  console.log(cart);
   return (
-    <div className="h-screen flex flex-col justify-between">
+    <div className="h-screen flex flex-col justify-between">  
       <h2 className="text-2xl font-bold mb-4">POS System</h2>
+      {/* Dynamic Category Selection */}
+      <div className="flex space-x-2 mb-2  ">
+        {categories.map((cat) => (
+          <button
+            key={cat}
+            onClick={() => handleCategoryChange(cat)}
+            className={`px-2 py-1 rounded-lg ${category === cat ? 'bg-[#f6931e] text-white' : 'bg-gray-200 text-gray-700'}`}
+          >
+            {cat}
+          </button>
+        ))}
+        </div>
+     
       {/* Items Grid */}
-      <div className="grid grid-cols-2 gap-2 mb-4">
+      <div className="grid grid-cols-2 lg:grid lg:grid-cols-4 gap-2 mb-4">
         {items.filter(item => category === 'All' || item.category === category).map((item) => (
           <div key={item._id} className="w-40 ">
             <img src={item.image} alt={item.name} className="h-20 w-20 object-cover mx-auto" />
@@ -257,7 +384,7 @@ const Pos = () => {
                 onChange={(e) => {
                   const selectedSize = item.sizes.find(sizeOption => sizeOption.size === e.target.value);
                   if (selectedSize) {
-                    addToCart(item, selectedSize.size, selectedSize.price);
+                    addToCart(item, selectedSize.size, selectedSize.price,selectedSize.costPrice,selectedSize.stock);
                   }
                 }}
               >
@@ -287,30 +414,54 @@ const Pos = () => {
           </div>
         ))}
       </div>
-
+   
       <div>
-      <div className="fixed bottom-0 left-0 w-full bg-white p-4 shadow-lg">
-        <div className="flex justify-between items-center">
-          <div>
-            <p className="text-gray-600">Total Items: {quantity}</p>
-            <p className="text-lg font-bold">Total: ₹{total}</p>
-          </div>
-          <div>
-            <button
-              className="bg-green-500 text-white px-6 py-2 mr-2 rounded-lg"
-              onClick={() => setShowNumberModal(true)}
-            >
-              KOT
-            </button>
-            <button
-              className="bg-[#f6931e] text-white px-6 py-2 rounded-lg"
-              onClick={() => setShowBill(!showBill)}
-            >
-              {showBill ? 'Hide Bill' : 'Show Bill'}
-            </button>
+      </div>
+        <div className="fixed bottom-0 left-0 w-full  bg-white p-4 shadow-lg  ">
+      <div className="flex justify-between items-center">
+      <div>
+      <p className="text-gray-600">Total Items: {quantity}</p>
+      <p className="text-lg font-bold">Total: ₹{total}</p>
+      </div>
+      <div >
+      <button
+        className="bg-green-500 text-white px-6 py-2 mr-2 rounded-lg"
+        onClick={() => setShowNumberModal(true)}
+      >
+        KOT
+      </button>
+      <button
+        className="bg-[#f6931e] text-white px-6 py-2 rounded-lg"
+        onClick={() => setShowBill(!showBill)}
+      >
+        {showBill ? 'Hide Bill' : 'Show Bill'}
+      </button>
+      </div>
+      </div>
+      
+      {/* Modal for sharing receipt */}
+      {showModal && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded shadow-lg text-center">
+            <h2 className="text-lg font-bold mb-4">Share Receipt</h2>
+            <p>Do you want to share the receipt via WhatsApp to {newPhone}?</p>
+            <div className="mt-4 flex justify-center gap-4">
+              <button
+                className="bg-green-500 text-white px-4 py-2 rounded"
+                onClick={sendReceiptToWhatsApp}
+              >
+                Yes, Share
+              </button>
+              <button
+                className="bg-gray-500 text-white px-4 py-2 rounded"
+                onClick={() => setShowModal(false)}
+              >
+                Cancel
+              </button>
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
       {/* Modal for WhatsApp number selection */}
       {showNumberModal && (
@@ -459,7 +610,24 @@ const Pos = () => {
           )}
 
             {/* Payment Section */}
+               <label className="block text-lg font-bold mb-2 mt-3">Discount:</label>
+              <input
+                type="text"
+                placeholder="Discount"
+                value={discountAmount}
+                onChange={(e) => setdiscountAmount(e.target.value)}
+                className="border p-2 mr-2 w-full rounded-lg"
+              />
           
+            <label className="block text-lg font-bold mb-2 mt-3">Amount Paid:</label>
+              <input
+                type="text"
+                placeholder="Paid Amount"
+                value={amountpaid}
+                onChange={(e) => setamountpaid(e.target.value)}
+                className="border p-2 mr-2 w-full rounded-lg"
+              />
+
             <label className="block text-lg font-bold mb-2 mt-3">Payment Mode:</label>
             <select
               className="w-full p-2 border rounded-md text-gray-600"
@@ -534,15 +702,29 @@ const Pos = () => {
           </div>
         </div>
       )}
+
+
+        <div>
+          <p className="mb-2"> 
+          </p>
+          <div className="mb-4">
+            <label className="block mb-2 font-medium">Enter Prize Amount</label>
+            <input
+              type="text"
+              value={prizeAmount}
+              onChange={(e) => setPrizeAmount(e.target.value)}
+              className="w-full p-2 border rounded-md"
+              placeholder="Enter prize amount"
+            />
+          </div>   
+        </div> 
           </div>
           <button
               className="mt-4 w-full bg-[#f6931e] text-white px-6 py-2 rounded-lg"
               onClick={handlePayment}
             >
               Pay ₹{finalAmount}
-            </button>   
-           
-                     
+            </button>            
           </div>
         </div>
       )}

@@ -14,7 +14,7 @@ const Wallet = () => {
 
   useEffect(() => {
     if (buyerEmail) {
-      axios.get(`http://localhost:1000/addresses?email=${buyerEmail}`)
+      axios.get(`https://backendcafe-nefw.onrender.com/addresses?email=${buyerEmail}`)
         .then(response => {
           setWallet(response.data.wallet); // Assuming wallet is part of the response
           setLoading(false);

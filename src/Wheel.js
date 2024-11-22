@@ -26,7 +26,7 @@ const WheelComponent = () => {
 
   const validateQRCode = async (qrid) => {
     try {
-      const response = await fetch(`http://localhost:1000/validateqr/${qrid}`);
+      const response = await fetch(`https://backendcafe-nefw.onrender.com/validateqr/${qrid}`);
       const data = await response.json();
 
       if (data.success) {
@@ -48,7 +48,7 @@ const WheelComponent = () => {
 
   const fetchRewards = async () => {
     try {
-      const response = await fetch('http://localhost:1000/REWARDS');
+      const response = await fetch('https://backendcafe-nefw.onrender.com/REWARDS');
       const data = await response.json();
       if (response.ok) {
         const formattedRewards = data.map((reward) => ({
@@ -87,7 +87,7 @@ const WheelComponent = () => {
     setPrizeAmount(rewardAmount);
 
     try {
-      const response = await fetch(`http://localhost:1000/updatespinned/${qrid}`, {
+      const response = await fetch(`https://backendcafe-nefw.onrender.com/updatespinned/${qrid}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ prizeAmount: rewardAmount, spinned: true }),
@@ -111,7 +111,7 @@ const WheelComponent = () => {
   
     try {
       // Step 1: Add reward to wallet
-      const addWalletResponse = await fetch(`http://localhost:1000/addwallet`, {
+      const addWalletResponse = await fetch(`https://backendcafe-nefw.onrender.com/addwallet`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ reward: prizeAmount, email: buyer.email }),
@@ -124,7 +124,7 @@ const WheelComponent = () => {
       }
   
       // Step 2: Update the QR code as redeemed
-      const updateRedeemedResponse = await fetch(`http://localhost:1000/updateredeemed/${qrid}`, {
+      const updateRedeemedResponse = await fetch(`https://backendcafe-nefw.onrender.com/updateredeemed/${qrid}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
       });

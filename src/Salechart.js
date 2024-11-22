@@ -16,7 +16,7 @@ const Salechart= () => {
   const fetchData = async (selectedMonth) => {
     const monthStr = selectedMonth.toISOString().split('T')[0].slice(0, 7); // Get month in YYYY-MM format
     try {
-      const response = await axios.get(`http://localhost:1000/api/sales?month=${monthStr}`);
+      const response = await axios.get(`https://backendcafe-nefw.onrender.com/api/sales?month=${monthStr}`);
       setData(response.data);
     } catch (error) {
       console.error('Error fetching data:', error);
