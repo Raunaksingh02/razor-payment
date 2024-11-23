@@ -33,7 +33,14 @@ import { TbBuildingWarehouse } from "react-icons/tb";
 import { BsQrCode } from "react-icons/bs";
 import Inventory from "./Inventory.js";
 import Dynamicqr from './Dynamicqr.js'
-
+import { Pie } from 'react-chartjs-2';
+import {
+  Chart as ChartJS,
+  ArcElement,
+  Tooltip,
+  Legend,
+} from 'chart.js';
+ChartJS.register(ArcElement, Tooltip, Legend);
 
 function Owner() {
 
@@ -43,6 +50,49 @@ function Owner() {
   const [chartOptions, setChartOptions] = useState({});
   const [chartSeries, setChartSeries] = useState([]);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [paymentData, setPaymentData] = useState([]);
+  const [chartData, setChartData] = useState(null);
+
+  useEffect(() => {
+    // Fetch payments
+    const fetchPayments = async () => {
+      try {
+        const response = await axios.get('http://localhost:1000/api/payments'); // Corrected URL
+        setPaymentData(response.data);
+        processChartData(response.data);
+      } catch (error) {
+        console.error('Error fetching payment data:', error);
+      }
+    };
+    fetchPayments();
+  }, []);
+  
+
+  const processChartData = (data) => {
+    // Count payment modes
+    const modeCounts = data.reduce((acc, payment) => {
+      acc[payment.paymentmode] = (acc[payment.paymentmode] || 0) + 1;
+      return acc;
+    }, {});
+
+    // Prepare data for Chart.js
+    setChartData({
+      labels: ['UPI', 'Cash', 'Card'],
+      datasets: [
+        {
+          label: 'Payment Modes',
+          data: [
+            modeCounts['UPI'] || 0,
+            modeCounts['Cash'] || 0,
+            modeCounts['Card'] || 0,
+          ],
+          backgroundColor: ['#f6931e', '#4caf50', '#2196f3'], // Colors for each mode
+          borderWidth: 1,
+        },
+      ],
+    });
+  };
+
 
   const navigate = useNavigate();
 
@@ -101,6 +151,14 @@ function Owner() {
       <div className="bg-white p-6 rounded-lg shadow-xl">
         <h2 className="text-xl font-bold mb-4">Today's Performance</h2>
         <Chart options={chartOptions} series={chartSeries} type="bar" height={350} />
+        <div className="p-4">
+      <h2 className="text-center text-2xl font-bold mb-4">Payment Modes Distribution</h2>
+      {chartData ? (
+        <Pie data={chartData} />
+      ) : (
+        <p className="text-center">Loading chart...</p>
+      )}
+    </div>
       </div>
     </div>
   );
