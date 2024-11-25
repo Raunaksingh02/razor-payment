@@ -21,7 +21,7 @@ export default function DetailScreen() {
     useEffect(() => {
         const fetchDish = async () => {
             try {
-                const response = await axios.get(`http://localhost:1000/getdish/${id}`);
+                const response = await axios.get(`https://backendcafe-nefw.onrender.com/getdish/${id}`);
                 const data = response.data;
                 setDish(data);
                 setSelectedSize(data.sizes[0]?.size || '');

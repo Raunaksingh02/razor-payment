@@ -56,7 +56,7 @@ function Homepage() {
     const totalquantityforhome = cartfortotal.map((item) => item.quantity).reduce((prev, curr) => prev + curr, 0);
 
     useEffect(() => {
-        axios.get('http://localhost:1000/getdish')
+        axios.get('https://backendcafe-nefw.onrender.com/getdish')
             .then(response => {
                 setCafes(response.data);
                 setQuantities(Array(response.data.length).fill(0));

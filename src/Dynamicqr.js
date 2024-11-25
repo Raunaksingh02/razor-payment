@@ -44,7 +44,7 @@ const Dynamicqr = () => {
       setSuccess(true);
 
       try {
-        await axios.post("http://localhost:1000/api/send-confirmation-email", {
+        await axios.post("https://backendcafe-nefw.onrender.com/api/send-confirmation-email", {
           email: buyer.email,
           amount,
           verificationCode: generatedCode,

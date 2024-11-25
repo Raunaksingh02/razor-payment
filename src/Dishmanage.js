@@ -84,7 +84,7 @@ const DishManagement = () => {
   
   const handleUpdate = async () => {
     try {
-      const response = await axios.put(`http://localhost:1000/dishes/${editDish._id}`, editDish);
+      const response = await axios.put(`https://backendcafe-nefw.onrender.com/dishes/${editDish._id}`, editDish);
       setDishes(dishes.map((dish) => (dish._id === editDish._id ? response.data : dish)));
       setEditDish(null);
     } catch (error) {

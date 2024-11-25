@@ -57,7 +57,7 @@ function Owner() {
     // Fetch payments
     const fetchPayments = async () => {
       try {
-        const response = await axios.get('http://localhost:1000/api/payments'); // Corrected URL
+        const response = await axios.get('https://backendcafe-nefw.onrender.com/api/payments'); // Corrected URL
         setPaymentData(response.data);
         processChartData(response.data);
       } catch (error) {
