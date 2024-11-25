@@ -70,6 +70,14 @@ const Pos = () => {
     };
     fetchItems(); 
   }, []);
+ 
+  useEffect(() => {
+    const totalPrize = cart.reduce(
+      (sum, item) => sum + item.points * item.quantity,
+      0
+    );
+    setPrizeAmount(totalPrize);
+  }, [cart]);
 
   useEffect(() => {
     const fetchwallet = async () => {
@@ -226,54 +234,7 @@ const sendReceiptToWhatsApp = async () => {
     setQuantity(totalQuantity);
 };
 
-  const addToCart = (item, size = '', price = '') => {
-    if (!size) {
-      size = item.sizes[0].size;
-      price = item.sizes[0].price;
-    }
-
-    const existingItem = cart.find(cartItem => cartItem.id === item._id && cartItem.size === size);
-    if (existingItem) {
-      const updatedCart = cart.map(cartItem => {
-        if (cartItem.id === item._id && cartItem.size === size) {
-          return { ...cartItem, quantity: cartItem.quantity + 1 };
-        }
-        return cartItem;
-      });
-      setCart(updatedCart);
-    } else {
-      setCart([...cart, { ...item, id: item._id, size, price, quantity: 1 }]);
-    }
-  };
-
-  const removeFromCart = (id, size) => {
-    const updatedCart = cart.filter(item => !(item.id === id && item.size === size));
-    setCart(updatedCart);
-  };
-
-  const incrementQuantity = (id, size) => {
-    const updatedCart = cart.map(item => {
-      if (item.id === id && item.size === size) {
-        return { ...item, quantity: item.quantity + 1 };
-      }
-      return item;
-    });
-    setCart(updatedCart);
-  };
-
-  const decrementQuantity = (id, size) => {
-    const updatedCart = cart.map(item => {
-      if (item.id === id && item.size === size && item.quantity > 1) {
-        return { ...item, quantity: item.quantity - 1 };
-      }
-      return item;
-    });
-    setCart(updatedCart);
-  };
-
-  const emptyCart = () => {
-    setCart([]); // Completely clear the cart
-  };
+ 
 
   const handleWalletToggle = () => {
     setWalletApplied(!walletApplied);
@@ -353,6 +314,63 @@ const sendReceiptToWhatsApp = async () => {
     setWhatsappNumbers(updatedNumbers);
   };
 
+  const addToCart = (item, size, price, costPrice, points, stock) => {
+    const existingItem = cart.find(
+      (cartItem) => cartItem.id === item._id && cartItem.size === size
+    );
+
+    if (existingItem) {
+      // Update quantity if item already in cart
+      setCart((prevCart) =>
+        prevCart.map((cartItem) =>
+          cartItem.id === item._id && cartItem.size === size
+            ? { ...cartItem, quantity: cartItem.quantity + 1 }
+            : cartItem
+        )
+      );
+    } else {
+      // Add new item to cart
+      setCart((prevCart) => [
+        ...prevCart,
+        {
+          id: item._id,
+          name: item.name,
+          size,
+          price,
+          costPrice,
+          quantity: 1,
+          stock,
+          points, // Use the predefined points
+        },
+      ]);
+    }
+  };
+
+  // Function to increment quantity
+  const incrementQuantity = (id, size) => {
+    setCart((prevCart) =>
+      prevCart.map((cartItem) =>
+        cartItem.id === id && cartItem.size === size
+          ? { ...cartItem, quantity: cartItem.quantity + 1 }
+          : cartItem
+      )
+    );
+  };
+
+  // Function to decrement quantity
+  const decrementQuantity = (id, size) => {
+    setCart((prevCart) =>
+      prevCart
+        .map((cartItem) =>
+          cartItem.id === id && cartItem.size === size
+            ? { ...cartItem, quantity: cartItem.quantity - 1 }
+            : cartItem
+        )
+        .filter((cartItem) => cartItem.quantity > 0) // Remove item if quantity reaches 0
+    );
+  };
+
+
   const categories = ['All', ...new Set(items.map(item => item.category))];
   console.log(cart);
   return (
@@ -373,25 +391,40 @@ const sendReceiptToWhatsApp = async () => {
      
       {/* Items Grid */}
       <div className="grid grid-cols-2 lg:grid lg:grid-cols-4 gap-2 mb-4">
-        {items.filter(item => category === 'All' || item.category === category).map((item) => (
-          <div key={item._id} className="w-40 ">
-            <img src={item.image} alt={item.name} className="h-20 w-20 object-cover mx-auto" />
+      {items
+        .filter((item) => category === "All" || item.category === category)
+        .map((item) => (
+          <div key={item._id} className="w-40">
+            <img
+              src={item.image}
+              alt={item.name}
+              className="h-20 w-20 object-cover mx-auto"
+            />
             <h4 className="text-lg font-bold text-center">{item.name}</h4>
             <div className="mt-2">
               <select
                 id={`size-select-${item._id}`}
                 className="w-30 p-2 border rounded-md mr-4 text-gray-600"
                 onChange={(e) => {
-                  const selectedSize = item.sizes.find(sizeOption => sizeOption.size === e.target.value);
+                  const selectedSize = item.sizes.find(
+                    (sizeOption) => sizeOption.size === e.target.value
+                  );
                   if (selectedSize) {
-                    addToCart(item, selectedSize.size, selectedSize.price,selectedSize.costPrice,selectedSize.stock);
+                    addToCart(
+                      item,
+                      selectedSize.size,
+                      selectedSize.price,
+                      selectedSize.costPrice,
+                      selectedSize.points,
+                      selectedSize.stock
+                    );
                   }
                 }}
               >
                 <option value="">Choose size</option>
                 {item.sizes.map((sizeOption) => (
                   <option key={sizeOption.size} value={sizeOption.size}>
-                    {sizeOption.size} - ₹{sizeOption.price}
+                    {sizeOption.size} - ₹{sizeOption.price} - {sizeOption.points} points
                   </option>
                 ))}
               </select>
@@ -403,7 +436,13 @@ const sendReceiptToWhatsApp = async () => {
               >
                 -
               </button>
-              <span className="mx-2">{cart.find(cartItem => cartItem.id === item._id && cartItem.size === item.sizes[0].size)?.quantity || 0}</span>
+              <span className="mx-2">
+                {cart.find(
+                  (cartItem) =>
+                    cartItem.id === item._id &&
+                    cartItem.size === item.sizes[0].size
+                )?.quantity || 0}
+              </span>
               <button
                 onClick={() => incrementQuantity(item._id, item.sizes[0].size)}
                 className="px-2 py-1 bg-green-500 text-white rounded-lg"
@@ -413,7 +452,7 @@ const sendReceiptToWhatsApp = async () => {
             </div>
           </div>
         ))}
-      </div>
+    </div>
    
       <div>
       </div>
@@ -598,12 +637,7 @@ const sendReceiptToWhatsApp = async () => {
                 <p>Price: ₹{item.price * item.quantity}</p>
                 </div>
                 <div>
-                <button
-                  className="text-red-500"
-                  onClick={() => removeFromCart(item.id, item.size)}
-                >
-                  <MdDelete size={24} />
-                </button>
+                
                 </div>
               </div>
             ))
@@ -704,20 +738,7 @@ const sendReceiptToWhatsApp = async () => {
       )}
 
 
-        <div>
-          <p className="mb-2"> 
-          </p>
-          <div className="mb-4">
-            <label className="block mb-2 font-medium">Enter Prize Amount</label>
-            <input
-              type="text"
-              value={prizeAmount}
-              onChange={(e) => setPrizeAmount(e.target.value)}
-              className="w-full p-2 border rounded-md"
-              placeholder="Enter prize amount"
-            />
-          </div>   
-        </div> 
+        
           </div>
           <button
               className="mt-4 w-full bg-[#f6931e] text-white px-6 py-2 rounded-lg"

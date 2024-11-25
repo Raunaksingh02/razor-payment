@@ -51,6 +51,7 @@ import Wheel from "./Wheel.js"
 import Dynamicqr from './Dynamicqr.js'
 import Scratch from "./Scratch.js";
 import Inventory from './Inventory.js'
+import Detailscreen from "./Detailscreen.js";
 
 const PaymentComponent = () => {
  
@@ -73,7 +74,6 @@ const PaymentComponent = () => {
         <Route path="/Success" element={<Successpage/>} />
         <Route path="/Inventory" element={<Inventory/>} />
         <Route path="/Dyanmic" element={<Dynamicqr/>} />
-      
         <Route path="/orders" element={<Customerorder/>} />
         <Route path="/pos" element={<Pos />} />
         <Route path="/addreward" element={<AddRewardCoupon/>} />
@@ -82,7 +82,8 @@ const PaymentComponent = () => {
         <Route path="/web/login" element={<Customerlogin/>} />
         <Route path="/web/otp" element={<Customerotp/>} />
         <Route path="/Fail" element={<Failurepage/>} />
-        <Route path="/docs/terms" element={<Termcondition/>} />
+        <Route path="/details/:id" element={<Detailscreen />} />
+         <Route path="/docs/terms" element={<Termcondition/>} />
         <Route path="/docs/Contact" element={<Contactus/>} />
         <Route path="/docs/Refund" element={<Refundpolicy/>} />
         <Route path="/login" element={<Login/>} />

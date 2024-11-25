@@ -18,7 +18,7 @@ import { BuyerContext } from './components/Buyercontext.js';
 import {CouponContext } from "./components/CouponContext.js";
 import WhatsAppButton from "./WhatsAppButton.js";
 import Couponmodal from "./components/Couponmodal.js";
-
+import Detailscreen from "./Detailscreen.js";
 import { FaTag } from 'react-icons';
 
 function Homepage() {
@@ -56,7 +56,7 @@ function Homepage() {
     const totalquantityforhome = cartfortotal.map((item) => item.quantity).reduce((prev, curr) => prev + curr, 0);
 
     useEffect(() => {
-        axios.get('https://backendaggrawal-8dey.onrender.com/getdish')
+        axios.get('http://localhost:1000/getdish')
             .then(response => {
                 setCafes(response.data);
                 setQuantities(Array(response.data.length).fill(0));
@@ -171,6 +171,55 @@ function Homepage() {
     const handleClickOnDial = () => {
         navigate(`/Call?table=${table}`);
     };
+
+
+    const foodCategories = [
+      {
+        id: 1,
+        name: "Biryani",
+        image: "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_288,h_360/MERCHANDISING_BANNERS/IMAGES/MERCH/2024/7/2/6ef07bda-b707-48ea-9b14-2594071593d1_Biryani.png",
+      },
+      {
+        id: 2,
+        name: "Paratha",
+        image: "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_288,h_360/MERCHANDISING_BANNERS/IMAGES/MERCH/2024/7/2/6ef07bda-b707-48ea-9b14-2594071593d1_Paratha.png",
+      },
+      {
+        id: 3,
+        name: "Pasta",
+        image: "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_288,h_360/MERCHANDISING_BANNERS/IMAGES/MERCH/2024/7/2/f1263395-5d4a-4775-95dc-80ab6f3bbd89_pasta.png",
+      },
+      {
+        id: 4,
+        name: "Cake",
+        image: "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_288,h_360/MERCHANDISING_BANNERS/IMAGES/MERCH/2024/7/2/8f508de7-e0ac-4ba8-b54d-def9db98959e_cake.png",
+      },
+      {
+        id: 5,
+        name: "Burgers",
+        image: "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_288,h_360/MERCHANDISING_BANNERS/IMAGES/MERCH/2024/7/2/8f508de7-e0ac-4ba8-b54d-def9db98959e_burger.png",
+      },
+      {
+        id: 6,
+        name: "Chinese",
+        image: "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_288,h_360/MERCHANDISING_BANNERS/IMAGES/MERCH/2024/7/2/6ef07bda-b707-48ea-9b14-2594071593d1_Chinese.png",
+      },
+      {
+        id: 7,
+        name: "Pure Veg",
+        image: "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_288,h_360/MERCHANDISING_BANNERS/IMAGES/MERCH/2024/7/2/8f508de7-e0ac-4ba8-b54d-def9db98959e_Pure%20Veg.png",
+      },
+      {
+        id: 8,
+        name: "Ice-Cream",
+        image: "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_288,h_360/MERCHANDISING_BANNERS/IMAGES/MERCH/2024/7/2/8f508de7-e0ac-4ba8-b54d-def9db98959e_chocolate%20icecream.png",
+      },
+      {
+        id: 9,
+        name: "Biryani",
+        image: "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_288,h_360/MERCHANDISING_BANNERS/IMAGES/MERCH/2024/7/2/6ef07bda-b707-48ea-9b14-2594071593d1_Biryani.png",
+      },
+    ];
     
     return (
         <div className="m-3 ">
@@ -235,8 +284,26 @@ function Homepage() {
            </div>
             </div>
 
-         
-            <div className="flex flex-col md:flex-row items-start md:items-center justify-start font-bold text-xl p-3">
+  <div className="relative p-2">
+  <h1 className="text-lg font-bold font-serif">What's on your mind?</h1>
+  <div className="flex gap-4  overflow-x-scroll scrollbar-hide snap-x snap-mandatory">
+
+    {foodCategories.map((category) => (
+      <div
+        key={category.id}
+        className="bg-white shadow-lg  rounded-2xl min-w-[120px] snap-center overflow-hidden transform hover:scale-105 transition-all duration-300"
+      >
+        <img
+          src={category.image}
+          alt={category.name}
+          className="w-full h-28 object-cover"
+        />
+      </div>
+    ))}
+  </div>
+ </div>
+
+  <div className="flex flex-col md:flex-row items-start md:items-center justify-start font-bold text-xl p-3">
   {/* Tab Container with Centering for Desktop */}
   <div className="flex flex-nowrap overflow-x-auto space-x-4 w-full md:w-auto pb-3 md:pb-0 md:justify-center mx-auto">
     {categories.map((category, index) => (
@@ -257,11 +324,12 @@ function Homepage() {
 
 
 
-            <div className="grid grid-cols-1 mt-3 sm:grid sm:grid-cols-3 sm:gap-4">
+   <div className="grid grid-cols-1 mt-3 sm:grid sm:grid-cols-3 sm:gap-4">
   {currentCafes.map((item, index) => (
     <div
       className="flex flex-row bg-gray-100 ease-in duration-300 rounded-2xl shadow-inner shadow-gray-400 animate-slideInFromBottom p-4 mb-4 hover:bg-gray-400"
       key={index}
+      onClick={() => navigate(`/details/${item._id}`)}
     >
       <img
         className="w-40 h-40 object-cover mt-4 p-2 rounded-3xl shadow-lg shadow-orange-200"
