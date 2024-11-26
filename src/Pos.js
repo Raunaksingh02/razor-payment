@@ -424,7 +424,7 @@ const sendReceiptToWhatsApp = async () => {
                 <option value="">Choose size</option>
                 {item.sizes.map((sizeOption) => (
                   <option key={sizeOption.size} value={sizeOption.size}>
-                    {sizeOption.size} - ₹{sizeOption.price} - {sizeOption.points} points
+                    {sizeOption.size}-₹{sizeOption.price} 
                   </option>
                 ))}
               </select>

@@ -323,13 +323,12 @@ function Homepage() {
 </div>
 
 
-
-   <div className="grid grid-cols-1 mt-3 sm:grid sm:grid-cols-3 sm:gap-4">
+<div className="grid grid-cols-1 mt-3 sm:grid sm:grid-cols-3 sm:gap-4">
   {currentCafes.map((item, index) => (
     <div
       className="flex flex-row bg-gray-100 ease-in duration-300 rounded-2xl shadow-inner shadow-gray-400 animate-slideInFromBottom p-4 mb-4 hover:bg-gray-400"
       key={index}
-      onClick={() => navigate(`/details/${item._id}`)}
+      onClick={() => navigate(`/details/${item._id}`)} // Redirect on card click
     >
       <img
         className="w-40 h-40 object-cover mt-4 p-2 rounded-3xl shadow-lg shadow-orange-200"
@@ -352,22 +351,26 @@ function Homepage() {
             id={`size-select-${index}`}
             className="mt-1 block w-full sm:w-40 pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
             value={selectedSizes[cafes.indexOf(item)]}
+            onClick={(e) => e.stopPropagation()} // Prevents redirection when interacting with the dropdown
             onChange={(e) => {
+              e.stopPropagation(); // Prevents event bubbling
               const size = e.target.value;
               handleSizeChange(cafes.indexOf(item), size);
             }}
           >
             {item.sizes.map((size) => (
               <option key={size.size} value={size.size} className="w-full">
-                {`${size.size}`}
+                {size.size}
               </option>
             ))}
           </select>
         </div>
+
         <p className="mt-2">{item.description}</p>
         <div className="flex items-center mt-4">
           <button
-            onClick={() => {
+            onClick={(e) => {
+              e.stopPropagation(); // Prevents redirection
               increase(cafes.indexOf(item));
               additemtocart(
                 item,
@@ -384,7 +387,8 @@ function Homepage() {
             {quantities[cafes.indexOf(item)]}
           </h1>
           <button
-            onClick={() => {
+            onClick={(e) => {
+              e.stopPropagation(); // Prevents redirection
               decrease(cafes.indexOf(item));
               removeitemtocart(
                 item,
@@ -401,6 +405,8 @@ function Homepage() {
     </div>
   ))}
 </div>
+
+  
 
         <div className="overflow-x-auto py-4">
         <div className="flex space-x-2 px-4">

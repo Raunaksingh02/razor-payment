@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext , useEffect} from "react";
 import QRCode from "qrcode.react";
 import Confetti from "react-confetti";
 import axios from "axios";
@@ -15,6 +15,16 @@ const Dynamicqr = () => {
   const [calcInput, setCalcInput] = useState(""); // Calculator input
   const [activeTab, setActiveTab] = useState("normal"); // Tab state
   const [showModal, setShowModal] = useState(false); // Modal state
+  const [showSplash, setShowSplash] = useState(true); // State for splash screen
+
+  useEffect(() => {
+      // Show splash screen for 3 seconds
+      const splashTimeout = setTimeout(() => {
+          setShowSplash(false);
+      }, 3000);
+      return () => clearTimeout(splashTimeout);
+  }, []);
+
 
   const resetComponent = () => {
     setAmount("");
@@ -111,6 +121,21 @@ const Dynamicqr = () => {
       setCalcInput((prev) => prev + value); // Append input
     }
   };
+
+  if (showSplash) {
+    return (
+        <div className="flex justify-center items-center h-screen bg-black">
+            <video
+                className="h-full w-full object-cover"
+                autoPlay
+                muted
+                loop
+            >
+                <source src="https://easypay.in/images/slide3.mp4" type="video/mp4" />
+            </video>
+        </div>
+    );
+}
   
   
 

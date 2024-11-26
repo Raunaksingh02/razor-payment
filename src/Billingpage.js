@@ -13,6 +13,16 @@ function BillingPage() {
     const [deliveryCharge, setDeliveryCharge] = useState(0);
     const [discountAmount, setDiscountAmount] = useState(0); // New state for discount
 
+    const [showSplash, setShowSplash] = useState(true); // State for splash screen
+
+    useEffect(() => {
+        // Show splash screen for 3 seconds
+        const splashTimeout = setTimeout(() => {
+            setShowSplash(false);
+        }, 3000);
+        return () => clearTimeout(splashTimeout);
+    }, []);
+
     useEffect(() => {
         fetchData();
         fetchMinOrderDetails();
@@ -81,6 +91,21 @@ function BillingPage() {
         const whatsappLink = `https://api.whatsapp.com/send?phone=91${customerData.customerPhoneNo}&text=${encodeURIComponent(message)}`;
         window.open(whatsappLink, '_blank');
     };
+
+    if (showSplash) {
+        return (
+            <div className="flex justify-center items-center h-screen bg-black">
+                <video
+                    className="h-full w-full object-cover"
+                    autoPlay
+                    muted
+                    loop
+                >
+                    <source src="https://easypay.in/images/slide3.mp4" type="video/mp4" />
+                </video>
+            </div>
+        );
+    }
 
     if (!customerData) {
         return (

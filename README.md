@@ -191,3 +191,48 @@ const Dynamicqr = () => {
 };
 
 export default Dynamicqr;
+
+
+{/* Items Table */}
+                <table className="w-full mb-4">
+                    <thead>
+                        <tr className="bg-gray-200">
+                            <th className="border px-4 py-2">Item</th>
+                            <th className="border px-4 py-2">Price</th>
+                            <th className="border px-4 py-2">Quantity</th>
+                            <th className="border px-4 py-2">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {customerData.cartforpayment.map((item, index) => (
+                            <tr key={index}>
+                                <td className="border px-4 py-2">{item.name}</td>
+                                <td className="border px-4 py-2">{item.price.toFixed(2)}</td>
+                                <td className="border px-4 py-2">{item.quantity}</td>
+                                <td className="border px-4 py-2">{(item.price * item.quantity).toFixed(2)}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colSpan="3" className="border px-4 py-2 text-right">Subtotal:</td>
+                            <td className="border px-4 py-2">{calculateSubtotal().toFixed(2)}</td>
+                        </tr>
+                        {calculateAdditionalCharge() > 0 && (
+                            <tr>
+                                <td colSpan="3" className="border px-4 py-2 text-right">Delivery Charge:</td>
+                                <td className="border px-4 py-2">{deliveryCharge.toFixed(2)}</td>
+                            </tr>
+                        )}
+                        {discountAmount > 0 && (
+                            <tr>
+                                <td colSpan="3" className="border px-4 py-2 text-right">Discount:</td>
+                                <td className="border px-4 py-2">-{discountAmount.toFixed(2)}</td>
+                            </tr>
+                        )}
+                        <tr>
+                            <td colSpan="3" className="border px-4 py-2 text-right font-bold">Grand Total:</td>
+                            <td className="border px-4 py-2 font-bold">{calculateGrandTotal().toFixed(2)}</td>
+                        </tr>
+                    </tfoot>
+                </table>

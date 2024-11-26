@@ -16,8 +16,17 @@ const WheelComponent = () => {
   const [hasSpun, setHasSpun] = useState(false);
   const [prizeAmount, setPrizeAmount] = useState(null);
   const [showLoginModal, setShowLoginModal] = useState(false);
-
   const { isAuthenticated, buyer } = useContext(BuyerContext);
+
+  const [showSplash, setShowSplash] = useState(true); // State for splash screen
+
+  useEffect(() => {
+      // Show splash screen for 3 seconds
+      const splashTimeout = setTimeout(() => {
+          setShowSplash(false);
+      }, 3000);
+      return () => clearTimeout(splashTimeout);
+  }, []);
 
   useEffect(() => {
     validateQRCode(qrid);
@@ -154,6 +163,21 @@ const WheelComponent = () => {
       </div>
     );
   }
+
+  if (showSplash) {
+    return (
+        <div className="flex justify-center items-center h-screen bg-black">
+            <video
+                className="h-full w-full object-cover"
+                autoPlay
+                muted
+                loop
+            >
+                <source src="https://easypay.in/images/slide3.mp4" type="video/mp4" />
+            </video>
+        </div>
+    );
+}
 
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-gray-100 relative overflow-hidden">
