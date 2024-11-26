@@ -8,6 +8,8 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 export default function DetailScreen() {
     const { id } = useParams();
+    const location = useLocation();
+    const navigate = useNavigate();
     const [dish, setDish] = useState(null);
     const [loading, setLoading] = useState(true);
     const [selectedSize, setSelectedSize] = useState('');
@@ -88,24 +90,27 @@ export default function DetailScreen() {
             </div>
         );
     }
+ 
+    const queryParams = new URLSearchParams(location.search);
+    const table = queryParams.get("table");
+    console.log(table);
 
     return (
         <div className="container bg-white mx-auto p-1 md:p- min-h-screen">
         <div className='flex items-center mb-4'>
         <div className='mr-4'>
-            <button>
-            <Link to="/">
-              <img src={backarrowlogo} className='h-10 w-10' alt="Back" />
-            </Link>
+            <button  onClick={() => navigate(table ? `/${table}` : "/")}
+            >
+             
+            <img src={backarrowlogo} className='h-10 w-10' alt="Back" />
             </button>
         </div>
         <div className='flex-1 text-center'>
-          <h1 className='font-bold text-2xl  mr-8'>Details</h1>
+         <h1 className='font-bold text-2xl  mr-8'>Details</h1>
         </div>
         </div>
-       
             <div className=" shadow-lg rounded-lg overflow-hidden transition-all duration-300 ease-in-out transform hover:scale-[1.02]">
-                <div className="relative h-80 overflow-hidden">
+            <div className="relative h-80 overflow-hidden">
                     <img
                         src={dish.image}
                         alt={dish.name}
@@ -114,8 +119,8 @@ export default function DetailScreen() {
                 </div>
                 <div className="p-6">
                     <h1 className="text-3xl font-bold mb-4 text-gray-800">{dish.name}</h1>
+                  
                     <p className="text-lg mb-6 text-gray-600">{dish.description}</p>
-
                     <div className="flex flex-col md:flex-row md:items-center mb-6">
                         <label htmlFor="size-select" className="mr-4 text-lg font-medium text-gray-700 mb-2 md:mb-0">Choose Size:</label>
                         <select
@@ -134,11 +139,9 @@ export default function DetailScreen() {
 
                     <div className="mb-6">
                         <p className="text-xl font-semibold text-gray-800">
-                            Price: <span className="text-green-600">${selectedPrice.toFixed(2)}</span>
+                            Price: <span className="text-green-600">{selectedPrice.toFixed(2)}</span>
                         </p>
-                        <p className="text-lg text-gray-600">
-                            Cost Price: <span>${selectedCostPrice.toFixed(2)}</span>
-                        </p>
+                       
                     </div>                    
   <div className="flex items-center justify-center gap-8 p-2">
     {/* Decrease Button */}

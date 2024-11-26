@@ -323,12 +323,18 @@ function Homepage() {
 </div>
 
 
-<div className="grid grid-cols-1 mt-3 sm:grid sm:grid-cols-3 sm:gap-4">
+  <div className="grid grid-cols-1 mt-3 sm:grid sm:grid-cols-3 sm:gap-4">
   {currentCafes.map((item, index) => (
-    <div
-      className="flex flex-row bg-gray-100 ease-in duration-300 rounded-2xl shadow-inner shadow-gray-400 animate-slideInFromBottom p-4 mb-4 hover:bg-gray-400"
-      key={index}
-      onClick={() => navigate(`/details/${item._id}`)} // Redirect on card click
+   <div
+   className="flex flex-row bg-gray-100 ease-in duration-300 rounded-2xl shadow-inner shadow-gray-400 animate-slideInFromBottom p-4 mb-4 hover:bg-gray-400"
+   key={index}
+   onClick={() => {
+     if (table) {
+       navigate(`/details/${item._id}?table=${table}`);
+     } else {
+       navigate(`/details/${item._id}`);
+     }
+    }}
     >
       <img
         className="w-40 h-40 object-cover mt-4 p-2 rounded-3xl shadow-lg shadow-orange-200"

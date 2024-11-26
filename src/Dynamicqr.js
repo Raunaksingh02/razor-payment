@@ -4,6 +4,8 @@ import Confetti from "react-confetti";
 import axios from "axios";
 import { BuyerContext } from "./components/Buyercontext.js";
 import { UPIDetailsContext } from "./components/UPIDetailsContext.js";
+import { useLocation, useNavigate } from "react-router-dom";
+
 
 const Dynamicqr = () => {
   const { buyer } = useContext(BuyerContext); // Retrieve buyer email
@@ -16,6 +18,10 @@ const Dynamicqr = () => {
   const [activeTab, setActiveTab] = useState("normal"); // Tab state
   const [showModal, setShowModal] = useState(false); // Modal state
   const [showSplash, setShowSplash] = useState(true); // State for splash screen
+
+  const location = useLocation();
+  const navigate = useNavigate();
+
 
   useEffect(() => {
       // Show splash screen for 3 seconds
@@ -137,8 +143,6 @@ const Dynamicqr = () => {
     );
 }
   
-  
-
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-6">
       <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-md">
