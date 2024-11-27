@@ -97,11 +97,10 @@ export default function DetailScreen() {
 
     return (
         <div className="container bg-white mx-auto p-1 md:p- min-h-screen">
-        <div className='flex items-center mb-4'>
+        <div className='flex  bg-white items-center mb-4'>
         <div className='mr-4'>
             <button  onClick={() => navigate(table ? `/${table}` : "/")}
             >
-             
             <img src={backarrowlogo} className='h-10 w-10' alt="Back" />
             </button>
         </div>

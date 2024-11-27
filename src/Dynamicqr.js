@@ -19,10 +19,12 @@ const Dynamicqr = () => {
   const [showModal, setShowModal] = useState(false); // Modal state
   const [showSplash, setShowSplash] = useState(true); // State for splash screen
 
-  const location = useLocation();
+    const location = useLocation();
   const navigate = useNavigate();
 
-
+  // Extract the 'table' query parameter
+  const queryParams = new URLSearchParams(location.search);
+  const table = queryParams.get("table");
   useEffect(() => {
       // Show splash screen for 3 seconds
       const splashTimeout = setTimeout(() => {
@@ -90,7 +92,7 @@ const Dynamicqr = () => {
     if (value === "C") {
       setCalcInput(""); // Clear entire input
     } else if (value === "⌫") {
-      setCalcInput(calcInput.slice(0, -1)); // Clear one character/place
+      setCalcInput((prev) => prev.slice(0, -1)); // Clear one character/place
     } else if (value === "=") {
       try {
         const result = eval(calcInput);
@@ -101,25 +103,25 @@ const Dynamicqr = () => {
     } else if (value === "%") {
       try {
         const result = eval(calcInput) / 100; // Calculate percentage
-        setCalcInput(result.toFixed(2)); // Limit to 2 decimal places
+        setCalcInput(result.toFixed(2));
       } catch {
         setCalcInput("Error");
       }
     } else if (value === ".") {
       if (!calcInput.includes(".")) {
-        setCalcInput((prev) => prev + value); // Add decimal point if none exists
+        setCalcInput((prev) => prev + value); // Add decimal point
       }
     } else if (value === "Discount") {
       try {
-        const result = eval(calcInput) * 0.10; // Apply 10% discount for example
-        setCalcInput(result.toFixed(2)); // Limit to 2 decimal places
+        const result = eval(calcInput) * 0.90; // Apply 10% discount
+        setCalcInput(result.toFixed(2));
       } catch {
         setCalcInput("Error");
       }
     } else if (value === "Tax") {
       try {
-        const result = eval(calcInput) * 0.18; // Apply 18% tax for example
-        setCalcInput(result.toFixed(2)); // Limit to 2 decimal places
+        const result = eval(calcInput) * 1.18; // Apply 18% tax
+        setCalcInput(result.toFixed(2));
       } catch {
         setCalcInput("Error");
       }
@@ -127,6 +129,7 @@ const Dynamicqr = () => {
       setCalcInput((prev) => prev + value); // Append input
     }
   };
+ 
 
   if (showSplash) {
     return (
@@ -192,45 +195,48 @@ const Dynamicqr = () => {
           </>
         )}
 
-        {activeTab === "calculator" && (
-          <>
-            <h2 className="text-2xl font-bold text-center mb-6 text-gray-800">
-              Calculator-Based QR Code Generator
-            </h2>
-            <div className="mb-6">
-              <label className="block text-gray-700 font-medium mb-2">
-                Calculator
-              </label>
-              <div className="grid grid-cols-4 gap-2">
-  {[
-    "1", "2", "3", "+",
-    "4", "5", "6", "-",
-    "7", "8", "9", "*",
-    "C", "0", "=", "%",
-    ".", "⌫", "Dis", "Tax"
-  ].map((btn) => (
-    <button
-      key={btn}
-      onClick={() => handleCalculate(btn)}
-      className="bg-gray-200 p-3 rounded-lg text-center hover:bg-gray-300 transition"
-    >
-      {btn}
-    </button>
-  ))}
-</div>
+{activeTab === "calculator" && (
+  <>
+    <h2 className="text-2xl font-bold text-center mb-6 text-gray-800">
+      Calculator-Based QR Code Generator
+    </h2>
+    <div className="mb-6">
+    <label className="block text-gray-700 font-medium mb-2">
+        Calculator
+      </label>
+      <div className="mt-2">
+        <input
+          type="text"
+          value={calcInput}
+          readOnly
+          className="w-full px-4 py-2 border border-gray-600 rounded-lg text-gray-800 font-bold focus:outline-none focus:ring-2 focus:ring-blue-600"
+        />
+      </div>
+    </div>
 
+    <div className="mb-6">
+      
+      <div className="grid grid-cols-4 gap-2">
+        {[
+          "1", "2", "3", "+",
+          "4", "5", "6", "-",
+          "7", "8", "9", "*",
+          "C", "0", "=", "%",
+          ".", "⌫", "Discount", "Tax"
+        ].map((btn) => (
+          <button
+            key={btn}
+            onClick={() => handleCalculate(btn)}
+            className="bg-gray-200 p-3 rounded-lg text-center hover:bg-gray-300 transition"
+          >
+            {btn}
+          </button>
+        ))}
+      </div>
+    </div>
+  </>
+)}
 
-              <div className="mt-4">
-                <input
-                  type="text"
-                  value={calcInput}
-                  readOnly
-                  className="w-full px-4 py-2 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:bg-[#18196c]"
-                />
-              </div>
-            </div>
-          </>
-        )}
 
         {/* Generate QR Button */}
         <button
