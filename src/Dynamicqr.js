@@ -222,7 +222,7 @@ const Dynamicqr = () => {
           "4", "5", "6", "-",
           "7", "8", "9", "*",
           "C", "0", "=", "%",
-          ".", "⌫", "Discount", "Tax"
+          ".", "⌫", "Dis", "Tax"
         ].map((btn) => (
           <button
             key={btn}
