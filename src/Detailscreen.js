@@ -96,82 +96,94 @@ export default function DetailScreen() {
     console.log(table);
 
     return (
-        <div className="container bg-white mx-auto p-1 md:p- min-h-screen">
-        <div className='flex  bg-white items-center mb-4'>
-        <div className='mr-4'>
-            <button  onClick={() => navigate(table ? `/${table}` : "/")}
-            >
-            <img src={backarrowlogo} className='h-10 w-10' alt="Back" />
+      
+        <div className="container bg-white mx-auto p-1 md:p-4 min-h-screen">
+        <div className="flex bg-white items-center mb-4">
+          <div className="mr-4">
+            <button onClick={() => navigate(table ? `/${table}` : "/")}>
+              <img src={backarrowlogo} className="h-10 w-10" alt="Back" />
             </button>
+          </div>
+          <div className="flex-1 text-center">
+            <h1 className="font-bold text-2xl mr-8">Details</h1>
+          </div>
         </div>
-        <div className='flex-1 text-center'>
-         <h1 className='font-bold text-2xl  mr-8'>Details</h1>
+      
+        <div className="shadow-lg rounded-lg overflow-hidden transition-all duration-300 ease-in-out transform hover:scale-[1.02]">
+          <div className="flex flex-col lg:flex-row">
+            {/* Image Section */}
+            <div className="relative h-80 lg:h-auto lg:w-1/2 overflow-hidden">
+              <img
+                src={dish.image}
+                alt={dish.name}
+                className="w-full h-full object-cover object-center transition-transform duration-300 ease-in-out transform hover:scale-110"
+              />
+            </div>
+      
+            {/* Details Section */}
+            <div className="p-6 lg:w-1/2">
+              <h1 className="text-3xl font-bold mb-4 text-gray-800">{dish.name}</h1>
+              <p className="text-lg mb-6 text-gray-600">{dish.description}</p>
+      
+              <div className="flex flex-col md:flex-row md:items-center mb-6">
+                <label
+                  htmlFor="size-select"
+                  className="mr-4 text-lg font-medium text-gray-700 mb-2 md:mb-0"
+                >
+                  Choose Size:
+                </label>
+                <select
+                  id="size-select"
+                  value={selectedSize}
+                  onChange={(e) => handleSizeChange(e.target.value)}
+                  className="p-2 border rounded-md bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-150 ease-in-out"
+                >
+                  {dish.sizes.map((sizeOption) => (
+                    <option key={sizeOption.size} value={sizeOption.size}>
+                      {sizeOption.size}
+                    </option>
+                  ))}
+                </select>
+              </div>
+      
+              <div className="mb-6">
+                <p className="text-xl font-semibold text-gray-800">
+                  Price: <span className="text-green-600">{selectedPrice.toFixed(2)}</span>
+                </p>
+              </div>
+      
+              <div className="flex items-center justify-center gap-8 p-2">
+                {/* Decrease Button */}
+                <button
+                  onClick={decreaseQuantity}
+                  disabled={quantity === 0}
+                  className={`px-6 py-3 rounded-2xl text-white font-semibold text-xl shadow-md transition-all duration-300 ${
+                    quantity === 0
+                      ? "bg-black cursor-not-allowed shadow-none"
+                      : "bg-black hover:bg-red-600 active:bg-red-700"
+                  } focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50`}
+                  aria-label="Decrease quantity"
+                >
+                  -
+                </button>
+      
+                {/* Quantity Display */}
+                <span className="text-3xl font-bold">{quantity}</span>
+      
+                {/* Increase Button */}
+                <button
+                  onClick={increaseQuantity}
+                  className="px-6 py-3 bg-black active:bg-[#f6931e] rounded-2xl text-white font-semibold text-xl shadow-md transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+                  aria-label="Increase quantity"
+                >
+                  +
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
-        </div>
-            <div className=" shadow-lg rounded-lg overflow-hidden transition-all duration-300 ease-in-out transform hover:scale-[1.02]">
-            <div className="relative h-80 overflow-hidden">
-                    <img
-                        src={dish.image}
-                        alt={dish.name}
-                        className="w-full h-full object-cover object-center transition-transform duration-300 ease-in-out transform hover:scale-110"
-                    />
-                </div>
-                <div className="p-6">
-                    <h1 className="text-3xl font-bold mb-4 text-gray-800">{dish.name}</h1>
-                  
-                    <p className="text-lg mb-6 text-gray-600">{dish.description}</p>
-                    <div className="flex flex-col md:flex-row md:items-center mb-6">
-                        <label htmlFor="size-select" className="mr-4 text-lg font-medium text-gray-700 mb-2 md:mb-0">Choose Size:</label>
-                        <select
-                            id="size-select"
-                            value={selectedSize}
-                            onChange={(e) => handleSizeChange(e.target.value)}
-                            className="p-2 border rounded-md bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-150 ease-in-out"
-                        >
-                            {dish.sizes.map((sizeOption) => (
-                                <option key={sizeOption.size} value={sizeOption.size}>
-                                    {sizeOption.size}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
-
-                    <div className="mb-6">
-                        <p className="text-xl font-semibold text-gray-800">
-                            Price: <span className="text-green-600">{selectedPrice.toFixed(2)}</span>
-                        </p>
-                       
-                    </div>                    
-  <div className="flex items-center justify-center gap-8 p-2">
-    {/* Decrease Button */}
-    <button
-      onClick={decreaseQuantity}
-      disabled={quantity === 0}
-      className={`px-6 py-3  rounded-2xl text-white font-semibold text-xl shadow-md transition-all duration-300 ${
-        quantity === 0
-          ? ' bg-black cursor-not-allowed shadow-none'
-          : ' bg-black hover:bg-red-600 active:bg-red-700'
-      } focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50`}
-      aria-label="Decrease quantity"
-    >
-      -
-    </button>
-    {/* Quantity Display */}
-    <span className="text-3xl font-bold ">
-      {quantity}
-    </span>
-    {/* Increase Button */}
-    <button
-      onClick={increaseQuantity}
-      className="px-6 py-3  bg-black  active:bg-[#f6931e] rounded-2xl text-white font-semibold text-xl shadow-md transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
-      aria-label="Increase quantity"
-    >
-      +
-    </button>
-  </div>
-  </div>
-   </div>
-  </div>
+      </div>
+      
     );
 }
 
