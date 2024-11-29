@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import html2canvas from "html2canvas";
+import { QRCodeCanvas } from "qrcode.react";
 
 const AddRewardCoupon = () => {
   const [label, setLabel] = useState('');
@@ -77,6 +79,26 @@ const AddRewardCoupon = () => {
     } catch (error) {
       setMessage(error.response?.data?.message || 'Error generating links.');
     }
+  };
+
+
+  const downloadQRWithText = (index) => {
+    const qrContainer = document.getElementById(`qr-container-${index}`);
+    html2canvas(qrContainer, {
+      scale: 2, // High-resolution download
+      useCORS: true, // To handle potential cross-origin issues
+    }).then((canvas) => {
+      const pngUrl = canvas
+        .toDataURL("image/png")
+        .replace("image/png", "image/octet-stream");
+
+      const downloadLink = document.createElement("a");
+      downloadLink.href = pngUrl;
+      downloadLink.download = `qr-with-text-${index}.png`;
+      document.body.appendChild(downloadLink);
+      downloadLink.click();
+      document.body.removeChild(downloadLink);
+    });
   };
 
   return (
@@ -186,21 +208,56 @@ const AddRewardCoupon = () => {
             Generate Links
           </button>
         </div>
-
+     
         {generatedLinks.length > 0 && (
-          <div className="mt-6">
-            <h3 className="text-lg font-bold text-gray-800">Generated Links</h3>
-            <ul className="mt-2 space-y-2">
-              {generatedLinks.map((link, index) => (
-                <li key={index} className="p-2 border border-gray-300 rounded-md">
-                  <a href={link} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
+        <>
+          <h3 className="text-lg font-bold text-gray-800">Generated Links</h3>
+          <ul className="mt-2 space-y-6">
+            {generatedLinks.map((link, index) => (
+              <li
+                key={index}
+                className="p-4 border border-gray-300 rounded-md bg-gray-50 sm:p-6"
+              >
+                <div
+                  id={`qr-container-${index}`}
+                  className="flex flex-col items-center bg-white p-3 sm:p-4 rounded-md"
+                  style={{ paddingBottom: "16px" }}
+                >
+                  <p className="text-center font-semibold text-lg text-[#f6931e] leading-tight mb-3 sm:mb-4">
+                    Scan this QR <br /> and get your assured gift
+                  </p>
+                  <div className="mt-2">
+                    <QRCodeCanvas
+                      value={link}
+                      size={150}
+                      bgColor={"#ffffff"}
+                      fgColor={"#000000"}
+                      level={"H"}
+                    />
+                  </div>
+                </div>
+                <button
+                  onClick={() => downloadQRWithText(index)}
+                  className="mt-4 w-full bg-[#f6931e] text-white font-semibold py-2 rounded-md hover:bg-[#d67f19] sm:py-3"
+                >
+                  Download QR with Text
+                </button>
+                <div className="mt-4 text-center">
+                  <a
+                    href={link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-500 hover:underline break-words"
+                  >
                     {link}
                   </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
+                </div>
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
+      
       </div>
     </div>
   );

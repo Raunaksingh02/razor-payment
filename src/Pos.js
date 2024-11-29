@@ -148,18 +148,12 @@ const handlePayment = async () => {
       setPaymentId(response.data.payment._id);
       console.log("Payment ID:", response.data.payment._id);
     }
-
-    // Display success message
     alert("Payment successful!");
-
-    // Clear the cart and close the bill
     emptyCart();
     setShowBill(false);
     setShowModal(true); // Open the modal
   } catch (error) {
     console.error("Payment error:", error.response || error);
-
-    // Check for validation errors or backend issues
     if (error.response) {
       alert(`Payment failed: ${error.response.data.error || "Unknown error"}`);
     } else {
@@ -736,10 +730,8 @@ const sendReceiptToWhatsApp = async () => {
           </div>
         </div>
       )}
-
-
-        
           </div>
+          
           <button
               className="mt-4 w-full bg-[#f6931e] text-white px-6 py-2 rounded-lg"
               onClick={handlePayment}

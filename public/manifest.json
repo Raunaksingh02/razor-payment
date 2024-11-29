@@ -1,6 +1,6 @@
 {
   "short_name": "cafehouse ",
-  "name": "Create React App Sample",
+  "name": "cafehouse",
   "icons": [
     {
       "src": "../src/images/waiter.png",
