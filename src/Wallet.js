@@ -7,24 +7,29 @@ const Wallet = () => {
   const { buyer } = useContext(BuyerContext);
   const [wallet, setWallet] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [balance,setbalance] = useState(0);
+
   const navigate = useNavigate();
-
+  
   const buyerEmail = buyer?.email || "";
-
+  
+ 
 
   useEffect(() => {
-    if (buyerEmail) {
-      axios.get(`https://backendcafe-nefw.onrender.com/addresses?email=${buyerEmail}`)
-        .then(response => {
-          setWallet(response.data.wallet); // Assuming wallet is part of the response
-          setLoading(false);
-        })
-        .catch(error => {
-          console.error("Error fetching wallet data: ", error);
-          setLoading(false);
-        });
-    }
-  }, [buyerEmail]);
+    const fetchBuyerAndWalletData = async () => {
+      try {
+        const buyerResponse = await axios.get(`https://backendcafe-nefw.onrender.com/buyerdata?email=${buyerEmail}`);
+        setbalance(buyerResponse.data.balance);
+        setWallet(buyerResponse.data.wallet);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setLoading(false);
+      }
+    };
+
+    fetchBuyerAndWalletData();
+  }, []);
+
 
   if (loading) {
     return <p className="text-center text-lg">Loading...</p>;
@@ -44,10 +49,16 @@ const Wallet = () => {
 
       {/* Wallet Balance */}
       <div className="flex-1 flex flex-col justify-center items-center">
-        <div className="bg-gradient-to-r from-[#f6931e] to-[#f79f35] p-6 rounded-lg shadow-lg text-center">
-          <span className="text-white font-semibold text-lg block">Wallet Balance</span>
+        <div className="bg-gradient-to-r from-[#f6931e] to-[#f79f35] p-6 rounded-2xl shadow-lg text-center">
+          <span className="text-white font-semibold text-lg block">Wallet Amount</span>
           <span className="text-white font-bold text-5xl mt-2">
-            ₹{wallet.toFixed(2)}
+            ₹{wallet}
+          </span>
+        </div>
+        <div className="bg-gradient-to-r from-[#f6931e]  to-[#f79f35] mt-2 p-6 rounded-2xl shadow-lg text-center">
+          <span className="text-white font-semibold text-lg block"> Balance Amount</span>
+          <span className="text-white font-bold text-5xl mt-2">
+            ₹{balance}
           </span>
         </div>
       </div>

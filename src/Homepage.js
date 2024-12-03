@@ -14,6 +14,7 @@ import { CiSearch } from "react-icons/ci";
 import { addToCart, removeToCart } from './redux/cartSlice.js';
 import Calling from './Calling.js';
 import Footer from "./Footer.js";
+import { FaSearch } from "react-icons/fa";
 import { BuyerContext } from './components/Buyercontext.js';
 import {CouponContext } from "./components/CouponContext.js";
 import WhatsAppButton from "./WhatsAppButton.js";
@@ -48,6 +49,8 @@ function Homepage() {
     const [loading, setLoading] = useState(true);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
+    const [isSearchOpen, setIsSearchOpen] = useState(false);
+
     const [searchTerm, setSearchTerm] = useState('');
     const itemsPerPage = 9;
 
@@ -222,8 +225,9 @@ function Homepage() {
     ];
     
     return (
-        <div className="m-3 ">
-          <WhatsAppButton/>
+      <div className="m-3 ">
+    
+    <WhatsAppButton/>
             {
                 table === "Takeaway" && (
                     <>
@@ -251,6 +255,8 @@ function Homepage() {
         </button>
           )}
 
+                 
+
                     {!table && (
                         <>
                             <button onClick={handlemodalClick} className="ml-5">
@@ -259,14 +265,14 @@ function Homepage() {
                             <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
                         </>
                     )}
-
                     <button onClick={handleCartClick}>
                     <FaShoppingCart fill="white" className="h-8 w-8 " />
                     </button>
                     <h1 className="font-bold text-white text-2xl ">{totalquantityforhome}</h1>
                  </div>
                  </div>
-                  <div className="flex justify-center bg-[#f6931e]  rounded-b-3xl shadow-inner shadow-orange-200  mb-2 p-4 ">
+
+                 <div className="flex justify-center bg-[#f6931e]  rounded-b-3xl shadow-inner shadow-orange-200  mb-2 p-4 ">
                   <div className="flex w-full max-w-md md:max-w-lg lg:max-w-xl border-2 mb-3 border-gray-300 rounded-full shadow-lg">
                 <input
                  type="text"
@@ -281,8 +287,9 @@ function Homepage() {
           >
             <CiSearch fill="white" className="w-8 h-8" />
           </button>
-           </div>
+           </div>  
             </div>
+
 
   <div className="relative p-2">
   <h1 className="text-lg font-bold font-serif">What's on your mind?</h1>
