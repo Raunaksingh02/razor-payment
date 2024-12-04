@@ -95,79 +95,94 @@ const Barcode = () => {
   const decrementQuantity = () => setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-4">
-      <h1 className="text-2xl font-bold mb-4 text-center">Web-based Barcode Scanner</h1>
+    <div className="min-h-screen  flex flex-col items-center justify-center bg-gray-100 p-4">
+    <h1 className="text-2xl font-bold mb-4 text-center md:text-3xl">Web-based Barcode Scanner</h1>
+    <div
+  ref={scannerRef}
+  className={`w-full max-w-md flex items-center justify-center rounded-lg overflow-hidden bg-black transition-all duration-300 ${
+    isScanning ? 'h-[50vh] w-[90%]' : 'sm:h-72 md:h-80 lg:h-96'
+  }`}
+  style={{
+    position: 'relative',
+  }}
+>
+  {isScanning ? (
+    <video
+      autoPlay
+      playsInline
+      muted
+      className="absolute top-0 left-0 w-full h-full object-cover"
+    ></video>
+  ) : (
+    <p className="text-white text-center">Tap "Start Scanning"</p>
+  )}
+</div>
 
-      <div
-        ref={scannerRef}
-        style={{ width: '100%', height: '300px', backgroundColor: '#000' }}
-        className="flex items-center justify-center rounded-lg"
-      >
-        {!isScanning && <p className="text-white text-center">Tap "Start Scanning"</p>}
-      </div>
+  <button
+    onClick={() => setIsScanning(true)}
+    className="mt-4 px-4 py-2 bg-blue-500 text-white rounded shadow hover:bg-blue-600 transition w-full max-w-sm"
+  >
+    Start Scanning
+  </button>
+  <div className="mt-4 w-full max-w-sm">
+    <input
+      type="text"
+      placeholder="Enter Barcode Manually"
+      value={manualCode}
+      onChange={(e) => setManualCode(e.target.value)}
+      className="w-full p-3 border rounded mb-2 text-sm md:text-base"
+    />
+    <button
+      onClick={handleManualFetch}
+      className="w-full px-4 py-2 bg-green-500 text-white rounded shadow hover:bg-green-600 transition"
+    >
+      Fetch Product
+    </button>
+  </div>
 
-      <button
-        onClick={() => setIsScanning(true)}
-        className="mt-4 px-4 py-2 bg-blue-500 text-white rounded shadow hover:bg-blue-600 transition"
-      >
-        Start Scanning
-      </button>
-
-      <div className="mt-4 w-full max-w-md">
-        <input
-          type="text"
-          placeholder="Enter Barcode Manually"
-          value={manualCode}
-          onChange={(e) => setManualCode(e.target.value)}
-          className="w-full p-2 border rounded mb-2"
+  {isModalOpen && product && (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+      <div className="bg-white p-6 rounded-lg shadow-lg w-11/12 max-w-lg">
+        <h2 className="text-xl font-bold mb-4 text-center">{product.name}</h2>
+        <img
+          src={product.image}
+          alt={product.name}
+          className="w-full h-48 object-cover rounded-2xl mb-4 md:h-60"
         />
+        <p className="mb-4 text-sm md:text-base">{product.description}</p>
+        <div className="flex items-center gap-4 justify-center">
+          <button
+            onClick={decrementQuantity}
+            className="px-4 py-2 bg-gray-300 rounded shadow hover:bg-gray-400 transition"
+          >
+            -
+          </button>
+          <span className="text-xl font-semibold">{quantity}</span>
+          <button
+            onClick={incrementQuantity}
+            className="px-4 py-2 bg-gray-300 rounded shadow hover:bg-gray-400 transition"
+          >
+            +
+          </button>
+        </div>
         <button
-          onClick={handleManualFetch}
-          className="w-full px-4 py-2 bg-green-500 text-white rounded shadow hover:bg-green-600 transition"
+          onClick={() => setIsModalOpen(false)}
+          className="mt-4 px-4 py-2 bg-green-500 text-white rounded shadow hover:bg-green-600 transition w-full"
         >
-          Fetch Product
+          Confirm
         </button>
       </div>
-
-      {isModalOpen && product && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-11/12 max-w-lg">
-            <h2 className="text-xl font-bold mb-4">{product.name}</h2>
-            <img src={product.image} alt={product.name} className="w-full h-40 object-cover rounded-lg mb-4" />
-            <p className="mb-4">{product.description}</p>
-            <div className="flex items-center gap-4">
-              <button
-                onClick={decrementQuantity}
-                className="px-4 py-2 bg-gray-300 rounded shadow hover:bg-gray-400 transition"
-              >
-                -
-              </button>
-              <span className="text-xl font-semibold">{quantity}</span>
-              <button
-                onClick={incrementQuantity}
-                className="px-4 py-2 bg-gray-300 rounded shadow hover:bg-gray-400 transition"
-              >
-                +
-              </button>
-            </div>
-            <button
-              onClick={() => setIsModalOpen(false)}
-              className="mt-4 px-4 py-2 bg-green-500 text-white rounded shadow hover:bg-green-600 transition"
-            >
-              Confirm
-            </button>
-          </div>
-        </div>
-      )}
-
-      {scannedCode && (
-        <div className="mt-4 bg-white p-4 rounded shadow w-full text-center">
-          <p className="text-lg">
-            Scanned Barcode: <span className="font-semibold">{scannedCode}</span>
-          </p>
-        </div>
-      )}
     </div>
+  )}
+
+  {scannedCode && (
+    <div className="mt-4 bg-white p-4 rounded shadow w-full text-center">
+      <p className="text-lg">
+        Scanned Barcode: <span className="font-semibold">{scannedCode}</span>
+      </p>
+    </div>
+  )}
+</div>
   );
 };
 
