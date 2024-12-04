@@ -98,15 +98,15 @@ const Barcode = () => {
     <div className="min-h-screen  flex flex-col items-center justify-center bg-gray-100 p-4">
     <h1 className="text-2xl font-bold mb-4 text-center md:text-3xl">Web-based Barcode Scanner</h1>
     <div
-  ref={scannerRef}
-  className={`w-full max-w-md flex items-center justify-center rounded-lg overflow-hidden bg-black transition-all duration-300 ${
+    ref={scannerRef}
+    className={`w-full max-w-md flex items-center justify-center rounded-lg overflow-hidden bg-black transition-all duration-300 ${
     isScanning ? 'h-[50vh] w-[90%]' : 'sm:h-72 md:h-80 lg:h-96'
-  }`}
-  style={{
+     }`}
+     style={{
     position: 'relative',
-  }}
->
-  {isScanning ? (
+     }}
+    >
+     {isScanning ? (
     <video
       autoPlay
       playsInline
@@ -116,7 +116,7 @@ const Barcode = () => {
   ) : (
     <p className="text-white text-center">Tap "Start Scanning"</p>
   )}
-</div>
+  </div>
 
   <button
     onClick={() => setIsScanning(true)}

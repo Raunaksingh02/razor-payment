@@ -7,6 +7,7 @@ import { UPIDetailsContext } from "./components/UPIDetailsContext.js";
 import { useDispatch, useSelector } from 'react-redux';
 import { addToCart, removeToCart ,emptyCart} from './redux/cartSlice.js';
 import { useNavigate } from 'react-router-dom';
+import { CiBarcode } from "react-icons/ci";
 
 const Pos = () => {
 
@@ -381,7 +382,18 @@ const sendReceiptToWhatsApp = async () => {
   console.log(cart);
   return (
     <div className="h-screen flex flex-col justify-between">  
-      <h2 className="text-2xl font-bold mb-4">POS System</h2>
+    <div className='flex'>
+    <div>
+    <h2 className="text-2xl font-bold mb-2">POS System</h2>
+    </div>
+    <div className='ml-2'>
+      <button>
+      <CiBarcode className='h-10 w-10 mb-2' />
+      </button>
+    </div>
+    </div>
+     
+
       {/* Dynamic Category Selection */}
       <div className="flex space-x-2 mb-2  ">
         {categories.map((cat) => (

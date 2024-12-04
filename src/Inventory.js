@@ -34,7 +34,6 @@ const InventoryPage = () => {
       <h1 className="text-2xl font-bold text-gray-800 mb-5 text-center">
         Inventory
       </h1>
-      <Barcode/>
       <div className="overflow-x-auto">
         <table className="w-full bg-white shadow-md rounded-lg">
           {/* Table Head */}
