@@ -49,6 +49,11 @@ const Pos = () => {
   const [paymentId, setPaymentId] = useState("");
   const [balance,setbalance]= useState(0);
   const [amountpaid,setamountpaid]= useState(0);
+  const [loading, setLoading] = useState(false);
+  const [selectedDish, setDish] = useState(null);
+  const [selectedSize, setSelectedSize] = useState('');
+  const [selectedPrice, setSelectedPrice] = useState(0);
+  const [selectedCostPrice, setSelectedCostPrice] = useState(0);
  
   useEffect(() => {
     const randomCode = Math.floor(1000 + Math.random() * 9000).toString();
@@ -63,13 +68,29 @@ const Pos = () => {
       try {
         const response = await axios.get('https://backendcafe-nefw.onrender.com/getdish');
         setItems(response.data);
-        console.log(response.data);
       } catch (error) {
         console.error('Error fetching items:', error);
       }
     };
-    fetchItems(); 
+    fetchItems();
   }, []);
+
+  const fetchDishDetails = async (id) => {
+    setLoading(true);
+    try {
+      const response = await axios.get(`https://backendcafe-nefw.onrender.com/getdish/${id}`);
+      const data = response.data;
+      setDish(data);
+      setSelectedSize(data.sizes[0]?.size || '');
+      setSelectedPrice(data.sizes[0]?.price || 0);
+      setSelectedCostPrice(data.sizes[0]?.costPrice || 0);
+    } catch (error) {
+      console.error('Error fetching dish details:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
  
   useEffect(() => {
     const totalPrize = cart.reduce(
@@ -307,14 +328,11 @@ const sendReceiptToWhatsApp = async () => {
     const updatedNumbers = whatsappNumbers.filter((_, i) => i !== index);
     setWhatsappNumbers(updatedNumbers);
   };
-
-  const addToCart = (item, size, price, costPrice, points, stock) => {
-    const existingItem = cart.find(
-      (cartItem) => cartItem.id === item._id && cartItem.size === size
-    );
+  
+  const addToCart = (item, size, price, costPrice) => {
+    const existingItem = cart.find((cartItem) => cartItem.id === item._id && cartItem.size === size);
 
     if (existingItem) {
-      // Update quantity if item already in cart
       setCart((prevCart) =>
         prevCart.map((cartItem) =>
           cartItem.id === item._id && cartItem.size === size
@@ -323,7 +341,6 @@ const sendReceiptToWhatsApp = async () => {
         )
       );
     } else {
-      // Add new item to cart
       setCart((prevCart) => [
         ...prevCart,
         {
@@ -333,14 +350,11 @@ const sendReceiptToWhatsApp = async () => {
           price,
           costPrice,
           quantity: 1,
-          stock,
-          points, // Use the predefined points
         },
       ]);
     }
   };
 
-  // Function to increment quantity
   const incrementQuantity = (id, size) => {
     setCart((prevCart) =>
       prevCart.map((cartItem) =>
@@ -351,7 +365,6 @@ const sendReceiptToWhatsApp = async () => {
     );
   };
 
-  // Function to decrement quantity
   const decrementQuantity = (id, size) => {
     setCart((prevCart) =>
       prevCart
@@ -360,10 +373,9 @@ const sendReceiptToWhatsApp = async () => {
             ? { ...cartItem, quantity: cartItem.quantity - 1 }
             : cartItem
         )
-        .filter((cartItem) => cartItem.quantity > 0) // Remove item if quantity reaches 0
+        .filter((cartItem) => cartItem.quantity > 0)
     );
   };
-
 
   const categories = ['All', ...new Set(items.map(item => item.category))];
   console.log(cart);
@@ -386,66 +398,61 @@ const sendReceiptToWhatsApp = async () => {
       {/* Items Grid */}
       <div className="grid grid-cols-2 lg:grid lg:grid-cols-4 gap-2 mb-4">
       {items
-        .filter((item) => category === "All" || item.category === category)
-        .map((item) => (
-          <div key={item._id} className="w-40">
-            <img
-              src={item.image}
-              alt={item.name}
-              className="h-20 w-20 object-cover mx-auto"
-            />
-            <h4 className="text-lg font-bold text-center">{item.name}</h4>
-            <div className="mt-2">
+          .filter((item) => category === 'All' || item.category === category)
+          .map((item) => (
+            <div key={item._id} className="p-4 border rounded shadow-md">
+              <img src={item.image} alt={item.name} className="w-32 h-32 object-cover mx-auto" />
+              <h4 className="text-center font-semibold">{item.name}</h4>
               <select
-                id={`size-select-${item._id}`}
-                className="w-30 p-2 border rounded-md mr-4 text-gray-600"
                 onChange={(e) => {
-                  const selectedSize = item.sizes.find(
-                    (sizeOption) => sizeOption.size === e.target.value
-                  );
-                  if (selectedSize) {
-                    addToCart(
-                      item,
-                      selectedSize.size,
-                      selectedSize.price,
-                      selectedSize.costPrice,
-                      selectedSize.points,
-                      selectedSize.stock
-                    );
+                  const sizeOption = item.sizes.find((s) => s.size === e.target.value);
+                  if (sizeOption) {
+                    setSelectedSize(sizeOption.size);
+                    setSelectedPrice(sizeOption.price);
+                    setSelectedCostPrice(sizeOption.costPrice);
                   }
                 }}
+                className="w-full p-2 border rounded mt-2"
               >
                 <option value="">Choose size</option>
                 {item.sizes.map((sizeOption) => (
                   <option key={sizeOption.size} value={sizeOption.size}>
-                    {sizeOption.size}-₹{sizeOption.price} 
+                    {sizeOption.size} - ₹{sizeOption.price}
                   </option>
                 ))}
               </select>
-            </div>
-            <div className="flex justify-center items-center mt-2">
               <button
-                onClick={() => decrementQuantity(item._id, item.sizes[0].size)}
-                className="px-2 py-1 bg-red-500 text-white rounded-lg"
+                onClick={() =>
+                  addToCart(item, selectedSize, selectedPrice, selectedCostPrice)
+                }
+                className="bg-blue-500 text-white w-full mt-2 p-2 rounded"
               >
-                -
+                Add to Cart
               </button>
-              <span className="mx-2">
-                {cart.find(
-                  (cartItem) =>
-                    cartItem.id === item._id &&
-                    cartItem.size === item.sizes[0].size
-                )?.quantity || 0}
-              </span>
-              <button
-                onClick={() => incrementQuantity(item._id, item.sizes[0].size)}
-                className="px-2 py-1 bg-green-500 text-white rounded-lg"
-              >
-                +
-              </button>
+              <div className="flex justify-between items-center mt-2">
+                <button
+                  onClick={() => decrementQuantity(item._id, selectedSize)}
+                  className="bg-red-500 text-white p-1 rounded"
+                >
+                  -
+                </button>
+                <span className="px-2">
+                  {
+                    cart.find(
+                      (cartItem) =>
+                        cartItem.id === item._id && cartItem.size === selectedSize
+                    )?.quantity || 0
+                  }
+                </span>
+                <button
+                  onClick={() => incrementQuantity(item._id, selectedSize)}
+                  className="bg-green-500 text-white p-1 rounded"
+                >
+                  +
+                </button>
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
     </div>
    
       <div>
