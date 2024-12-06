@@ -8,9 +8,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addToCart, removeToCart ,emptyCart} from './redux/cartSlice.js';
 import { useNavigate } from 'react-router-dom';
 import { CiBarcode } from "react-icons/ci";
+import Barcode from "./Barcode.js";
+
 
 const Pos = () => {
-
 
   const navigate = useNavigate(); 
   const dispatch = useDispatch();
@@ -54,6 +55,7 @@ const Pos = () => {
   const [selectedDish, setDish] = useState(null);
   const [selectedSize, setSelectedSize] = useState('');
   const [selectedPrice, setSelectedPrice] = useState(0);
+  const [isBarcodeVisible, setIsBarcodeVisible] = useState(false);
   const [selectedCostPrice, setSelectedCostPrice] = useState(0);
  
   useEffect(() => {
@@ -380,20 +382,26 @@ const sendReceiptToWhatsApp = async () => {
 
   const categories = ['All', ...new Set(items.map(item => item.category))];
   console.log(cart);
+
   return (
     <div className="h-screen flex flex-col justify-between">  
     <div className='flex'>
     <div>
     <h2 className="text-2xl font-bold mb-2">POS System</h2>
     </div>
-    <div className='ml-2'>
-      <button>
-      <CiBarcode className='h-10 w-10 mb-2' />
-      </button>
-    </div>
-    </div>
-     
+    <div className="ml-3">
+      <button
+        onClick={() => setIsBarcodeVisible((prev) => !prev)}
+        className="flex items-center justify-center MB-3"
+      >
+        <CiBarcode className="h-8 w-8 " />
 
+        <span>{isBarcodeVisible ? '' : ''}</span>
+      </button>
+
+      {isBarcodeVisible && <Barcode addToCart={addToCart} />}
+    </div>
+    </div>
       {/* Dynamic Category Selection */}
       <div className="flex space-x-2 mb-2  ">
         {categories.map((cat) => (
@@ -406,7 +414,6 @@ const sendReceiptToWhatsApp = async () => {
           </button>
         ))}
         </div>
-     
       {/* Items Grid */}
       <div className="grid grid-cols-2 lg:grid lg:grid-cols-4 gap-2 mb-4">
       {items

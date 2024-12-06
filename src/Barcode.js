@@ -2,18 +2,19 @@ import React, { useEffect, useRef, useState } from 'react';
 import Quagga from 'quagga';
 import axios from 'axios';
 
-const Barcode = () => {
+const Barcode = ({ addToCart }) => {
   const scannerRef = useRef(null);
   const [scannedCode, setScannedCode] = useState('');
   const [manualCode, setManualCode] = useState('');
   const [isScanning, setIsScanning] = useState(false);
   const [product, setProduct] = useState(null);
-  const [quantity, setQuantity] = useState(1);
+  const [selectedSize, setSelectedSize] = useState('');
+  const [price, setPrice] = useState(0);
+  const [costPrice, setCostPrice] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     if (!isScanning) return;
-
     Quagga.init(
       {
         inputStream: {
@@ -26,28 +27,8 @@ const Barcode = () => {
           },
         },
         decoder: {
-          readers: [
-            'code_128_reader',
-            'ean_reader',
-            'upc_reader',
-            'ean_8_reader',
-            'code_39_reader',
-            'code_39_vin_reader',
-            'codabar_reader',
-            'upc_e_reader',
-            'i2of5_reader',
-            '2of5_reader',
-            'code_93_reader',
-          ],
-          debug: {
-            drawBoundingBox: true,
-            showFrequency: true,
-            drawScanline: true,
-            showPattern: true,
-          },
+          readers: ['code_128_reader', 'ean_reader', 'upc_reader'],
         },
-        locate: true,
-        frequency: 10,
       },
       (err) => {
         if (err) {
@@ -79,110 +60,73 @@ const Barcode = () => {
       const response = await axios.get(`https://backendcafe-nefw.onrender.com/barcodeitem?barcode=${barcode}`);
       setProduct(response.data);
       setIsModalOpen(true);
+      if (response.data.sizes && response.data.sizes.length > 0) {
+        setSelectedSize(response.data.sizes[0].size);
+        setPrice(response.data.sizes[0].price);
+        setCostPrice(response.data.sizes[0].costPrice);
+      }
     } catch (error) {
       console.error('Error fetching product details:', error);
     }
   };
 
-  const handleManualFetch = () => {
-    if (manualCode.trim()) {
-      setScannedCode(manualCode);
-      fetchProductDetails(manualCode);
+  const handleAddToCart = () => {
+    if (product) {
+      addToCart(product, selectedSize, price, costPrice); // Use the addToCart function
+      setIsModalOpen(false);
     }
   };
 
-  const incrementQuantity = () => setQuantity((prev) => prev + 1);
-  const decrementQuantity = () => setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
+  const handleSizeChange = (sizeObj) => {
+    setSelectedSize(sizeObj.size);
+    setPrice(sizeObj.price);
+    setCostPrice(sizeObj.costPrice);
+  };
 
   return (
-    <div className="min-h-screen  flex flex-col items-center justify-center bg-gray-100 p-4">
-    <h1 className="text-2xl font-bold mb-4 text-center md:text-3xl">Web-based Barcode Scanner</h1>
-    <div
-    ref={scannerRef}
-    className={`w-full max-w-md flex items-center justify-center rounded-lg overflow-hidden bg-black transition-all duration-300 ${
-    isScanning ? 'h-[50vh] w-[90%]' : 'sm:h-72 md:h-80 lg:h-96'
-     }`}
-     style={{
-    position: 'relative',
-     }}
-    >
-     {isScanning ? (
-    <video
-      autoPlay
-      playsInline
-      muted
-      className="absolute top-0 left-0 w-full h-full object-cover"
-    ></video>
-  ) : (
-    <p className="text-white text-center">Tap "Start Scanning"</p>
-  )}
-  </div>
+    <div className="min-h-screen flex flex-col items-center justify-center p-4">
+      <h1 className="text-2xl font-bold mb-4 text-center">Web-based Barcode Scanner</h1>
+      <div ref={scannerRef} className="w-full h-60 bg-black mb-4"></div>
+      <button onClick={() => setIsScanning(true)} className="bg-blue-500 text-white px-4 py-2 rounded">
+        Start Scanning
+      </button>
 
-  <button
-    onClick={() => setIsScanning(true)}
-    className="mt-4 px-4 py-2 bg-blue-500 text-white rounded shadow hover:bg-blue-600 transition w-full max-w-sm"
-  >
-    Start Scanning
-  </button>
-  <div className="mt-4 w-full max-w-sm">
-    <input
-      type="text"
-      placeholder="Enter Barcode Manually"
-      value={manualCode}
-      onChange={(e) => setManualCode(e.target.value)}
-      className="w-full p-3 border rounded mb-2 text-sm md:text-base"
-    />
-    <button
-      onClick={handleManualFetch}
-      className="w-full px-4 py-2 bg-green-500 text-white rounded shadow hover:bg-green-600 transition"
-    >
-      Fetch Product
-    </button>
-  </div>
+      <input
+        type="text"
+        value={manualCode}
+        onChange={(e) => setManualCode(e.target.value)}
+        placeholder="Enter Barcode Manually"
+        className="border rounded p-2 mt-4"
+      />
+      <button onClick={() => fetchProductDetails(manualCode)} className="bg-green-500 text-white px-4 py-2 rounded mt-2">
+        Fetch Product
+      </button>
 
-  {isModalOpen && product && (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-      <div className="bg-white p-6 rounded-lg shadow-lg w-11/12 max-w-lg">
-        <h2 className="text-xl font-bold mb-4 text-center">{product.name}</h2>
-        <img
-          src={product.image}
-          alt={product.name}
-          className="w-full h-48 object-cover rounded-2xl mb-4 md:h-60"
-        />
-        <p className="mb-4 text-sm md:text-base">{product.description}</p>
-        <div className="flex items-center gap-4 justify-center">
-          <button
-            onClick={decrementQuantity}
-            className="px-4 py-2 bg-gray-300 rounded shadow hover:bg-gray-400 transition"
-          >
-            -
-          </button>
-          <span className="text-xl font-semibold">{quantity}</span>
-          <button
-            onClick={incrementQuantity}
-            className="px-4 py-2 bg-gray-300 rounded shadow hover:bg-gray-400 transition"
-          >
-            +
-          </button>
+      {isModalOpen && product && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+          <div className="bg-white p-6 rounded-lg shadow-lg">
+            <h2 className="text-xl font-bold">{product.name}</h2>
+            <img src={product.image} alt={product.name} className="w-32 h-32 mb-4" />
+            <div>
+              {product.sizes.map((sizeObj, index) => (
+                <button
+                  key={index}
+                  onClick={() => handleSizeChange(sizeObj)}
+                  className={`px-2 py-1 m-1 ${
+                    sizeObj.size === selectedSize ? 'bg-green-500 text-white' : 'bg-gray-200'
+                  }`}
+                >
+                  {sizeObj.size}
+                </button>
+              ))}
+            </div>
+            <button onClick={handleAddToCart} className="bg-blue-500 text-white px-4 py-2 rounded mt-4">
+              Add to Cart
+            </button>
+          </div>
         </div>
-        <button
-          onClick={() => setIsModalOpen(false)}
-          className="mt-4 px-4 py-2 bg-green-500 text-white rounded shadow hover:bg-green-600 transition w-full"
-        >
-          Confirm
-        </button>
-      </div>
+      )}
     </div>
-  )}
-
-  {scannedCode && (
-    <div className="mt-4 bg-white p-4 rounded shadow w-full text-center">
-      <p className="text-lg">
-        Scanned Barcode: <span className="font-semibold">{scannedCode}</span>
-      </p>
-    </div>
-  )}
-</div>
   );
 };
 
