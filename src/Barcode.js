@@ -72,7 +72,7 @@ const Barcode = ({ addToCart }) => {
 
   const handleAddToCart = () => {
     if (product) {
-      addToCart(product, selectedSize, price, costPrice); // Use the addToCart function
+      addToCart(product, selectedSize, price, costPrice);
       setIsModalOpen(false);
     }
   };
@@ -84,49 +84,82 @@ const Barcode = ({ addToCart }) => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-4">
-      <h1 className="text-2xl font-bold mb-4 text-center">Web-based Barcode Scanner</h1>
-      <div ref={scannerRef} className="w-full h-60 bg-black mb-4"></div>
-      <button onClick={() => setIsScanning(true)} className="bg-blue-500 text-white px-4 py-2 rounded">
+
+    <div className="flex flex-col items-center justify-center p-6 bg-gray-100 min-h-screen">
+  <h1 className="text-3xl font-extrabold text-center text-gray-800 mb-6">
+    Web-based Barcode Scanner
+  </h1>
+
+  {/* Scanner Container */}
+  <div className="relative w-full max-w-lg h-72 bg-gray-900 mb-6 overflow-hidden rounded-xl shadow-lg">
+    <div ref={scannerRef} className="absolute inset-0 z-0" />
+    <div className="absolute z-10 flex flex-col items-start top-4 left-4 space-y-2">
+      <button
+        onClick={() => setIsScanning(true)}
+        className="bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700"
+      >
         Start Scanning
       </button>
-
-      <input
-        type="text"
-        value={manualCode}
-        onChange={(e) => setManualCode(e.target.value)}
-        placeholder="Enter Barcode Manually"
-        className="border rounded p-2 mt-4"
-      />
-      <button onClick={() => fetchProductDetails(manualCode)} className="bg-green-500 text-white px-4 py-2 rounded mt-2">
-        Fetch Product
-      </button>
-
-      {isModalOpen && product && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white p-6 rounded-lg shadow-lg">
-            <h2 className="text-xl font-bold">{product.name}</h2>
-            <img src={product.image} alt={product.name} className="w-32 h-32 mb-4" />
-            <div>
-              {product.sizes.map((sizeObj, index) => (
-                <button
-                  key={index}
-                  onClick={() => handleSizeChange(sizeObj)}
-                  className={`px-2 py-1 m-1 ${
-                    sizeObj.size === selectedSize ? 'bg-green-500 text-white' : 'bg-gray-200'
-                  }`}
-                >
-                  {sizeObj.size}
-                </button>
-              ))}
-            </div>
-            <button onClick={handleAddToCart} className="bg-blue-500 text-white px-4 py-2 rounded mt-4">
-              Add to Cart
-            </button>
-          </div>
-        </div>
-      )}
     </div>
+    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent pointer-events-none" />
+  </div>
+
+  {/* Manual Input */}
+  <div className="w-full max-w-lg">
+    <input
+      type="text"
+      value={manualCode}
+      onChange={(e) => setManualCode(e.target.value)}
+      placeholder="Enter Barcode Manually"
+      className="border border-gray-300 rounded-lg w-full p-3 mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+    />
+    <button
+      onClick={() => fetchProductDetails(manualCode)}
+      className="w-full bg-green-600 text-white px-4 py-3 rounded shadow hover:bg-green-700"
+    >
+      Fetch Product
+    </button>
+  </div>
+
+  {/* Product Modal */}
+  {isModalOpen && product && (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-sm">
+        <h2 className="text-2xl font-bold text-gray-800 mb-4 text-center">
+          {product.name}
+        </h2>
+        <img
+          src={product.image}
+          alt={product.name}
+          className="w-32 h-32 mb-4 mx-auto rounded-full shadow-lg"
+        />
+        <div className="flex flex-wrap justify-center mb-4 space-x-2">
+          {product.sizes.map((sizeObj, index) => (
+            <button
+              key={index}
+              onClick={() => handleSizeChange(sizeObj)}
+              className={`px-4 py-2 rounded-lg shadow ${
+                sizeObj.size === selectedSize
+                  ? 'bg-green-600 text-white'
+                  : 'bg-gray-200 hover:bg-gray-300'
+              }`}
+            >
+              {sizeObj.size}
+            </button>
+          ))}
+        </div>
+        <button
+          onClick={handleAddToCart}
+          className="w-full bg-blue-600 text-white px-4 py-3 rounded shadow hover:bg-blue-700"
+        >
+          Add to Cart
+        </button>
+      </div>
+    </div>
+  )}
+</div>
+
+     
   );
 };
 

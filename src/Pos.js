@@ -9,6 +9,7 @@ import { addToCart, removeToCart ,emptyCart} from './redux/cartSlice.js';
 import { useNavigate } from 'react-router-dom';
 import { CiBarcode } from "react-icons/ci";
 import Barcode from "./Barcode.js";
+import { HiArchiveBoxArrowDown } from "react-icons/hi2";
 
 
 const Pos = () => {
@@ -384,7 +385,7 @@ const sendReceiptToWhatsApp = async () => {
   console.log(cart);
 
   return (
-    <div className="h-screen flex flex-col justify-between">  
+    <div className=" flex flex-col justify-between">  
     <div className='flex'>
     <div>
     <h2 className="text-2xl font-bold mb-2">POS System</h2>
@@ -392,14 +393,17 @@ const sendReceiptToWhatsApp = async () => {
     <div className="ml-3">
       <button
         onClick={() => setIsBarcodeVisible((prev) => !prev)}
-        className="flex items-center justify-center MB-3"
+        className="flex items-center justify-center mb-3"
       >
         <CiBarcode className="h-8 w-8 " />
-
         <span>{isBarcodeVisible ? '' : ''}</span>
       </button>
-
       {isBarcodeVisible && <Barcode addToCart={addToCart} />}
+    </div>
+    <div>
+      <button>
+      <HiArchiveBoxArrowDown className="h-8 w-8 mr-2"  />
+      </button>
     </div>
     </div>
       {/* Dynamic Category Selection */}
