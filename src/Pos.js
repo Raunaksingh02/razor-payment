@@ -337,7 +337,6 @@ const sendReceiptToWhatsApp = async () => {
   
   const addToCart = (item, size, price, costPrice) => {
     const existingItem = cart.find((cartItem) => cartItem.id === item._id && cartItem.size === size);
-
     if (existingItem) {
       setCart((prevCart) =>
         prevCart.map((cartItem) =>
@@ -392,34 +391,33 @@ const sendReceiptToWhatsApp = async () => {
   console.log(cart);
 
   return (
-    <div className=" flex flex-col justify-between">  
-    <div className='flex'>
-    <div>
-    <h2 className="text-2xl font-bold mb-2">POS System</h2>
-    </div>
-    <div className="ml-3">
-      <button
+       <div className=" flex flex-col justify-between">  
+       <div className='flex'>
+       <div>
+       <h2 className="text-2xl font-bold mb-2">POS System</h2>
+       </div>
+        <div className="ml-3">
+        <button
         onClick={() => setIsBarcodeVisible((prev) => !prev)}
         className="flex items-center justify-center mb-3"
-      >
+        >
         <CiBarcode className="h-8 w-8 " />
         <span>{isBarcodeVisible ? '' : ''}</span>
-      </button>
-      {isBarcodeVisible && <Barcode addToCart={addToCart} />}
-    </div>
-    <div>
+        </button>
+        {isBarcodeVisible && <Barcode addToCart={addToCart} />}
+        </div>
+        <div>
         <button
           onClick={() => setFilterQuickBill(!filterQuickBill)} // Toggle the filter state
-          className="bg-blue-500 text-white p-2 rounded"
+          className="p-2 rounded"
         >
-          <HiArchiveBoxArrowDown className="h-8 w-8 mr-2" />
-          {filterQuickBill ? 'Show All' : 'Show QuickBill Items'}
+        <HiArchiveBoxArrowDown className="h-8 w-8 mr-2" />
         </button>
-      </div>
-    </div>
-      {/* Dynamic Category Selection */}
-      <div className="flex space-x-2 mb-2  ">
-        {categories.map((cat) => (
+        </div>
+        </div>
+         {/* Dynamic Category Selection */}
+         <div className="flex space-x-2 mb-2  ">
+         {categories.map((cat) => (
           <button
             key={cat}
             onClick={() => handleCategoryChange(cat)}
@@ -459,14 +457,14 @@ const sendReceiptToWhatsApp = async () => {
                 onClick={() =>
                   addToCart(item, selectedSize, selectedPrice, selectedCostPrice)
                 }
-                className="bg-blue-500 text-white w-full mt-2 p-2 rounded"
+                className="bg-blue-500 text-white w-full mt-2 p-2 rounded-full"
               >
                 Add to Cart
               </button>
               <div className="flex justify-between items-center mt-2">
                 <button
                   onClick={() => decrementQuantity(item._id, selectedSize)}
-                  className="bg-red-500 text-white p-1 rounded"
+                  className="bg-red-500 text-white p-1 rounded-full"
                 >
                   -
                 </button>
@@ -480,14 +478,14 @@ const sendReceiptToWhatsApp = async () => {
                 </span>
                 <button
                   onClick={() => incrementQuantity(item._id, selectedSize)}
-                  className="bg-green-500 text-white p-1 rounded"
+                  className="bg-green-500 text-white p-1 rounded-full"
                 >
                   +
                 </button>
               </div>
             </div>
           ))}
-    </div>
+         </div>
    
       <div>
       </div>
