@@ -141,41 +141,65 @@ const Barcode = ({ addToCart }) => {
       </div>
 
       {/* Product Modal */}
-      {isModalOpen && product && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-sm">
-            <h2 className="text-2xl font-bold text-gray-800 mb-4 text-center">
-              {product.name}
-            </h2>
-            <img
-              src={product.image}
-              alt={product.name}
-              className="w-32 h-32 mb-4 mx-auto rounded-full shadow-lg"
-            />
-            <div className="flex flex-wrap justify-center mb-4 space-x-2">
-              {product.sizes.map((sizeObj, index) => (
-                <button
-                  key={index}
-                  onClick={() => handleSizeChange(sizeObj)}
-                  className={`px-4 py-2 rounded-lg shadow ${
-                    sizeObj.size === selectedSize
-                      ? 'bg-green-600 text-white'
-                      : 'bg-gray-200 hover:bg-gray-300'
-                  }`}
-                >
-                  {sizeObj.size}
-                </button>
-              ))}
-            </div>
-            <button
-              onClick={handleAddToCart}
-              className="w-full bg-blue-600 text-white px-4 py-3 rounded shadow hover:bg-blue-700"
-            >
-              Add to Cart
-            </button>
-          </div>
-        </div>
-      )}
+    {/* Product Modal */}
+{isModalOpen && product && (
+  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-sm relative">
+      {/* Close Button */}
+      <button
+        onClick={() => setIsModalOpen(false)}
+        className="absolute top-2 right-2 text-gray-400 hover:text-gray-600"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth={1.5}
+          stroke="currentColor"
+          className="w-6 h-6"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M6 18L18 6M6 6l12 12"
+          />
+        </svg>
+      </button>
+      
+
+      <h2 className="text-2xl font-bold text-gray-800 mb-4 text-center">
+        {product.name}
+      </h2>
+      <img
+        src={product.image}
+        alt={product.name}
+        className="w-32 h-32 mb-4 mx-auto rounded-full shadow-lg"
+      />
+      <div className="flex flex-wrap justify-center mb-4 space-x-2">
+        {product.sizes.map((sizeObj, index) => (
+          <button
+            key={index}
+            onClick={() => handleSizeChange(sizeObj)}
+            className={`px-4 py-2 rounded-lg shadow ${
+              sizeObj.size === selectedSize
+                ? 'bg-green-600 text-white'
+                : 'bg-gray-200 hover:bg-gray-300'
+            }`}
+          >
+            {sizeObj.size}
+          </button>
+        ))}
+      </div>
+      <button
+        onClick={handleAddToCart}
+        className="w-full bg-blue-600 text-white px-4 py-3 rounded shadow hover:bg-blue-700"
+      >
+        Add to Cart
+      </button>
+    </div>
+  </div>
+)}
+
     </div>
   );
 };
