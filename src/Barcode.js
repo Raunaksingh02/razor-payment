@@ -59,10 +59,18 @@ const Barcode = ({ addToCart }) => {
 
   const fetchProductDetails = async (barcode) => {
     setError('');
+    if (!barcode) {
+      setError('Barcode is empty.');
+      return;
+    }
+  
     try {
+      console.log(`Fetching details for barcode: ${barcode}`);
       const response = await axios.get(
         `https://backendcafe-nefw.onrender.com/barcodeitem?barcode=${barcode}`
       );
+      console.log('API Response:', response.data);
+  
       if (response.data) {
         setProduct(response.data);
         setIsModalOpen(true);
@@ -76,9 +84,10 @@ const Barcode = ({ addToCart }) => {
       }
     } catch (error) {
       setError('Error fetching product details.');
-      console.error(error);
+      console.error('API Error:', error);
     }
   };
+  
 
   const handleAddToCart = () => {
     if (product) {

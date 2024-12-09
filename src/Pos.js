@@ -58,6 +58,8 @@ const Pos = () => {
   const [selectedPrice, setSelectedPrice] = useState(0);
   const [isBarcodeVisible, setIsBarcodeVisible] = useState(false);
   const [selectedCostPrice, setSelectedCostPrice] = useState(0);
+  const [filterQuickBill, setFilterQuickBill] = useState(false); // New state to track QuickBill filter
+
  
   useEffect(() => {
     const randomCode = Math.floor(1000 + Math.random() * 9000).toString();
@@ -381,6 +383,11 @@ const sendReceiptToWhatsApp = async () => {
     );
   };
 
+  const filteredItems = items
+  .filter((item) => category === 'All' || item.category === category)
+  .filter((item) => !filterQuickBill || item.quickbill); // Apply filter based on quickBill
+
+
   const categories = ['All', ...new Set(items.map(item => item.category))];
   console.log(cart);
 
@@ -401,10 +408,14 @@ const sendReceiptToWhatsApp = async () => {
       {isBarcodeVisible && <Barcode addToCart={addToCart} />}
     </div>
     <div>
-      <button>
-      <HiArchiveBoxArrowDown className="h-8 w-8 mr-2"  />
-      </button>
-    </div>
+        <button
+          onClick={() => setFilterQuickBill(!filterQuickBill)} // Toggle the filter state
+          className="bg-blue-500 text-white p-2 rounded"
+        >
+          <HiArchiveBoxArrowDown className="h-8 w-8 mr-2" />
+          {filterQuickBill ? 'Show All' : 'Show QuickBill Items'}
+        </button>
+      </div>
     </div>
       {/* Dynamic Category Selection */}
       <div className="flex space-x-2 mb-2  ">
@@ -649,23 +660,39 @@ const sendReceiptToWhatsApp = async () => {
                     )}
                 </div>
             )}
-          {cart.length === 0 ? (
-            <p>No items in the cart.</p>
-          ) : (
-            cart.map((item, index) => (
-              <div key={index} className="flex justify-between border-b pb-2 mb-2">
-                <div>
-                <h4 className="text-lg font-bold">{item.name}</h4>
-                <p>Size: {item.size}</p>
-                <p>Quantity: {item.quantity}</p>
-                <p>Price: ₹{item.price * item.quantity}</p>
-                </div>
-                <div>
-                
-                </div>
-              </div>
-            ))
-          )}
+        {cart.length === 0 ? (
+  <p>No items in the cart.</p>
+) : (
+  cart.map((item, index) => (
+    <div key={index} className="flex justify-between items-center border-b pb-2 mb-2">
+      {/* Item Details */}
+      <div>
+        <h4 className="text-lg font-bold">{item.name}</h4>
+        <p>Size: {item.size}</p>
+        <p>Quantity: {item.quantity}</p>
+        <p>Price: ₹{item.price * item.quantity}</p>
+      </div>
+
+      {/* Quantity Controls */}
+      <div className="flex items-center space-x-2">
+        <button
+          onClick={() => decrementQuantity(item.id, item.size)}
+          className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600"
+        >
+          -
+        </button>
+        <span className="px-4 py-1 border rounded">{item.quantity}</span>
+        <button
+          onClick={() => incrementQuantity(item.id, item.size)}
+          className="bg-green-500 text-white px-2 py-1 rounded hover:bg-green-600"
+        >
+          +
+        </button>
+      </div>
+    </div>
+  ))
+)}
+
 
             {/* Payment Section */}
                <label className="block text-lg font-bold mb-2 mt-3">Discount:</label>
