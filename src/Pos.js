@@ -427,9 +427,9 @@ const sendReceiptToWhatsApp = async () => {
           </button>
         ))}
         </div>
-      {/* Items Grid */}
-      <div className="grid grid-cols-2 lg:grid lg:grid-cols-4 gap-2 mb-4">
-      {items
+          {/* Items Grid */}
+          <div className="grid grid-cols-2 lg:grid lg:grid-cols-4 gap-2 mb-4">
+          {items
           .filter((item) => category === 'All' || item.category === category)
           .map((item) => (
             <div key={item._id} className="p-4 border rounded shadow-md">
@@ -600,13 +600,13 @@ const sendReceiptToWhatsApp = async () => {
             </div>
           </div>
         </div>
-      )}
-    </div>
+        )}
+        </div>
 
-      {/* Bill Section */}
-      {showBill && (
-        <div className="fixed top-0 left-0 w-full h-screen bg-white p-4 overflow-y-auto z-50">
-          <div className="flex justify-between items-center">
+           {/* Bill Section */}
+           {showBill && (
+           <div className="fixed top-0 left-0 w-full h-screen bg-white p-4 overflow-y-auto z-50">
+           <div className="flex justify-between items-center">
             <h3 className="text-xl font-bold mb-2">Bill Summary</h3>
             <div>
             <button

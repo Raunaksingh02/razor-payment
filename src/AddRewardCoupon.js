@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import html2canvas from "html2canvas";
 import { QRCodeCanvas } from "qrcode.react";
+import gifticon from "./images/gifticon.png";
 
 const AddRewardCoupon = () => {
   const [label, setLabel] = useState('');
@@ -208,56 +209,77 @@ const AddRewardCoupon = () => {
             Generate Links
           </button>
         </div>
-     
-        {generatedLinks.length > 0 && (
-        <>
-          <h3 className="text-lg font-bold text-gray-800">Generated Links</h3>
-          <ul className="mt-2 space-y-6">
-            {generatedLinks.map((link, index) => (
-              <li
-                key={index}
-                className="p-4 border border-gray-300 rounded-md bg-gray-50 sm:p-6"
+        
+    
+       {generatedLinks.length > 0 && (
+       <>
+       <h3 className="text-lg font-bold text-gray-800">Generated Links</h3>
+        <ul className="mt-2 space-y-6">
+        {generatedLinks.map((link, index) => (
+        <li
+          key={index}
+          className="p-4 border border-gray-300 rounded-md bg-gray-50 sm:p-6"
+        >
+          <div
+            id={`qr-container-${index}`}
+            className="flex flex-col items-center bg-white rounded-md"
+            style={{
+              padding: "12px",
+              justifyContent: "center",
+            }}
+          >
+            <p className="text-center font-semibold text-lg text-[#f6931e] leading-tight mb-2">
+              Scan this QR <br /> and get your assured gift
+            </p>
+            {/* Gift Icon with Centered QR */}
+            <div
+              className="relative flex justify-center items-center"
+              style={{
+                backgroundImage: `url(${gifticon})`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                width: "240px", // Increased width of the gift icon
+                height: "240px", // Increased height of the gift icon
+              }}
+            >
+              <div 
+                className="absolute"
+                style={{
+                  marginTop: "60px", // Adjust margin to control QR code position
+                }}
               >
-                <div
-                  id={`qr-container-${index}`}
-                  className="flex flex-col items-center bg-white p-3 sm:p-4 rounded-md"
-                  style={{ paddingBottom: "16px" }}
-                >
-                  <p className="text-center font-semibold text-lg text-[#f6931e] leading-tight mb-3 sm:mb-4">
-                    Scan this QR <br /> and get your assured gift
-                  </p>
-                  <div className="mt-2">
-                    <QRCodeCanvas
-                      value={link}
-                      size={150}
-                      bgColor={"#ffffff"}
-                      fgColor={"#000000"}
-                      level={"H"}
-                    />
-                  </div>
-                </div>
-                <button
-                  onClick={() => downloadQRWithText(index)}
-                  className="mt-4 w-full bg-[#f6931e] text-white font-semibold py-2 rounded-md hover:bg-[#d67f19] sm:py-3"
-                >
-                  Download QR with Text
-                </button>
-                <div className="mt-4 text-center">
-                  <a
-                    href={link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-500 hover:underline break-words"
-                  >
-                    {link}
-                  </a>
-                </div>
-              </li>
-            ))}
-          </ul>
-        </>
-      )}
-      
+              <QRCodeCanvas
+                value={link}
+                size={70} // Reduced size of the QR code
+                bgColor={"#ffffff"}
+                fgColor={"#000000"}
+                level={"H"}
+              />
+              </div>
+            </div>
+          </div>
+          <button
+            onClick={() => downloadQRWithText(index)}
+            className="mt-4 w-full bg-[#f6931e] text-white font-semibold py-2 rounded-md hover:bg-[#d67f19] sm:py-3"
+          >
+            Download QR with Text
+          </button>
+          <div className="mt-4 text-center">
+            <a
+              href={link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-500 hover:underline break-words"
+            >
+              {link}
+            </a>
+          </div>
+        </li>
+      ))}
+    </ul>
+  </>
+)}
+
       </div>
     </div>
   );

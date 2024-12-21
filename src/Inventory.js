@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import Barcode from "./Barcode.js"
 
 const InventoryPage = () => {
   const [dishes, setDishes] = useState([]);
+  const [filteredDishes, setFilteredDishes] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -11,6 +12,7 @@ const InventoryPage = () => {
       try {
         const response = await axios.get("https://backendcafe-nefw.onrender.com/getdish");
         setDishes(response.data);
+        setFilteredDishes(response.data); // Initialize with full list
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {
@@ -20,6 +22,19 @@ const InventoryPage = () => {
 
     fetchDishes();
   }, []);
+
+  const handleSearch = (e) => {
+    setSearchQuery(e.target.value);
+
+    if (e.target.value.trim() === "") {
+      setFilteredDishes(dishes); // Reset to full list
+    } else {
+      const query = e.target.value.toLowerCase();
+      setFilteredDishes(
+        dishes.filter((dish) => dish.name.toLowerCase().includes(query))
+      );
+    }
+  };
 
   if (loading) {
     return (
@@ -34,6 +49,18 @@ const InventoryPage = () => {
       <h1 className="text-2xl font-bold text-gray-800 mb-5 text-center">
         Inventory
       </h1>
+
+      {/* Search Bar */}
+      <div className="flex justify-center mb-5">
+        <input
+          type="text"
+          value={searchQuery}
+          onChange={handleSearch}
+          placeholder="Search by item name..."
+          className="w-full max-w-md px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#f6931e] focus:border-transparent"
+        />
+      </div>
+
       <div className="overflow-x-auto">
         <table className="w-full bg-white shadow-md rounded-lg">
           {/* Table Head */}
@@ -47,7 +74,7 @@ const InventoryPage = () => {
           </thead>
           {/* Table Body */}
           <tbody>
-            {dishes.map((dish) =>
+            {filteredDishes.map((dish) =>
               dish.sizes.map((size) => (
                 <tr key={size._id} className="border-b">
                   <td className="py-2 px-4">{dish.name}</td>
