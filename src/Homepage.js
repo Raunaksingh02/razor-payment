@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext,useRef } from 'react';
+KO import React, { useState, useEffect, useContext,useRef } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom'; // import useNavigate for navigation
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
@@ -291,24 +291,7 @@ function Homepage() {
             </div>
 
 
-  <div className="relative p-2">
-  <h1 className="text-lg font-bold font-serif">What's on your mind?</h1>
-  <div className="flex gap-4  overflow-x-scroll scrollbar-hide snap-x snap-mandatory">
 
-    {foodCategories.map((category) => (
-      <div
-        key={category.id}
-        className="bg-white shadow-lg  rounded-2xl min-w-[120px] snap-center overflow-hidden transform hover:scale-105 transition-all duration-300"
-      >
-        <img
-          src={category.image}
-          alt={category.name}
-          className="w-full h-28 object-cover"
-        />
-      </div>
-    ))}
-  </div>
- </div>
 
   <div className="flex flex-col md:flex-row items-start md:items-center justify-start font-bold text-xl p-3">
   {/* Tab Container with Centering for Desktop */}
